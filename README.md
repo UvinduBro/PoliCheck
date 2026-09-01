@@ -37,6 +37,10 @@ npm run dev
 The app renders even without Firebase configured (auth/data features show a
 configuration notice instead of crashing) — useful for UI work without a live project.
 
+For full setup (Firebase project configuration, security rules deployment, the
+role-sync Cloud Function, Vercel environment variables, and troubleshooting), see
+[`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md).
+
 ### Firebase project setup
 
 1. Create a Firebase project with Authentication, Cloud Firestore, and Storage enabled.
