@@ -17,7 +17,7 @@ export function CasesTab({ caseType }: { caseType: "criminal" | "civil" }) {
     {
       header: "Case",
       render: (c) => (
-        <Link to={`/cases/${c.id}`} className="font-medium text-blue-800 hover:underline">
+        <Link to={`/cases/${c.id}`} className="font-medium text-brand-700 hover:underline dark:text-brand-400">
           {c.caseName}
         </Link>
       ),
@@ -28,7 +28,7 @@ export function CasesTab({ caseType }: { caseType: "criminal" | "civil" }) {
     { header: "Current Status", render: (c) => c.currentStatus },
   ];
 
-  if (isLoading) return <p className="text-sm text-gray-500">Loading cases...</p>;
+  if (isLoading) return <p className="text-sm text-slate-500 dark:text-slate-400">Loading cases...</p>;
 
   return (
     <DataTable

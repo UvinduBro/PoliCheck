@@ -21,9 +21,7 @@ const ICONS: Record<StatusBadgeKey, typeof CheckCircle2> = {
 export function StatusBadge({ status, className = "" }: { status: StatusBadgeKey; className?: string }) {
   const Icon = ICONS[status];
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${STATUS_BADGE_CLASSES[status]} ${className}`}
-    >
+    <span className={`chip ${STATUS_BADGE_CLASSES[status]} ${className}`}>
       <Icon aria-hidden="true" size={14} />
       {STATUS_BADGE_LABELS[status]}
     </span>

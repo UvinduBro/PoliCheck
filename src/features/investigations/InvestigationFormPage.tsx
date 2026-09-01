@@ -52,7 +52,7 @@ export function InvestigationFormPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="text-xl font-semibold text-gray-900">Add an Investigation</h1>
+      <h1 className="text-xl font-semibold text-slate-900 dark:text-white">Add an Investigation</h1>
       <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div>
           <label className="label" htmlFor="politicianIds">Politician ID(s), comma-separated</label>
@@ -107,11 +107,11 @@ export function InvestigationFormPage() {
         </div>
         <fieldset>
           <legend className="label">Sources (at least one required)</legend>
-          <div className="max-h-48 space-y-1 overflow-y-auto rounded-md border border-gray-300 p-2">
+          <div className="max-h-48 space-y-1 overflow-y-auto rounded-md border border-slate-300 p-2">
             {sources.map((s) => (
               <label key={s.id} className="flex items-center gap-2 text-sm">
                 <input type="checkbox" value={s.id} {...register("sourceIds")} />
-                {s.title} <span className="text-xs text-gray-500">(Tier {s.tier})</span>
+                {s.title} <span className="text-xs text-slate-500 dark:text-slate-400">(Tier {s.tier})</span>
               </label>
             ))}
           </div>

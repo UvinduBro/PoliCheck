@@ -16,26 +16,34 @@ export function DataTable<T extends { id: string }>({
   emptyMessage?: string;
 }) {
   if (rows.length === 0) {
-    return <p className="text-sm text-gray-500">{emptyMessage}</p>;
+    return (
+      <p className="rounded-lg border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
+        {emptyMessage}
+      </p>
+    );
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200">
-      <table className="min-w-full divide-y divide-gray-200 text-sm">
-        <thead className="bg-gray-50">
+    <div className="scroll-fade-x overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
+      <table className="min-w-full divide-y divide-slate-200 text-sm dark:divide-slate-800">
+        <thead className="bg-slate-50 dark:bg-slate-900">
           <tr>
             {columns.map((col) => (
-              <th key={col.header} scope="col" className="px-4 py-2 text-left font-semibold text-gray-700">
+              <th
+                key={col.header}
+                scope="col"
+                className="whitespace-nowrap px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400"
+              >
                 {col.header}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100 bg-white">
+        <tbody className="divide-y divide-slate-100 bg-white dark:divide-slate-800/60 dark:bg-slate-900">
           {rows.map((row) => (
-            <tr key={row.id}>
+            <tr key={row.id} className="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50">
               {columns.map((col) => (
-                <td key={col.header} className={`px-4 py-2 align-top text-gray-800 ${col.className ?? ""}`}>
+                <td key={col.header} className={`px-4 py-3 align-top text-slate-800 dark:text-slate-200 ${col.className ?? ""}`}>
                   {col.render(row)}
                 </td>
               ))}

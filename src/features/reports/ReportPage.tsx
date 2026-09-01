@@ -9,7 +9,7 @@ export function ReportPage() {
   const { reportId } = useParams();
   const { data: report, isLoading, error } = useReport(reportId);
 
-  if (isLoading) return <p className="text-sm text-gray-500">Loading report...</p>;
+  if (isLoading) return <p className="text-sm text-slate-500 dark:text-slate-400">Loading report...</p>;
   if (error || !report) {
     return (
       <div className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-800">
@@ -21,13 +21,13 @@ export function ReportPage() {
   return (
     <article className="mx-auto max-w-3xl">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h1 className="text-xl font-semibold text-gray-900">{report.title}</h1>
+        <h1 className="text-xl font-semibold text-slate-900 dark:text-white">{report.title}</h1>
         <div className="flex items-center gap-2">
           <PublicationStatusBadge status={report.status} />
           <ConfidenceBadge level={report.confidenceLevel} />
         </div>
       </div>
-      <p className="mt-1 text-xs text-gray-500">
+      <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
         Research date: {formatDate(report.researchDate)} · Research cutoff: {formatDate(report.researchCutoff)}
       </p>
       {report.limitations && (

@@ -3,7 +3,7 @@ import type { Source } from "@/types";
 
 export function SourceList({ sources }: { sources: Source[] }) {
   if (sources.length === 0) {
-    return <p className="text-sm text-gray-500">No sources recorded.</p>;
+    return <p className="text-sm text-slate-500 dark:text-slate-400">No sources recorded.</p>;
   }
   return (
     <ul className="space-y-3">

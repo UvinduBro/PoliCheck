@@ -67,10 +67,10 @@ export function PoliticianFormPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="text-xl font-semibold text-gray-900">
+      <h1 className="text-xl font-semibold text-slate-900 dark:text-white">
         {isEditing ? "Edit Politician Profile" : "Add a New Politician"}
       </h1>
-      <p className="mt-1 text-sm text-gray-600">
+      <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
         Verify identity carefully before adding legal records. If multiple people share this name, create
         separate profiles rather than merging them.
       </p>

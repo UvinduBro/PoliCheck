@@ -12,7 +12,7 @@ export function CaseDetailPage() {
   const { data: claims = [] } = useCaseClaims(caseId);
   const { data: sources = [] } = usePoliticianSources(legalCase?.sourceIds ?? []);
 
-  if (isLoading) return <p className="text-sm text-gray-500">Loading case...</p>;
+  if (isLoading) return <p className="text-sm text-slate-500 dark:text-slate-400">Loading case...</p>;
   if (error || !legalCase) {
     return (
       <div className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-800">
@@ -25,70 +25,70 @@ export function CaseDetailPage() {
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
         <div className="flex flex-wrap items-start justify-between gap-2">
-          <h1 className="text-xl font-semibold text-gray-900">{legalCase.caseName}</h1>
+          <h1 className="text-xl font-semibold text-slate-900 dark:text-white">{legalCase.caseName}</h1>
           <PublicationStatusBadge status={legalCase.publicationStatus} />
         </div>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-slate-600 dark:text-slate-400">
           {legalCase.court || "Court unknown"}{legalCase.caseNumber ? ` · Case No. ${legalCase.caseNumber}` : ""} · {legalCase.jurisdiction || legalCase.country}
         </p>
       </div>
 
-      <dl className="grid gap-3 rounded-lg border border-gray-200 bg-white p-4 text-sm sm:grid-cols-2">
+      <dl className="grid gap-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 text-sm sm:grid-cols-2">
         <div>
-          <dt className="text-xs font-medium uppercase text-gray-500">Case Type</dt>
-          <dd className="capitalize text-gray-900">{legalCase.caseType.replace("_", " ")}</dd>
+          <dt className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Case Type</dt>
+          <dd className="capitalize text-slate-900 dark:text-white">{legalCase.caseType.replace("_", " ")}</dd>
         </div>
         <div>
-          <dt className="text-xs font-medium uppercase text-gray-500">Legal Stage</dt>
-          <dd className="text-gray-900">{CASE_STAGE_LABELS[legalCase.legalStage]}</dd>
+          <dt className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Legal Stage</dt>
+          <dd className="text-slate-900 dark:text-white">{CASE_STAGE_LABELS[legalCase.legalStage]}</dd>
         </div>
         <div>
-          <dt className="text-xs font-medium uppercase text-gray-500">Date Filed</dt>
-          <dd className="text-gray-900">{legalCase.dateFiled ? formatDate(legalCase.dateFiled) : "Unknown"}</dd>
+          <dt className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Date Filed</dt>
+          <dd className="text-slate-900 dark:text-white">{legalCase.dateFiled ? formatDate(legalCase.dateFiled) : "Unknown"}</dd>
         </div>
         <div>
-          <dt className="text-xs font-medium uppercase text-gray-500">Next Known Step</dt>
-          <dd className="text-gray-900">{legalCase.nextKnownStep || "Not recorded"}</dd>
+          <dt className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Next Known Step</dt>
+          <dd className="text-slate-900 dark:text-white">{legalCase.nextKnownStep || "Not recorded"}</dd>
         </div>
       </dl>
 
       {legalCase.allegations && (
         <div>
-          <h2 className="font-semibold text-gray-900">Allegations (unproven claims)</h2>
-          <p className="mt-1 text-sm text-gray-800">{legalCase.allegations}</p>
+          <h2 className="font-semibold text-slate-900 dark:text-white">Allegations (unproven claims)</h2>
+          <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">{legalCase.allegations}</p>
         </div>
       )}
 
       {legalCase.charges && legalCase.charges.length > 0 && (
         <div>
-          <h2 className="font-semibold text-gray-900">Charges</h2>
-          <ul className="mt-1 list-inside list-disc text-sm text-gray-800">
+          <h2 className="font-semibold text-slate-900 dark:text-white">Charges</h2>
+          <ul className="mt-1 list-inside list-disc text-sm text-slate-800 dark:text-slate-200">
             {legalCase.charges.map((charge) => <li key={charge}>{charge}</li>)}
           </ul>
         </div>
       )}
 
       <div>
-        <h2 className="font-semibold text-gray-900">Current Status</h2>
-        <p className="mt-1 text-sm text-gray-800">{legalCase.currentStatus}</p>
+        <h2 className="font-semibold text-slate-900 dark:text-white">Current Status</h2>
+        <p className="mt-1 text-sm text-slate-800 dark:text-slate-200">{legalCase.currentStatus}</p>
         {legalCase.latestDevelopment && (
-          <p className="mt-1 text-sm text-gray-600">Latest development: {legalCase.latestDevelopment}</p>
+          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">Latest development: {legalCase.latestDevelopment}</p>
         )}
       </div>
 
       {claims.length > 0 && (
         <div>
-          <h2 className="font-semibold text-gray-900">Fact vs Allegation</h2>
-          <div className="mt-2 overflow-x-auto rounded-md border border-gray-200">
-            <table className="min-w-full divide-y divide-gray-200 text-sm">
-              <thead className="bg-gray-50">
+          <h2 className="font-semibold text-slate-900 dark:text-white">Fact vs Allegation</h2>
+          <div className="mt-2 overflow-x-auto rounded-md border border-slate-200 dark:border-slate-800">
+            <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800 text-sm">
+              <thead className="bg-slate-50 dark:bg-slate-800/60">
                 <tr>
-                  <th className="px-3 py-2 text-left font-semibold text-gray-700">Claim</th>
-                  <th className="px-3 py-2 text-left font-semibold text-gray-700">Classification</th>
-                  <th className="px-3 py-2 text-left font-semibold text-gray-700">Current Status</th>
+                  <th className="px-3 py-2 text-left font-semibold text-slate-700 dark:text-slate-300">Claim</th>
+                  <th className="px-3 py-2 text-left font-semibold text-slate-700 dark:text-slate-300">Classification</th>
+                  <th className="px-3 py-2 text-left font-semibold text-slate-700 dark:text-slate-300">Current Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 bg-white">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 bg-white dark:bg-slate-900">
                 {claims.map((claim) => (
                   <tr key={claim.id}>
                     <td className="px-3 py-2 align-top">{claim.text}</td>
@@ -103,7 +103,7 @@ export function CaseDetailPage() {
       )}
 
       <div>
-        <h2 className="font-semibold text-gray-900">Sources</h2>
+        <h2 className="font-semibold text-slate-900 dark:text-white">Sources</h2>
         <div className="mt-2">
           <SourceList sources={sources} />
         </div>

@@ -21,28 +21,28 @@ export function OverviewTab() {
   return (
     <div className="space-y-6">
       <section className="card p-5">
-        <h2 className="text-lg font-semibold text-gray-900">Executive Summary</h2>
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Executive Summary</h2>
         <dl className="mt-3 grid gap-3 sm:grid-cols-2">
           <div>
-            <dt className="text-xs font-medium uppercase text-gray-500">Current Political Position</dt>
-            <dd className="text-sm text-gray-900">{politician.currentPosition || "Not established"}</dd>
+            <dt className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Current Political Position</dt>
+            <dd className="text-sm text-slate-900 dark:text-white">{politician.currentPosition || "Not established"}</dd>
           </div>
           <div>
-            <dt className="text-xs font-medium uppercase text-gray-500">Freedom Status</dt>
+            <dt className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Freedom Status</dt>
             <dd className="mt-1 flex items-center gap-2">
               <FreedomStatusBadge status={dashboard.freedomStatus} />
               <ConfidenceBadge level={dashboard.freedomStatusConfidence} />
             </dd>
           </div>
           <div>
-            <dt className="text-xs font-medium uppercase text-gray-500">Active Court Cases / Investigations</dt>
-            <dd className="text-sm text-gray-900">
+            <dt className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Active Court Cases / Investigations</dt>
+            <dd className="text-sm text-slate-900 dark:text-white">
               {activeCases.length} case(s), {investigations.filter((i) => i.currentStatus === "open").length} open investigation(s)
             </dd>
           </div>
           <div>
-            <dt className="text-xs font-medium uppercase text-gray-500">Convictions / Acquittals</dt>
-            <dd className="text-sm text-gray-900">{convictions.length} conviction(s), {acquittals.length} acquittal(s)</dd>
+            <dt className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Convictions / Acquittals</dt>
+            <dd className="text-sm text-slate-900 dark:text-white">{convictions.length} conviction(s), {acquittals.length} acquittal(s)</dd>
           </div>
         </dl>
         {!isLoading && dashboard.hasConflictingSources && (
@@ -54,25 +54,25 @@ export function OverviewTab() {
       </section>
 
       <section className="card p-5">
-        <h2 className="text-lg font-semibold text-gray-900">Identity Verification</h2>
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Identity Verification</h2>
         <dl className="mt-3 grid gap-3 sm:grid-cols-2">
           <div>
-            <dt className="text-xs font-medium uppercase text-gray-500">Identity Confidence</dt>
-            <dd className="text-sm capitalize text-gray-900">{politician.identityConfidence}</dd>
+            <dt className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Identity Confidence</dt>
+            <dd className="text-sm capitalize text-slate-900 dark:text-white">{politician.identityConfidence}</dd>
           </div>
           <div>
-            <dt className="text-xs font-medium uppercase text-gray-500">Alternative / Local-Language Names</dt>
-            <dd className="text-sm text-gray-900">
+            <dt className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Alternative / Local-Language Names</dt>
+            <dd className="text-sm text-slate-900 dark:text-white">
               {[...politician.alternativeNames, ...politician.localLanguageNames].join(", ") || "None recorded"}
             </dd>
           </div>
           <div>
-            <dt className="text-xs font-medium uppercase text-gray-500">Nationality</dt>
-            <dd className="text-sm text-gray-900">{politician.nationality || "Unknown"}</dd>
+            <dt className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Nationality</dt>
+            <dd className="text-sm text-slate-900 dark:text-white">{politician.nationality || "Unknown"}</dd>
           </div>
           <div>
-            <dt className="text-xs font-medium uppercase text-gray-500">Date / Place of Birth</dt>
-            <dd className="text-sm text-gray-900">
+            <dt className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Date / Place of Birth</dt>
+            <dd className="text-sm text-slate-900 dark:text-white">
               {politician.dateOfBirth || "Unknown"}{politician.placeOfBirth ? `, ${politician.placeOfBirth}` : ""}
             </dd>
           </div>
@@ -85,7 +85,7 @@ export function OverviewTab() {
         )}
       </section>
 
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-slate-500 dark:text-slate-400">
         Research cutoff: {politician.researchCutoff ? formatDate(politician.researchCutoff) : "Not set"}.
         Last researched: {politician.lastResearchedAt ? formatDate(politician.lastResearchedAt) : "Never"}.
         Allegations are not convictions — see the Fact vs Allegation table in the Full Report tab.

@@ -35,7 +35,7 @@ export function InvestigationsTab() {
     { header: "Latest Development", render: (i) => i.latestDevelopment || i.description || "—" },
   ];
 
-  if (isLoading) return <p className="text-sm text-gray-500">Loading investigations...</p>;
+  if (isLoading) return <p className="text-sm text-slate-500 dark:text-slate-400">Loading investigations...</p>;
 
   return (
     <DataTable columns={columns} rows={investigations} emptyMessage="No investigations have been recorded." />
