@@ -20,20 +20,20 @@ export function SourceCard({ source }: { source: Source }) {
             href={source.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 font-medium text-blue-800 hover:underline"
+            className="inline-flex items-center gap-1 font-medium text-brand-700 hover:underline dark:text-brand-400"
           >
             {source.title}
             <ExternalLink size={14} aria-hidden="true" />
           </a>
-          <p className="text-sm text-gray-600">{source.publisher} &middot; {SOURCE_TYPE_LABELS[source.sourceType]}</p>
+          <p className="text-sm text-slate-600 dark:text-slate-400">{source.publisher} &middot; {SOURCE_TYPE_LABELS[source.sourceType]}</p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <SourceTierBadge tier={source.tier} />
-          <span className="text-xs text-gray-500">{VERIFICATION_LABELS[source.verificationStatus]}</span>
+          <span className="text-xs text-slate-500 dark:text-slate-400">{VERIFICATION_LABELS[source.verificationStatus]}</span>
         </div>
       </div>
-      {source.summary && <p className="mt-2 text-sm text-gray-700">{source.summary}</p>}
-      <dl className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500">
+      {source.summary && <p className="mt-2 text-sm text-slate-700 dark:text-slate-300">{source.summary}</p>}
+      <dl className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
         {source.publicationDate && (
           <div><dt className="inline font-medium">Published:</dt> <dd className="inline">{formatDate(source.publicationDate)}</dd></div>
         )}

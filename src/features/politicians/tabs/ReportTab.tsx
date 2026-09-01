@@ -75,7 +75,7 @@ export function ReportTab() {
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold text-gray-900">Full Report</h2>
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Full Report</h2>
         <div className="flex flex-wrap gap-2">
           {can.createRecords(userProfile?.role) && (
             <button type="button" className="btn-secondary" onClick={onGenerate} disabled={generating}>
@@ -96,14 +96,14 @@ export function ReportTab() {
       </div>
 
       {!latestReport && (
-        <p className="mt-4 text-sm text-gray-500">
+        <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
           No report has been generated for this profile yet.
         </p>
       )}
 
       {latestReport && (
         <article className="card prose prose-sm mt-4 max-w-none p-6">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Report status: {latestReport.status} · Confidence: {latestReport.confidenceLevel} · Research date:{" "}
             {formatDate(latestReport.researchDate)}
           </p>

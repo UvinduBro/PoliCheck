@@ -12,9 +12,9 @@ const RISK_LABELS: Record<string, string> = { high: "High", medium: "Medium", lo
 
 function StatTile({ label, value }: { label: string; value: number | string }) {
   return (
-    <div className="rounded-md border border-gray-200 bg-white p-3 text-center">
-      <p className="text-2xl font-semibold text-gray-900">{value}</p>
-      <p className="text-xs text-gray-500">{label}</p>
+    <div className="rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 text-center">
+      <p className="text-2xl font-semibold text-slate-900 dark:text-white">{value}</p>
+      <p className="text-xs text-slate-500 dark:text-slate-400">{label}</p>
     </div>
   );
 }
@@ -25,13 +25,13 @@ export function LegalStatusTab() {
   const { cases, investigations, events, sources, isLoading } = useLegalStatusDashboard(politician.id, userProfile?.role);
   const dashboard = buildLegalStatusDashboard({ cases, investigations, events, sources });
 
-  if (isLoading) return <p className="text-sm text-gray-500">Loading legal status...</p>;
+  if (isLoading) return <p className="text-sm text-slate-500 dark:text-slate-400">Loading legal status...</p>;
 
   return (
     <div className="space-y-6">
       <section className="card p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-lg font-semibold text-gray-900">Current Legal Status Dashboard</h2>
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Current Legal Status Dashboard</h2>
           <div className="flex items-center gap-2">
             <FreedomStatusBadge status={dashboard.freedomStatus} />
             <ConfidenceBadge level={dashboard.freedomStatusConfidence} />
@@ -39,7 +39,7 @@ export function LegalStatusTab() {
         </div>
 
         {dashboard.freedomStatusConfidence === "unresolved" && (
-          <p className="mt-3 rounded-md bg-gray-50 p-3 text-sm text-gray-700">
+          <p className="mt-3 rounded-md bg-slate-50 dark:bg-slate-800/60 p-3 text-sm text-slate-700 dark:text-slate-300">
             Current incarceration/freedom status could not be conclusively verified from authoritative
             sources, or conflicting sources require reviewer confirmation before a status can be shown.
           </p>
@@ -56,16 +56,16 @@ export function LegalStatusTab() {
           <StatTile label="Travel Restrictions" value={dashboard.travelRestrictions} />
         </div>
 
-        <p className="mt-4 text-sm text-gray-700">
+        <p className="mt-4 text-sm text-slate-700 dark:text-slate-300">
           Major legal risk: <span className="font-medium">{RISK_LABELS[dashboard.majorLegalRisk]}</span>
         </p>
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
           Last verified: {politician.lastResearchedAt ? formatDate(politician.lastResearchedAt) : "Not yet verified"}
         </p>
       </section>
 
       <section className="card p-5">
-        <h3 className="font-semibold text-gray-900">Cases &amp; Investigations Summary</h3>
+        <h3 className="font-semibold text-slate-900 dark:text-white">Cases &amp; Investigations Summary</h3>
         <div className="mt-3">
           <LegalStatusSummaryChart data={dashboard} />
         </div>

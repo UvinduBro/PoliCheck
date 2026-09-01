@@ -27,7 +27,7 @@ export function RegisterPage() {
 
   if (!firebaseConfigured) {
     return (
-      <div className="mx-auto max-w-md p-8 text-center text-sm text-gray-600">
+      <div className="mx-auto max-w-md p-8 text-center text-sm text-slate-600 dark:text-slate-400">
         Authentication is not configured in this environment. Set the VITE_FIREBASE_* variables.
       </div>
     );
@@ -35,8 +35,8 @@ export function RegisterPage() {
 
   return (
     <div className="mx-auto max-w-md px-4 py-12">
-      <h1 className="text-xl font-semibold text-gray-900">Create a researcher account</h1>
-      <p className="mt-1 text-sm text-gray-600">
+      <h1 className="text-xl font-semibold text-slate-900 dark:text-white">Create a researcher account</h1>
+      <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
         New accounts start with public-level access. A reviewer or administrator must upgrade your role
         to "researcher" before you can add records.
       </p>
@@ -66,8 +66,8 @@ export function RegisterPage() {
           {isSubmitting ? "Creating account..." : "Create account"}
         </button>
       </form>
-      <p className="mt-6 text-center text-sm text-gray-600">
-        Already have an account? <Link to="/login" className="text-blue-700 hover:underline">Sign in</Link>
+      <p className="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
+        Already have an account? <Link to="/login" className="text-brand-700 hover:underline dark:text-brand-400">Sign in</Link>
       </p>
     </div>
   );

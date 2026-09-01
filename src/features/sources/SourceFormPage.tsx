@@ -68,8 +68,8 @@ export function SourceFormPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="text-xl font-semibold text-gray-900">Add a Source</h1>
-      <p className="mt-1 text-sm text-gray-600">
+      <h1 className="text-xl font-semibold text-slate-900 dark:text-white">Add a Source</h1>
+      <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
         Court judgments, government records, and official statements should be tagged Tier 1. Tier 4 sources
         (blogs, anonymous sites, social media) can never be used alone as evidence of guilt.
       </p>
@@ -99,7 +99,7 @@ export function SourceFormPage() {
 
         <div>
           <label className="label" htmlFor="tier">
-            Source tier {suggestedTier && <span className="text-gray-500">(suggested: Tier {suggestedTier})</span>}
+            Source tier {suggestedTier && <span className="text-slate-500 dark:text-slate-400">(suggested: Tier {suggestedTier})</span>}
           </label>
           <select
             id="tier"

@@ -1,8 +1,8 @@
 const CLASSES: Record<string, string> = {
-  high: "bg-green-50 text-green-800 border-green-200",
-  medium: "bg-amber-50 text-amber-800 border-amber-200",
-  low: "bg-orange-50 text-orange-800 border-orange-200",
-  unresolved: "bg-gray-50 text-gray-700 border-gray-200",
+  high: "bg-green-50 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800",
+  medium: "bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800",
+  low: "bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800",
+  unresolved: "bg-slate-50 text-slate-700 border-slate-200 dark:border-slate-800 dark:bg-slate-800/60 dark:text-slate-300 dark:border-slate-700",
 };
 
 const LABELS: Record<string, string> = {
@@ -13,9 +13,5 @@ const LABELS: Record<string, string> = {
 };
 
 export function ConfidenceBadge({ level }: { level: "high" | "medium" | "low" | "unresolved" }) {
-  return (
-    <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${CLASSES[level]}`}>
-      {LABELS[level]}
-    </span>
-  );
+  return <span className={`chip font-medium ${CLASSES[level]}`}>{LABELS[level]}</span>;
 }

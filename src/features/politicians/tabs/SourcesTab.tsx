@@ -18,12 +18,12 @@ export function SourcesTab() {
   ];
   const { data: sources = [], isLoading } = usePoliticianSources(sourceIds);
 
-  if (isLoading) return <p className="text-sm text-gray-500">Loading sources...</p>;
+  if (isLoading) return <p className="text-sm text-slate-500 dark:text-slate-400">Loading sources...</p>;
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-gray-900">Sources</h2>
-      <p className="mt-1 text-sm text-gray-600">
+      <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Sources</h2>
+      <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
         Every source cited across this profile's cases, investigations, and timeline events.
       </p>
       <div className="mt-4">

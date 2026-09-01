@@ -32,7 +32,7 @@ export function ReportErrorButton({ politicianId }: { politicianId: string }) {
 
   if (!open) {
     return (
-      <button type="button" className="text-sm text-blue-700 hover:underline" onClick={() => setOpen(true)}>
+      <button type="button" className="text-sm text-brand-700 hover:underline dark:text-brand-400" onClick={() => setOpen(true)}>
         Report an error on this profile
       </button>
     );

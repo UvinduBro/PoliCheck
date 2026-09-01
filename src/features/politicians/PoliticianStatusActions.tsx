@@ -12,7 +12,7 @@ export function PoliticianStatusActions({ politician }: { politician: Politician
   if (!user || !can.createRecords(role)) return null;
 
   return (
-    <div className="mt-4 flex flex-wrap items-center gap-2 rounded-md border border-gray-200 bg-gray-50 p-3">
+    <div className="mt-4 flex flex-wrap items-center gap-2 rounded-md border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 p-3">
       <Link to={`/politicians/${politician.id}/edit`} className="btn-secondary">
         Edit profile
       </Link>
