@@ -1,55 +1,57 @@
-import { formatDate } from "@/lib/formatting/date";
-import type { LegalEvent } from "@/types";
+import { Landmark, Gavel, Search, Scale, type LucideIcon } from "lucide-react";
+import { EmptyState } from "@/components/feedback/EmptyState";
 
-const EVENT_TYPE_LABELS: Record<LegalEvent["eventType"], string> = {
-  complaint: "Complaint Filed",
-  investigation: "Investigation Opened",
-  arrest: "Arrest",
-  detention: "Detention",
-  remand: "Remand",
-  bail: "Bail",
-  indictment: "Indictment",
-  hearing: "Hearing",
-  judgment: "Judgment",
-  conviction: "Conviction",
-  acquittal: "Acquittal",
-  dismissal: "Dismissal",
-  appeal: "Appeal",
-  release: "Release",
-  warrant: "Warrant Issued",
-  travel_restriction: "Travel Restriction",
-  other: "Other Event",
+export type TimelineCategory = "political" | "legal" | "investigation" | "case";
+
+export interface TimelineEntry {
+  id: string;
+  date: string;
+  category: TimelineCategory;
+  eyebrow: string;
+  title: string;
+  description?: string;
+  note?: string;
+  current?: boolean;
+}
+
+const CATEGORY_CONFIG: Record<TimelineCategory, { icon: LucideIcon; dot: string; text: string }> = {
+  political: { icon: Landmark, dot: "bg-status-info", text: "text-status-info" },
+  legal: { icon: Gavel, dot: "bg-status-critical", text: "text-status-critical" },
+  investigation: { icon: Search, dot: "bg-status-pending", text: "text-status-pending" },
+  case: { icon: Scale, dot: "bg-accent", text: "text-accent" },
 };
 
-export function Timeline({ events }: { events: LegalEvent[] }) {
-  const sorted = [...events].sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
-
-  if (sorted.length === 0) {
-    return (
-      <p className="rounded-lg border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
-        No timeline events recorded.
-      </p>
-    );
+export function Timeline({ entries, emptyMessage = "No timeline events recorded." }: { entries: TimelineEntry[]; emptyMessage?: string }) {
+  if (entries.length === 0) {
+    return <EmptyState title={emptyMessage} />;
   }
 
   return (
-    <ol className="relative space-y-7 border-l-2 border-slate-200 pl-6 dark:border-slate-800">
-      {sorted.map((event) => (
-        <li key={event.id} className="relative">
-          <span
-            aria-hidden="true"
-            className="absolute -left-[31px] top-1 h-3.5 w-3.5 rounded-full border-2 border-white bg-brand-600 ring-4 ring-white dark:border-slate-950 dark:bg-brand-400 dark:ring-slate-950"
-          />
-          <p className="text-xs font-semibold uppercase tracking-wide text-brand-700 dark:text-brand-400">
-            {formatDate(event.date)} &middot; {EVENT_TYPE_LABELS[event.eventType]}
-          </p>
-          <h3 className="mt-0.5 font-medium text-slate-900 dark:text-white">{event.title}</h3>
-          <p className="mt-1 text-sm text-slate-700 dark:text-slate-300">{event.description}</p>
-          {event.legalSignificance && (
-            <p className="mt-1 text-sm italic text-slate-600 dark:text-slate-400">{event.legalSignificance}</p>
-          )}
-        </li>
-      ))}
+    <ol className="relative space-y-7 border-l-2 border-line pl-6">
+      {entries.map((entry) => {
+        const { icon: Icon, dot, text } = CATEGORY_CONFIG[entry.category];
+        return (
+          <li key={entry.id} className="relative">
+            <span
+              aria-hidden="true"
+              className={`absolute -left-[31px] top-0.5 flex h-6 w-6 items-center justify-center rounded-full ring-4 ring-bg ${dot}`}
+            >
+              <Icon size={12} className="text-white" aria-hidden="true" />
+            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <p className={`text-xs font-semibold uppercase tracking-wide ${text}`}>{entry.eyebrow}</p>
+              {entry.current && (
+                <span className="chip border-status-verified/25 bg-status-verified-bg py-0 text-[10px] font-semibold text-status-verified">
+                  Current
+                </span>
+              )}
+            </div>
+            <h3 className="mt-0.5 font-medium text-ink">{entry.title}</h3>
+            {entry.description && <p className="mt-1 text-sm leading-relaxed text-ink-muted">{entry.description}</p>}
+            {entry.note && <p className="mt-1 text-sm italic text-ink-faint">{entry.note}</p>}
+          </li>
+        );
+      })}
     </ol>
   );
 }

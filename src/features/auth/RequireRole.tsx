@@ -9,17 +9,17 @@ export function RequireRole({ minimum, children }: { minimum: UserRole; children
   const { user, userProfile, loading } = useAuth();
 
   if (loading) {
-    return <div className="p-8 text-center text-slate-500 dark:text-slate-400">Checking access...</div>;
+    return <div className="p-8 text-center text-sm text-ink-muted">Checking access...</div>;
   }
   if (!user || !userProfile) {
     return <Navigate to="/login" replace />;
   }
   if (ROLE_RANK[userProfile.role] < ROLE_RANK[minimum]) {
     return (
-      <div className="mx-auto max-w-xl p-8 text-center">
-        <h1 className="text-lg font-semibold text-slate-900 dark:text-white">Access restricted</h1>
-        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-          This page requires the "{minimum}" role or higher. Your account role is "{userProfile.role}".
+      <div className="card mx-auto max-w-xl p-8 text-center">
+        <h1 className="text-lg font-semibold text-ink">Access restricted</h1>
+        <p className="mt-2 text-sm text-ink-muted">
+          This page requires the &ldquo;{minimum}&rdquo; role or higher. Your account role is &ldquo;{userProfile.role}&rdquo;.
         </p>
       </div>
     );

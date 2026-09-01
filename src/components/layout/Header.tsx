@@ -1,22 +1,22 @@
-import { Menu, Scale, X } from "lucide-react";
+import { Menu, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { can } from "@/lib/permissions/roles";
+import { useCommandSearchContext } from "@/features/search/CommandSearchContext";
+import { CivicLensMark } from "./CivicLensMark";
+import { NotificationsMenu } from "./NotificationsMenu";
+import { UserMenu } from "./UserMenu";
 import { ThemeToggle } from "./ThemeToggle";
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   `rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-    isActive
-      ? "bg-brand-50 text-brand-800 dark:bg-brand-500/15 dark:text-brand-300"
-      : "text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+    isActive ? "text-ink" : "text-ink-muted hover:text-ink"
   }`;
 
 const mobileNavLinkClass = ({ isActive }: { isActive: boolean }) =>
   `block rounded-md px-3 py-2.5 text-base font-medium transition-colors ${
-    isActive
-      ? "bg-brand-50 text-brand-800 dark:bg-brand-500/15 dark:text-brand-300"
-      : "text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+    isActive ? "bg-surface-2 text-ink" : "text-ink-muted hover:bg-surface-2 hover:text-ink"
   }`;
 
 export function Header() {
@@ -24,49 +24,64 @@ export function Header() {
   const role = userProfile?.role;
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { openSearch } = useCommandSearchContext();
 
   useEffect(() => setMenuOpen(false), [location.pathname]);
 
   const links = [
-    { to: "/search", label: "Search", show: true },
+    { to: "/", label: "Discover", show: true, end: true },
     { to: "/politicians", label: "Politicians", show: true },
+    { to: "/cases", label: "Cases", show: true },
+    { to: "/investigations", label: "Investigations", show: true },
+    { to: "/sources", label: "Sources", show: true },
     { to: "/research", label: "Research", show: can.createRecords(role) },
     { to: "/review", label: "Review", show: can.reviewRecords(role) },
     { to: "/admin", label: "Admin", show: can.manageUsers(role) },
   ].filter((link) => link.show);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/85 backdrop-blur-md dark:border-slate-800/80 dark:bg-slate-950/85">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-        <Link to="/" className="flex items-center gap-2 text-slate-900 dark:text-white">
-          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand-600 text-white dark:bg-brand-500">
-            <Scale aria-hidden="true" size={18} />
-          </span>
-          <span className="text-lg font-semibold">PoliCheck</span>
+    <header className="sticky top-0 z-40 border-b border-line/80 bg-surface/85 backdrop-blur-md">
+      <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-3 sm:px-6">
+        <Link to="/" className="flex shrink-0 items-center gap-2 text-ink">
+          <CivicLensMark size={20} className="text-accent" />
+          <span className="text-[15px] font-semibold tracking-tight">CivicLens</span>
         </Link>
 
-        <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
+        <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
           {links.map((link) => (
-            <NavLink key={link.to} to={link.to} className={navLinkClass}>
+            <NavLink key={link.to} to={link.to} end={link.end} className={navLinkClass}>
               {link.label}
             </NavLink>
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="hidden items-center gap-1 lg:flex">
+          <button
+            type="button"
+            onClick={openSearch}
+            className="flex min-h-[2.5rem] items-center gap-2 rounded-md border border-line bg-surface-2/60 px-3 text-sm text-ink-muted transition-colors hover:border-line-strong hover:text-ink"
+          >
+            <Search size={15} aria-hidden="true" />
+            Search
+            <kbd className="ml-1 rounded border border-line bg-surface px-1.5 py-0.5 text-[11px] text-ink-faint">
+              ⌘K
+            </kbd>
+          </button>
+          <NotificationsMenu />
           <ThemeToggle />
-          {user ? (
-            <NavLink to="/account" className={navLinkClass}>
-              Account
-            </NavLink>
-          ) : (
-            <NavLink to="/login" className="btn-primary">
-              Sign in
-            </NavLink>
-          )}
+          <span className="mx-1 h-6 w-px bg-line" aria-hidden="true" />
+          <UserMenu />
         </div>
 
-        <div className="flex items-center gap-1 md:hidden">
+        <div className="flex items-center gap-1 lg:hidden">
+          <button
+            type="button"
+            onClick={openSearch}
+            aria-label="Search"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-md text-ink-muted hover:bg-surface-2 hover:text-ink"
+          >
+            <Search size={18} aria-hidden="true" />
+          </button>
           <ThemeToggle />
           <button
             type="button"
@@ -74,7 +89,7 @@ export function Header() {
             aria-expanded={menuOpen}
             aria-controls="mobile-nav"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-md text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-md text-ink-muted hover:bg-surface-2 hover:text-ink"
           >
             {menuOpen ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
           </button>
@@ -85,22 +100,24 @@ export function Header() {
         <nav
           id="mobile-nav"
           aria-label="Primary"
-          className="animate-fade-in space-y-1 border-t border-slate-200 bg-white px-4 py-3 md:hidden dark:border-slate-800 dark:bg-slate-950"
+          className="animate-fade-in space-y-1 border-t border-line bg-surface px-4 py-3 lg:hidden"
         >
           {links.map((link) => (
-            <NavLink key={link.to} to={link.to} className={mobileNavLinkClass}>
+            <NavLink key={link.to} to={link.to} end={link.end} className={mobileNavLinkClass}>
               {link.label}
             </NavLink>
           ))}
-          {user ? (
-            <NavLink to="/account" className={mobileNavLinkClass}>
-              Account
-            </NavLink>
-          ) : (
-            <NavLink to="/login" className="btn-primary mt-2 w-full">
-              Sign in
-            </NavLink>
-          )}
+          <div className="mt-2 flex items-center justify-between border-t border-line pt-3">
+            {user ? (
+              <Link to="/account" className={mobileNavLinkClass({ isActive: false })}>
+                Account
+              </Link>
+            ) : (
+              <Link to="/login" className="btn-primary w-full">
+                Sign in
+              </Link>
+            )}
+          </div>
         </nav>
       )}
     </header>

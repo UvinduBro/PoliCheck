@@ -1,9 +1,12 @@
 import { useMemo, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { Search } from "lucide-react";
 import { usePoliticians } from "./api";
 import { useAuth } from "@/hooks/useAuth";
-import { PublicationStatusBadge } from "@/components/status/PublicationStatusBadge";
-import { formatDate } from "@/lib/formatting/date";
+import { PoliticianCard } from "@/components/politicians/PoliticianCard";
+import { EmptyState } from "@/components/feedback/EmptyState";
+import { ErrorState } from "@/components/feedback/ErrorState";
+import { CardGridSkeleton } from "@/components/feedback/Skeleton";
 
 function normalize(value: string) {
   return value.trim().toLowerCase();
@@ -27,41 +30,41 @@ export function PoliticiansListPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-semibold text-slate-900 dark:text-white">Politician Profiles</h1>
-      <div className="mt-4">
-        <label htmlFor="politician-search" className="label">Search by name, party, constituency, or country</label>
+      <h1 className="text-page-heading font-semibold text-ink">Politician Profiles</h1>
+      <p className="mt-1 text-sm text-ink-muted">Search verified profiles by name, party, constituency, or country.</p>
+
+      <div className="relative mt-5 max-w-md">
+        <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint" aria-hidden="true" />
+        <label htmlFor="politician-search" className="sr-only">
+          Search by name, party, constituency, or country
+        </label>
         <input
           id="politician-search"
-          className="input max-w-md"
+          className="input pl-9"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="e.g. Jane Doe, or Sri Lanka"
         />
       </div>
 
-      {isLoading && <p className="mt-6 text-sm text-slate-500 dark:text-slate-400">Loading profiles...</p>}
-      {error && <p className="mt-6 text-sm text-red-700">Could not load politician profiles.</p>}
-
-      <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((p) => (
-          <li key={p.id} className="card p-4">
-            <Link to={`/politicians/${p.id}/overview`} className="font-medium text-brand-700 hover:underline dark:text-brand-400">
-              {p.fullName}
-            </Link>
-            <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{p.currentPosition || p.profession || "—"}</p>
-            <p className="text-sm text-slate-500 dark:text-slate-400">{p.country}{p.politicalParty ? ` · ${p.politicalParty}` : ""}</p>
-            <div className="mt-2 flex items-center justify-between">
-              <PublicationStatusBadge status={p.publicationStatus} />
-              <span className="text-xs text-slate-400 dark:text-slate-500">
-                {p.lastResearchedAt ? `Researched ${formatDate(p.lastResearchedAt)}` : "Not yet researched"}
-              </span>
-            </div>
-          </li>
-        ))}
-      </ul>
-      {!isLoading && filtered.length === 0 && (
-        <p className="mt-6 text-sm text-slate-500 dark:text-slate-400">No profiles match your search.</p>
-      )}
+      <div className="mt-6">
+        {isLoading ? (
+          <CardGridSkeleton count={6} />
+        ) : error ? (
+          <ErrorState description="Politician profiles returned an error while loading. Try again shortly." />
+        ) : filtered.length === 0 ? (
+          <EmptyState
+            title="No profiles match your search"
+            description="Try a different name, party, constituency, or country."
+          />
+        ) : (
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((p) => (
+              <PoliticianCard key={p.id} politician={p} />
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

@@ -15,6 +15,7 @@ import {
   type QueryDocumentSnapshot,
 } from "firebase/firestore";
 import { getFirebaseDb } from "./config";
+import type { UserRole } from "@/types";
 
 /** Firestore top-level collection names — kept in one place so a rename never drifts between reads and writes. */
 export const COLLECTIONS = {
@@ -74,6 +75,17 @@ export async function updateDocById(
     ...data,
     updatedAt: serverTimestamp(),
   });
+}
+
+/**
+ * Firestore only allows an unauthenticated/public list query when the query itself
+ * proves every result satisfies the security rule (publicationStatus == "published").
+ * Researcher+ can query without that constraint since the rule's isResearcher() branch
+ * holds regardless of document content. Shared across every feature's list query.
+ */
+export function publicationConstraint(role: UserRole | undefined): QueryConstraint[] {
+  if (role === "researcher" || role === "reviewer" || role === "admin") return [];
+  return [where("publicationStatus", "==", "published")];
 }
 
 export { where, orderBy, fbLimit as limit };

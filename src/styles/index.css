@@ -3,11 +3,69 @@
 @tailwind utilities;
 
 @layer base {
+  /*
+   * CivicLens design tokens. Values as space-separated RGB triplets so Tailwind's
+   * `rgb(var(--x) / <alpha-value>)` color functions (see tailwind.config.js) can apply
+   * opacity modifiers (e.g. `bg-surface/60`) the same way built-in colors do.
+   */
   :root {
     color-scheme: light;
+
+    --cl-bg: 247 248 250; /* #F7F8FA */
+    --cl-surface: 255 255 255; /* #FFFFFF */
+    --cl-surface-2: 241 243 245; /* #F1F3F5 */
+    --cl-elevated: 255 255 255;
+    --cl-ink: 17 19 24; /* #111318 */
+    --cl-ink-muted: 98 104 115; /* #626873 */
+    --cl-ink-faint: 148 153 162;
+    --cl-line: 228 231 235; /* #E4E7EB */
+    --cl-line-strong: 203 208 214;
+
+    --cl-accent: 71 68 201; /* accent-600 */
+    --cl-accent-fg: 255 255 255;
+
+    --cl-status-verified: 21 128 61;
+    --cl-status-verified-bg: 240 253 244;
+    --cl-status-pending: 146 100 14;
+    --cl-status-pending-bg: 255 251 235;
+    --cl-status-critical: 185 28 28;
+    --cl-status-critical-bg: 254 242 242;
+    --cl-status-info: 29 78 216;
+    --cl-status-info-bg: 239 246 255;
+    --cl-status-neutral: 71 85 105;
+    --cl-status-neutral-bg: 241 245 249;
+
+    --cl-shadow-color: 15 23 42;
   }
+
   .dark {
     color-scheme: dark;
+
+    --cl-bg: 11 13 16; /* #0B0D10 */
+    --cl-surface: 17 20 24; /* #111418 */
+    --cl-surface-2: 20 24 29;
+    --cl-elevated: 23 27 33; /* #171B21 */
+    --cl-ink: 244 246 248; /* #F4F6F8 */
+    --cl-ink-muted: 155 163 174; /* #9BA3AE */
+    --cl-ink-faint: 112 120 127;
+    --cl-line: 37 43 51; /* #252B33 */
+    --cl-line-strong: 55 63 73;
+
+    --cl-accent: 138 141 246; /* restrained electric indigo for dark surfaces */
+    --cl-accent-fg: 12 12 30;
+
+    --cl-status-verified: 74 222 128;
+    --cl-status-verified-bg: 15 42 28;
+    --cl-status-pending: 252 211 77;
+    --cl-status-pending-bg: 42 32 12;
+    --cl-status-critical: 248 113 113;
+    --cl-status-critical-bg: 42 20 20;
+    --cl-status-info: 165 180 252;
+    --cl-status-info-bg: 26 31 53;
+    --cl-status-neutral: 203 213 225;
+    --cl-status-neutral-bg: 28 33 40;
+
+    --cl-shadow-color: 0 0 0;
   }
 
   html {
@@ -15,17 +73,17 @@
   }
 
   body {
-    @apply bg-slate-50 text-slate-900 antialiased transition-colors duration-200;
-    @apply dark:bg-slate-950 dark:text-slate-100;
+    @apply bg-bg text-ink antialiased transition-colors duration-200;
     font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-feature-settings: "cv11", "ss01";
   }
 
   ::selection {
-    @apply bg-brand-200 text-brand-950 dark:bg-brand-800 dark:text-white;
+    @apply bg-accent-200 text-accent-950 dark:bg-accent-800 dark:text-white;
   }
 
   :focus-visible {
-    @apply outline outline-2 outline-offset-2 outline-brand-600 dark:outline-brand-400;
+    @apply outline outline-2 outline-offset-2 outline-accent;
   }
 
   h1,
@@ -33,53 +91,61 @@
   h3 {
     @apply tracking-tight;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @layer components {
   .btn {
-    @apply inline-flex min-h-[2.5rem] items-center justify-center gap-2 rounded-md px-3.5 py-2 text-sm font-medium
+    @apply inline-flex min-h-[2.75rem] items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium
       transition-all duration-150 ease-out active:scale-[0.98]
       focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
       disabled:pointer-events-none disabled:opacity-50 disabled:active:scale-100;
   }
   .btn-primary {
-    @apply btn bg-brand-600 text-white shadow-soft hover:bg-brand-700 hover:shadow-elevated
-      dark:bg-brand-500 dark:hover:bg-brand-400;
+    @apply btn bg-accent text-accent-fg shadow-soft hover:opacity-90 hover:shadow-elevated;
   }
   .btn-secondary {
-    @apply btn border border-slate-300 bg-white text-slate-900 shadow-soft hover:bg-slate-50
-      dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800;
+    @apply btn border border-line bg-surface text-ink shadow-soft hover:bg-surface-2;
   }
   .btn-danger {
-    @apply btn bg-red-600 text-white shadow-soft hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-400;
+    @apply btn bg-status-critical text-white shadow-soft hover:opacity-90;
   }
   .btn-ghost {
-    @apply btn text-slate-600 hover:bg-slate-100 hover:text-slate-900
-      dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white;
+    @apply btn text-ink-muted hover:bg-surface-2 hover:text-ink;
   }
 
   .card {
-    @apply rounded-xl border border-slate-200 bg-white shadow-soft transition-shadow duration-200
-      dark:border-slate-800 dark:bg-slate-900;
+    @apply rounded-lg border border-line bg-surface shadow-soft transition-shadow duration-200;
   }
   .card-hover {
-    @apply card hover:-translate-y-0.5 hover:shadow-elevated hover:border-slate-300 transition-all duration-200
-      dark:hover:border-slate-700;
+    @apply card hover:-translate-y-0.5 hover:shadow-elevated hover:border-line-strong transition-all duration-200;
   }
 
   .input {
-    @apply block w-full min-h-[2.5rem] rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900
-      placeholder:text-slate-400 transition-colors
-      focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600
-      dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500
-      dark:focus-visible:outline-brand-400;
+    @apply block w-full min-h-[2.75rem] rounded-md border border-line bg-surface px-3 py-2 text-sm text-ink
+      placeholder:text-ink-faint transition-colors
+      focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
   }
   .label {
-    @apply mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300;
+    @apply mb-1 block text-sm font-medium text-ink-muted;
   }
 
   .chip {
     @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold;
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted;
   }
 }
 

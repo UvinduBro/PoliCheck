@@ -1,8 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { COLLECTIONS, createDoc, getDocById, updateDocById } from "@/lib/firebase/firestore";
+import { COLLECTIONS, createDoc, getDocById, publicationConstraint, updateDocById } from "@/lib/firebase/firestore";
 import { writeAuditLog } from "@/lib/firebase/auditLog";
-import type { Claim, LegalCase } from "@/types";
-import { queryCollection, where } from "@/lib/firebase/firestore";
+import type { Claim, LegalCase, LegalEvent, UserRole } from "@/types";
+import { orderBy, queryCollection, where } from "@/lib/firebase/firestore";
+
+/** Every case visible to `role` — used by global search and cross-politician case listings. */
+export function useAllCases(role: UserRole | undefined) {
+  return useQuery({
+    queryKey: ["cases", "all", role],
+    queryFn: () =>
+      queryCollection<LegalCase>(COLLECTIONS.cases, [...publicationConstraint(role), orderBy("caseName")]),
+  });
+}
 
 export function useCase(id: string | undefined) {
   return useQuery({
@@ -16,6 +25,14 @@ export function useCaseClaims(caseId: string | undefined) {
   return useQuery({
     queryKey: ["claims", "byCase", caseId],
     queryFn: () => queryCollection<Claim>(COLLECTIONS.claims, [where("caseId", "==", caseId)]),
+    enabled: Boolean(caseId),
+  });
+}
+
+export function useCaseEvents(caseId: string | undefined) {
+  return useQuery({
+    queryKey: ["legalEvents", "byCase", caseId],
+    queryFn: () => queryCollection<LegalEvent>(COLLECTIONS.legalEvents, [where("caseId", "==", caseId)]),
     enabled: Boolean(caseId),
   });
 }

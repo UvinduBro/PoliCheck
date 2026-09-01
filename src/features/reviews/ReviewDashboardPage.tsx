@@ -1,7 +1,54 @@
+import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { AlertOctagon, ClipboardList, FileSearch, Gavel, ScrollText, Users } from "lucide-react";
 import { usePendingReviewItems, useResolveCorrectionRequest, useSetClaimReviewStatus, useSetPublicationStatus } from "./api";
 import { useAuth } from "@/hooks/useAuth";
-import { CLAIM_CLASSIFICATION_LABELS } from "@/constants/legalStatus";
+import { StatCard } from "@/components/data/StatCard";
+import { EvidenceBadge } from "@/components/evidence/EvidenceBadge";
+import { EmptyState } from "@/components/feedback/EmptyState";
+import { TableSkeleton } from "@/components/feedback/Skeleton";
+
+function ReviewSection({
+  title,
+  icon,
+  count,
+  children,
+}: {
+  title: string;
+  icon: ReactNode;
+  count: number;
+  children: ReactNode;
+}) {
+  return (
+    <section className="card">
+      <div className="flex items-center gap-2.5 border-b border-line px-5 py-3.5">
+        <span className="text-ink-faint">{icon}</span>
+        <h2 className="font-semibold text-ink">{title}</h2>
+        <span className="chip border-line bg-surface-2 py-0 text-ink-muted">{count}</span>
+      </div>
+      {count === 0 ? (
+        <div className="p-5">
+          <EmptyState title="Nothing pending" description="Nothing in this queue right now." />
+        </div>
+      ) : (
+        <ul className="divide-y divide-line">{children}</ul>
+      )}
+    </section>
+  );
+}
+
+function ReviewActions({ onApprove, onReject }: { onApprove: () => void; onReject: () => void }) {
+  return (
+    <div className="flex shrink-0 gap-2">
+      <button type="button" className="btn-primary text-xs" onClick={onApprove}>
+        Approve &amp; publish
+      </button>
+      <button type="button" className="btn-secondary text-xs" onClick={onReject}>
+        Reject
+      </button>
+    </div>
+  );
+}
 
 export function ReviewDashboardPage() {
   const { user } = useAuth();
@@ -13,207 +60,130 @@ export function ReviewDashboardPage() {
   const totalPending =
     politicians.length + cases.length + investigations.length + events.length + claims.length + correctionRequests.length;
 
-  if (isLoading) return <p className="text-sm text-slate-500 dark:text-slate-400">Loading review queue...</p>;
-
   return (
     <div>
-      <h1 className="text-xl font-semibold text-slate-900 dark:text-white">Reviewer Queue</h1>
-      <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-        {totalPending} item(s) awaiting review. Check identity, source quality, dates, case numbers, court
-        names, current status, and whether allegations are clearly labeled before publishing.
+      <h1 className="text-page-heading font-semibold text-ink">Reviewer Queue</h1>
+      <p className="mt-1 max-w-2xl text-sm text-ink-muted">
+        {totalPending} item{totalPending === 1 ? "" : "s"} awaiting review. Check identity, source quality, dates,
+        case numbers, court names, current status, and whether allegations are clearly labeled before publishing.
       </p>
 
-      <section className="mt-6">
-        <h2 className="font-semibold text-slate-900 dark:text-white">Politician Profiles</h2>
-        {politicians.length === 0 ? (
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Nothing pending.</p>
-        ) : (
-          <ul className="mt-2 divide-y divide-slate-200 dark:divide-slate-800 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+      <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        <StatCard label="Profiles" value={politicians.length} icon={<Users size={16} aria-hidden="true" />} />
+        <StatCard label="Cases" value={cases.length} icon={<Gavel size={16} aria-hidden="true" />} />
+        <StatCard label="Investigations" value={investigations.length} icon={<FileSearch size={16} aria-hidden="true" />} />
+        <StatCard label="Events" value={events.length} icon={<ScrollText size={16} aria-hidden="true" />} />
+        <StatCard label="Claims" value={claims.length} icon={<ClipboardList size={16} aria-hidden="true" />} />
+        <StatCard label="Corrections" value={correctionRequests.length} icon={<AlertOctagon size={16} aria-hidden="true" />} />
+      </div>
+
+      {isLoading ? (
+        <div className="mt-6">
+          <TableSkeleton rows={6} />
+        </div>
+      ) : (
+        <div className="mt-6 space-y-5">
+          <ReviewSection title="Politician Profiles" icon={<Users size={16} aria-hidden="true" />} count={politicians.length}>
             {politicians.map((p) => (
-              <li key={p.id} className="flex items-center justify-between px-4 py-3">
-                <Link to={`/politicians/${p.id}/overview`} className="text-brand-700 hover:underline dark:text-brand-400">
-                  {p.fullName} <span className="text-xs text-slate-500 dark:text-slate-400">({p.country})</span>
+              <li key={p.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5">
+                <Link to={`/politicians/${p.id}/overview`} className="font-medium text-ink hover:text-accent">
+                  {p.fullName} <span className="text-xs font-normal text-ink-faint">({p.country})</span>
                 </Link>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    className="btn-primary"
-                    onClick={() => setPublicationStatus.mutate({ entityType: "politician", id: p.id, status: "published" })}
-                  >
-                    Approve &amp; publish
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-secondary"
-                    onClick={() => setPublicationStatus.mutate({ entityType: "politician", id: p.id, status: "draft" })}
-                  >
-                    Reject
-                  </button>
-                </div>
+                <ReviewActions
+                  onApprove={() => setPublicationStatus.mutate({ entityType: "politician", id: p.id, status: "published" })}
+                  onReject={() => setPublicationStatus.mutate({ entityType: "politician", id: p.id, status: "draft" })}
+                />
               </li>
             ))}
-          </ul>
-        )}
-      </section>
+          </ReviewSection>
 
-      <section className="mt-6">
-        <h2 className="font-semibold text-slate-900 dark:text-white">Legal Cases</h2>
-        {cases.length === 0 ? (
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Nothing pending.</p>
-        ) : (
-          <ul className="mt-2 divide-y divide-slate-200 dark:divide-slate-800 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+          <ReviewSection title="Legal Cases" icon={<Gavel size={16} aria-hidden="true" />} count={cases.length}>
             {cases.map((c) => (
-              <li key={c.id} className="flex items-center justify-between px-4 py-3">
-                <Link to={`/cases/${c.id}`} className="text-brand-700 hover:underline dark:text-brand-400">{c.caseName}</Link>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    className="btn-primary"
-                    onClick={() => setPublicationStatus.mutate({ entityType: "case", id: c.id, status: "published" })}
-                  >
-                    Approve &amp; publish
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-secondary"
-                    onClick={() => setPublicationStatus.mutate({ entityType: "case", id: c.id, status: "draft" })}
-                  >
-                    Reject
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-
-      <section className="mt-6">
-        <h2 className="font-semibold text-slate-900 dark:text-white">Investigations</h2>
-        {investigations.length === 0 ? (
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Nothing pending.</p>
-        ) : (
-          <ul className="mt-2 divide-y divide-slate-200 dark:divide-slate-800 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-            {investigations.map((i) => (
-              <li key={i.id} className="flex items-center justify-between px-4 py-3">
-                <span>{i.agency} — {i.investigationType}</span>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    className="btn-primary"
-                    onClick={() => setPublicationStatus.mutate({ entityType: "investigation", id: i.id, status: "published" })}
-                  >
-                    Approve &amp; publish
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-secondary"
-                    onClick={() => setPublicationStatus.mutate({ entityType: "investigation", id: i.id, status: "draft" })}
-                  >
-                    Reject
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-
-      <section className="mt-6">
-        <h2 className="font-semibold text-slate-900 dark:text-white">Timeline Events</h2>
-        {events.length === 0 ? (
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Nothing pending.</p>
-        ) : (
-          <ul className="mt-2 divide-y divide-slate-200 dark:divide-slate-800 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-            {events.map((e) => (
-              <li key={e.id} className="flex items-center justify-between px-4 py-3">
-                <span>{e.title} ({e.date})</span>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    className="btn-primary"
-                    onClick={() => setPublicationStatus.mutate({ entityType: "legalEvent", id: e.id, status: "published" })}
-                  >
-                    Approve &amp; publish
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-secondary"
-                    onClick={() => setPublicationStatus.mutate({ entityType: "legalEvent", id: e.id, status: "draft" })}
-                  >
-                    Reject
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-
-      <section className="mt-6">
-        <h2 className="font-semibold text-slate-900 dark:text-white">Claims</h2>
-        {claims.length === 0 ? (
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Nothing pending.</p>
-        ) : (
-          <ul className="mt-2 divide-y divide-slate-200 dark:divide-slate-800 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-            {claims.map((c) => (
-              <li key={c.id} className="px-4 py-3">
-                <p className="text-sm text-slate-900 dark:text-white">{c.text}</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">{CLAIM_CLASSIFICATION_LABELS[c.classification]}</p>
-                <div className="mt-2 flex gap-2">
-                  <button
-                    type="button"
-                    className="btn-primary"
-                    onClick={() => setClaimStatus.mutate({ id: c.id, status: "approved" })}
-                  >
-                    Approve
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-secondary"
-                    onClick={() => setClaimStatus.mutate({ id: c.id, status: "rejected" })}
-                  >
-                    Reject
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-
-      <section className="mt-6">
-        <h2 className="font-semibold text-slate-900 dark:text-white">Reported Errors</h2>
-        {correctionRequests.length === 0 ? (
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Nothing pending.</p>
-        ) : (
-          <ul className="mt-2 divide-y divide-slate-200 dark:divide-slate-800 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-            {correctionRequests.map((r) => (
-              <li key={r.id} className="px-4 py-3">
-                <p className="text-sm text-slate-900 dark:text-white">{r.description}</p>
-                <Link to={`/politicians/${r.politicianId}/overview`} className="text-xs text-brand-700 hover:underline dark:text-brand-400">
-                  View profile
+              <li key={c.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5">
+                <Link to={`/cases/${c.id}`} className="font-medium text-ink hover:text-accent">
+                  {c.caseName}
                 </Link>
-                <div className="mt-2 flex gap-2">
-                  <button
-                    type="button"
-                    className="btn-primary"
-                    onClick={() => resolveCorrectionRequest.mutate({ id: r.id, status: "resolved" })}
-                  >
-                    Mark resolved
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-secondary"
-                    onClick={() => resolveCorrectionRequest.mutate({ id: r.id, status: "dismissed" })}
-                  >
-                    Dismiss
-                  </button>
+                <ReviewActions
+                  onApprove={() => setPublicationStatus.mutate({ entityType: "case", id: c.id, status: "published" })}
+                  onReject={() => setPublicationStatus.mutate({ entityType: "case", id: c.id, status: "draft" })}
+                />
+              </li>
+            ))}
+          </ReviewSection>
+
+          <ReviewSection title="Investigations" icon={<FileSearch size={16} aria-hidden="true" />} count={investigations.length}>
+            {investigations.map((i) => (
+              <li key={i.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5">
+                <span className="font-medium text-ink">
+                  {i.agency} <span className="text-xs font-normal text-ink-faint">— {i.investigationType}</span>
+                </span>
+                <ReviewActions
+                  onApprove={() => setPublicationStatus.mutate({ entityType: "investigation", id: i.id, status: "published" })}
+                  onReject={() => setPublicationStatus.mutate({ entityType: "investigation", id: i.id, status: "draft" })}
+                />
+              </li>
+            ))}
+          </ReviewSection>
+
+          <ReviewSection title="Timeline Events" icon={<ScrollText size={16} aria-hidden="true" />} count={events.length}>
+            {events.map((e) => (
+              <li key={e.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5">
+                <span className="font-medium text-ink">
+                  {e.title} <span className="text-xs font-normal text-ink-faint">({e.date})</span>
+                </span>
+                <ReviewActions
+                  onApprove={() => setPublicationStatus.mutate({ entityType: "legalEvent", id: e.id, status: "published" })}
+                  onReject={() => setPublicationStatus.mutate({ entityType: "legalEvent", id: e.id, status: "draft" })}
+                />
+              </li>
+            ))}
+          </ReviewSection>
+
+          <ReviewSection title="Claims" icon={<ClipboardList size={16} aria-hidden="true" />} count={claims.length}>
+            {claims.map((c) => (
+              <li key={c.id} className="flex flex-col gap-2.5 px-5 py-3.5">
+                <p className="text-sm text-ink">{c.text}</p>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <EvidenceBadge classification={c.classification} />
+                  <ReviewActions
+                    onApprove={() => setClaimStatus.mutate({ id: c.id, status: "approved" })}
+                    onReject={() => setClaimStatus.mutate({ id: c.id, status: "rejected" })}
+                  />
                 </div>
               </li>
             ))}
-          </ul>
-        )}
-      </section>
+          </ReviewSection>
+
+          <ReviewSection title="Reported Errors" icon={<AlertOctagon size={16} aria-hidden="true" />} count={correctionRequests.length}>
+            {correctionRequests.map((r) => (
+              <li key={r.id} className="flex flex-col gap-2.5 px-5 py-3.5">
+                <p className="text-sm text-ink">{r.description}</p>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <Link to={`/politicians/${r.politicianId}/overview`} className="text-xs font-medium text-accent hover:underline">
+                    View profile
+                  </Link>
+                  <div className="flex shrink-0 gap-2">
+                    <button
+                      type="button"
+                      className="btn-primary text-xs"
+                      onClick={() => resolveCorrectionRequest.mutate({ id: r.id, status: "resolved" })}
+                    >
+                      Mark resolved
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-secondary text-xs"
+                      onClick={() => resolveCorrectionRequest.mutate({ id: r.id, status: "dismissed" })}
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ReviewSection>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import type { RouteObject } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
+import { WorkspaceLayout } from "@/components/layout/WorkspaceLayout";
 import { HomePage } from "./pages/HomePage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 
@@ -24,13 +25,16 @@ import { ReportTab } from "@/features/politicians/tabs/ReportTab";
 
 import { CaseDetailPage } from "@/features/cases/CaseDetailPage";
 import { CaseFormPage } from "@/features/cases/CaseFormPage";
+import { CasesListPage } from "@/features/cases/CasesListPage";
 import { ClaimFormPage } from "@/features/cases/ClaimFormPage";
 
 import { InvestigationFormPage } from "@/features/investigations/InvestigationFormPage";
+import { InvestigationsListPage } from "@/features/investigations/InvestigationsListPage";
 import { LegalEventFormPage } from "@/features/investigations/LegalEventFormPage";
 
 import { SourceDetailPage } from "@/features/sources/SourceDetailPage";
 import { SourceFormPage } from "@/features/sources/SourceFormPage";
+import { SourcesListPage } from "@/features/sources/SourcesListPage";
 
 import { ReportPage } from "@/features/reports/ReportPage";
 import { ReviewDashboardPage } from "@/features/reviews/ReviewDashboardPage";
@@ -78,6 +82,7 @@ export const routes: RouteObject[] = [
         ],
       },
 
+      { path: "cases", element: <CasesListPage /> },
       { path: "cases/:caseId", element: <CaseDetailPage /> },
       {
         path: "cases/new",
@@ -95,6 +100,7 @@ export const routes: RouteObject[] = [
           </RequireRole>
         ),
       },
+      { path: "investigations", element: <InvestigationsListPage /> },
       {
         path: "investigations/new",
         element: (
@@ -112,6 +118,7 @@ export const routes: RouteObject[] = [
         ),
       },
 
+      { path: "sources", element: <SourcesListPage /> },
       { path: "sources/:sourceId", element: <SourceDetailPage /> },
       {
         path: "sources/new",
@@ -129,20 +136,25 @@ export const routes: RouteObject[] = [
       { path: "account", element: <AccountPage /> },
 
       {
-        path: "research",
-        element: (
-          <RequireRole minimum="researcher">
-            <ResearchHomePage />
-          </RequireRole>
-        ),
-      },
-      {
-        path: "review",
-        element: (
-          <RequireRole minimum="reviewer">
-            <ReviewDashboardPage />
-          </RequireRole>
-        ),
+        element: <WorkspaceLayout />,
+        children: [
+          {
+            path: "research",
+            element: (
+              <RequireRole minimum="researcher">
+                <ResearchHomePage />
+              </RequireRole>
+            ),
+          },
+          {
+            path: "review",
+            element: (
+              <RequireRole minimum="reviewer">
+                <ReviewDashboardPage />
+              </RequireRole>
+            ),
+          },
+        ],
       },
       {
         path: "admin",

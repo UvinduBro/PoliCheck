@@ -1,9 +1,10 @@
 import { SourceCard } from "./SourceCard";
+import { EmptyState } from "@/components/feedback/EmptyState";
 import type { Source } from "@/types";
 
 export function SourceList({ sources }: { sources: Source[] }) {
   if (sources.length === 0) {
-    return <p className="text-sm text-slate-500 dark:text-slate-400">No sources recorded.</p>;
+    return <EmptyState title="No sources recorded" description="No citations are on file for this record yet." />;
   }
   return (
     <ul className="space-y-3">

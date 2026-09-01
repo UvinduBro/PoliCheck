@@ -5,9 +5,9 @@ import type { LegalStatusDashboardData } from "@/types";
 export function LegalStatusSummaryChart({ data }: { data: LegalStatusDashboardData }) {
   const { theme } = useTheme();
   const isDark = theme === "dark";
-  const gridColor = isDark ? "#1e293b" : "#e2e8f0";
-  const tickColor = isDark ? "#94a3b8" : "#64748b";
-  const barColor = isDark ? "#6c8dff" : "#3145d6";
+  const gridColor = isDark ? "#252b33" : "#e4e7eb";
+  const tickColor = isDark ? "#9ba3ae" : "#626873";
+  const barColor = isDark ? "#8a8df6" : "#4744c9";
 
   const chartData = [
     { name: "Criminal", value: data.activeCriminalCases },
@@ -27,12 +27,12 @@ export function LegalStatusSummaryChart({ data }: { data: LegalStatusDashboardDa
           <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: tickColor }} axisLine={{ stroke: gridColor }} tickLine={{ stroke: gridColor }} />
           <Tooltip
             contentStyle={{
-              backgroundColor: isDark ? "#0f172a" : "#ffffff",
-              borderColor: isDark ? "#1e293b" : "#e2e8f0",
+              backgroundColor: isDark ? "#111418" : "#ffffff",
+              borderColor: isDark ? "#252b33" : "#e4e7eb",
               borderRadius: 8,
               fontSize: 13,
             }}
-            labelStyle={{ color: isDark ? "#f1f5f9" : "#0f172a" }}
+            labelStyle={{ color: isDark ? "#f4f6f8" : "#111318" }}
             itemStyle={{ color: tickColor }}
           />
           <Bar dataKey="value" fill={barColor} radius={[4, 4, 0, 0]} />

@@ -3,16 +3,10 @@ import { useAdminMetrics, useAllUsers, usePoliticiansWithIdentityConflicts, useR
 import { useAuth } from "@/hooks/useAuth";
 import { ROLE_LABELS, USER_ROLES } from "@/constants/roles";
 import { formatDate } from "@/lib/formatting/date";
+import { StatCard } from "@/components/data/StatCard";
+import { EmptyState } from "@/components/feedback/EmptyState";
+import { TableSkeleton } from "@/components/feedback/Skeleton";
 import type { UserRole } from "@/types";
-
-function StatTile({ label, value }: { label: string; value: number | string }) {
-  return (
-    <div className="rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 text-center">
-      <p className="text-2xl font-semibold text-slate-900 dark:text-white">{value}</p>
-      <p className="text-xs text-slate-500 dark:text-slate-400">{label}</p>
-    </div>
-  );
-}
 
 export function AdminDashboardPage() {
   const { user } = useAuth();
@@ -26,27 +20,29 @@ export function AdminDashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-xl font-semibold text-slate-900 dark:text-white">Administration</h1>
-        <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+        <h1 className="text-page-heading font-semibold text-ink">Administration</h1>
+        <p className="mt-1 text-sm text-ink-muted">
           Aggregate statistics only — presented as counts, never as an implication of guilt.
         </p>
       </div>
 
       <section>
-        <h2 className="font-semibold text-slate-900 dark:text-white">Dashboard Metrics</h2>
+        <h2 className="text-section-heading font-semibold text-ink">Dashboard Metrics</h2>
         {metricsLoading ? (
-          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Loading metrics...</p>
+          <div className="mt-3">
+            <TableSkeleton rows={2} />
+          </div>
         ) : (
           metrics && (
             <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <StatTile label="Published Profiles" value={metrics.publishedPoliticians} />
-              <StatTile label="Profiles Awaiting Review" value={metrics.pendingPoliticians} />
-              <StatTile label="Convictions" value={metrics.convictions} />
-              <StatTile label="Acquittals" value={metrics.acquittals} />
-              <StatTile label="Pending Appeals" value={metrics.pendingAppeals} />
-              <StatTile label="Open Investigations" value={metrics.openInvestigations} />
-              <StatTile label="Unresolved Identity Conflicts" value={unresolvedIdentity.length} />
-              <StatTile label="Tier 1 / 4 Sources" value={`${metrics.sourcesByTier[1]} / ${metrics.sourcesByTier[4]}`} />
+              <StatCard label="Published Profiles" value={metrics.publishedPoliticians} />
+              <StatCard label="Awaiting Review" value={metrics.pendingPoliticians} />
+              <StatCard label="Convictions" value={metrics.convictions} />
+              <StatCard label="Acquittals" value={metrics.acquittals} />
+              <StatCard label="Pending Appeals" value={metrics.pendingAppeals} />
+              <StatCard label="Open Investigations" value={metrics.openInvestigations} />
+              <StatCard label="Identity Conflicts" value={unresolvedIdentity.length} />
+              <StatCard label="Tier 1 / 4 Sources" value={`${metrics.sourcesByTier[1]} / ${metrics.sourcesByTier[4]}`} />
             </div>
           )
         )}
@@ -54,14 +50,14 @@ export function AdminDashboardPage() {
 
       {unresolvedIdentity.length > 0 && (
         <section>
-          <h2 className="font-semibold text-slate-900 dark:text-white">Profiles with Unresolved Identity Conflicts</h2>
-          <ul className="mt-2 divide-y divide-slate-200 dark:divide-slate-800 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+          <h2 className="text-section-heading font-semibold text-ink">Profiles with Unresolved Identity Conflicts</h2>
+          <ul className="mt-3 divide-y divide-line rounded-lg border border-line bg-surface">
             {unresolvedIdentity.map((p) => (
-              <li key={p.id} className="px-4 py-2 text-sm">
-                <Link to={`/politicians/${p.id}/overview`} className="text-brand-700 hover:underline dark:text-brand-400">
+              <li key={p.id} className="px-4 py-2.5 text-sm">
+                <Link to={`/politicians/${p.id}/overview`} className="font-medium text-ink hover:text-accent">
                   {p.fullName}
                 </Link>{" "}
-                <span className="text-slate-500 dark:text-slate-400">({p.country})</span>
+                <span className="text-ink-faint">({p.country})</span>
               </li>
             ))}
           </ul>
@@ -69,26 +65,32 @@ export function AdminDashboardPage() {
       )}
 
       <section>
-        <h2 className="font-semibold text-slate-900 dark:text-white">Users &amp; Roles</h2>
+        <h2 className="text-section-heading font-semibold text-ink">Users &amp; Roles</h2>
         {usersLoading ? (
-          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Loading users...</p>
+          <div className="mt-3">
+            <TableSkeleton rows={5} />
+          </div>
+        ) : users.length === 0 ? (
+          <div className="mt-3">
+            <EmptyState title="No users found" />
+          </div>
         ) : (
-          <div className="mt-2 overflow-x-auto rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-            <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800 text-sm">
-              <thead className="bg-slate-50 dark:bg-slate-800/60">
+          <div className="mt-3 overflow-x-auto rounded-lg border border-line bg-surface">
+            <table className="min-w-full divide-y divide-line text-sm">
+              <thead className="bg-surface-2">
                 <tr>
-                  <th className="px-4 py-2 text-left font-semibold text-slate-700 dark:text-slate-300">Name</th>
-                  <th className="px-4 py-2 text-left font-semibold text-slate-700 dark:text-slate-300">Email</th>
-                  <th className="px-4 py-2 text-left font-semibold text-slate-700 dark:text-slate-300">Role</th>
-                  <th className="px-4 py-2 text-left font-semibold text-slate-700 dark:text-slate-300">Active</th>
+                  <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-ink-muted">Name</th>
+                  <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-ink-muted">Email</th>
+                  <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-ink-muted">Role</th>
+                  <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-ink-muted">Active</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
+              <tbody className="divide-y divide-line">
                 {users.map((u) => (
-                  <tr key={u.uid}>
-                    <td className="px-4 py-2">{u.displayName || "—"}</td>
-                    <td className="px-4 py-2">{u.email}</td>
-                    <td className="px-4 py-2">
+                  <tr key={u.uid} className="hover:bg-surface-2/60">
+                    <td className="px-4 py-2.5 font-medium text-ink">{u.displayName || "—"}</td>
+                    <td className="px-4 py-2.5 text-ink-muted">{u.email}</td>
+                    <td className="px-4 py-2.5">
                       <select
                         aria-label={`Role for ${u.displayName || u.email}`}
                         className="input"
@@ -100,10 +102,10 @@ export function AdminDashboardPage() {
                         ))}
                       </select>
                     </td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-2.5">
                       <button
                         type="button"
-                        className="btn-secondary"
+                        className="btn-secondary text-xs"
                         onClick={() => setActive.mutate({ uid: u.uid, isActive: !u.isActive })}
                       >
                         {u.isActive ? "Deactivate" : "Activate"}
@@ -118,29 +120,35 @@ export function AdminDashboardPage() {
       </section>
 
       <section>
-        <h2 className="font-semibold text-slate-900 dark:text-white">Recent Audit Log</h2>
-        <div className="mt-2 max-h-96 overflow-y-auto rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-          <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800 text-sm">
-            <thead className="bg-slate-50 dark:bg-slate-800/60">
-              <tr>
-                <th className="px-4 py-2 text-left font-semibold text-slate-700 dark:text-slate-300">When</th>
-                <th className="px-4 py-2 text-left font-semibold text-slate-700 dark:text-slate-300">Actor</th>
-                <th className="px-4 py-2 text-left font-semibold text-slate-700 dark:text-slate-300">Action</th>
-                <th className="px-4 py-2 text-left font-semibold text-slate-700 dark:text-slate-300">Entity</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
-              {auditLogs.map((log) => (
-                <tr key={log.id}>
-                  <td className="px-4 py-2">{formatDate(log.createdAt, "d MMM yyyy HH:mm")}</td>
-                  <td className="px-4 py-2">{log.actorId}</td>
-                  <td className="px-4 py-2">{log.action}</td>
-                  <td className="px-4 py-2">{log.entityType} / {log.entityId}</td>
+        <h2 className="text-section-heading font-semibold text-ink">Recent Audit Log</h2>
+        {auditLogs.length === 0 ? (
+          <div className="mt-3">
+            <EmptyState title="No audit activity yet" />
+          </div>
+        ) : (
+          <div className="mt-3 max-h-96 overflow-y-auto rounded-lg border border-line bg-surface">
+            <table className="min-w-full divide-y divide-line text-sm">
+              <thead className="sticky top-0 bg-surface-2">
+                <tr>
+                  <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-ink-muted">When</th>
+                  <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-ink-muted">Actor</th>
+                  <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-ink-muted">Action</th>
+                  <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-ink-muted">Entity</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-line">
+                {auditLogs.map((log) => (
+                  <tr key={log.id} className="hover:bg-surface-2/60">
+                    <td className="whitespace-nowrap px-4 py-2.5 text-ink-muted">{formatDate(log.createdAt, "d MMM yyyy HH:mm")}</td>
+                    <td className="px-4 py-2.5 text-ink-muted">{log.actorId}</td>
+                    <td className="px-4 py-2.5 font-medium text-ink">{log.action}</td>
+                    <td className="px-4 py-2.5 text-ink-muted">{log.entityType} / {log.entityId}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </section>
     </div>
   );
