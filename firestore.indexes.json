@@ -1,0 +1,62 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "politicians",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "publicationStatus", "order": "ASCENDING" },
+        { "fieldPath": "fullName", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "politicians",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "publicationStatus", "order": "ASCENDING" },
+        { "fieldPath": "updatedAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "politicians",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "country", "order": "ASCENDING" },
+        { "fieldPath": "publicationStatus", "order": "ASCENDING" },
+        { "fieldPath": "fullName", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "cases",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "politicianIds", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "publicationStatus", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "investigations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "politicianIds", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "publicationStatus", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "legalEvents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "politicianIds", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "publicationStatus", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "reports",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "politicianId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

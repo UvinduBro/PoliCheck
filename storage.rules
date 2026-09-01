@@ -1,0 +1,54 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+    function isResearcher() {
+      return signedIn() && (
+        request.auth.token.role == "researcher" ||
+        request.auth.token.role == "reviewer" ||
+        request.auth.token.role == "admin"
+      );
+    }
+
+    function isAllowedType() {
+      return request.resource.contentType.matches("application/pdf")
+        || request.resource.contentType.matches("image/png")
+        || request.resource.contentType.matches("image/jpeg")
+        || request.resource.contentType.matches("image/webp");
+    }
+
+    function isUnderSizeLimit() {
+      return request.resource.size < 25 * 1024 * 1024;
+    }
+
+    // research/{politicians|cases|sources|reports}/{entityId}/{fileName}
+    match /research/{kind}/{entityId}/{fileName} {
+      allow read: if true;
+      allow write: if isResearcher() && isAllowedType() && isUnderSizeLimit();
+      allow delete: if false;
+    }
+
+    // research/user-uploads/{uid}/{fileName} — private working files, owner + admin only.
+    match /research/user-uploads/{uid}/{fileName} {
+      allow read: if signedIn() && (request.auth.uid == uid || request.auth.token.role == "admin");
+      allow write: if signedIn() && request.auth.uid == uid && isAllowedType() && isUnderSizeLimit();
+      allow delete: if false;
+    }
+
+    // User profile images.
+    match /research/profile-images/{uid}/{fileName} {
+      allow read: if true;
+      allow write: if signedIn() && request.auth.uid == uid
+        && (request.resource.contentType.matches("image/png") || request.resource.contentType.matches("image/jpeg") || request.resource.contentType.matches("image/webp"))
+        && isUnderSizeLimit();
+      allow delete: if false;
+    }
+
+    match /{allOtherPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

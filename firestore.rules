@@ -1,0 +1,143 @@
+rules_version = '2';
+
+// Roles are read from a Firebase custom claim (request.auth.token.role), set server-side
+// by the Cloud Function in functions/src/index.ts whenever users/{uid}.role changes. Never
+// trust a client-supplied role field for authorization decisions.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+    function isAdmin() {
+      return signedIn() && request.auth.token.role == "admin";
+    }
+    function isReviewer() {
+      return signedIn() && (request.auth.token.role == "reviewer" || request.auth.token.role == "admin");
+    }
+    function isResearcher() {
+      return signedIn() && (
+        request.auth.token.role == "researcher" ||
+        request.auth.token.role == "reviewer" ||
+        request.auth.token.role == "admin"
+      );
+    }
+    function isOwner(data) {
+      return signedIn() && data.createdBy == request.auth.uid;
+    }
+    // Researchers may only create/save records in draft or review; only a reviewer/admin
+    // may move a record to "published" or "archived" (spec section 10, steps 6-7).
+    function publicationTransitionAllowed(newStatus) {
+      return newStatus in ["draft", "review"] ? isResearcher() : isReviewer();
+    }
+
+    match /politicians/{politicianId} {
+      allow read: if resource.data.publicationStatus == "published" || isResearcher();
+      allow create: if isResearcher()
+        && request.resource.data.createdBy == request.auth.uid
+        && publicationTransitionAllowed(request.resource.data.publicationStatus);
+      allow update: if (isOwner(resource.data) || isReviewer())
+        && publicationTransitionAllowed(request.resource.data.publicationStatus);
+      allow delete: if isAdmin();
+    }
+
+    match /politicalPositions/{positionId} {
+      // Career history carries no allegations (unlike cases/claims/investigations, which
+      // are always gated on publicationStatus), so it is not treated as sensitive.
+      allow read: if true;
+      allow create: if isResearcher() && request.resource.data.createdBy == request.auth.uid;
+      allow update: if isOwner(resource.data) || isReviewer();
+      allow delete: if isAdmin();
+    }
+
+    match /cases/{caseId} {
+      allow read: if resource.data.publicationStatus == "published" || isResearcher();
+      allow create: if isResearcher()
+        && request.resource.data.createdBy == request.auth.uid
+        && publicationTransitionAllowed(request.resource.data.publicationStatus);
+      allow update: if (isOwner(resource.data) || isReviewer())
+        && publicationTransitionAllowed(request.resource.data.publicationStatus);
+      allow delete: if isAdmin();
+    }
+
+    match /investigations/{investigationId} {
+      allow read: if resource.data.publicationStatus == "published" || isResearcher();
+      allow create: if isResearcher()
+        && request.resource.data.createdBy == request.auth.uid
+        && publicationTransitionAllowed(request.resource.data.publicationStatus);
+      allow update: if (isOwner(resource.data) || isReviewer())
+        && publicationTransitionAllowed(request.resource.data.publicationStatus);
+      allow delete: if isAdmin();
+    }
+
+    match /legalEvents/{eventId} {
+      allow read: if resource.data.publicationStatus == "published" || isResearcher();
+      allow create: if isResearcher()
+        && request.resource.data.createdBy == request.auth.uid
+        && publicationTransitionAllowed(request.resource.data.publicationStatus);
+      allow update: if (isOwner(resource.data) || isReviewer())
+        && publicationTransitionAllowed(request.resource.data.publicationStatus);
+      allow delete: if isAdmin();
+    }
+
+    match /claims/{claimId} {
+      allow read: if resource.data.reviewStatus == "approved" || isResearcher();
+      allow create: if isResearcher() && request.resource.data.createdBy == request.auth.uid;
+      allow update: if isOwner(resource.data) || isReviewer();
+      allow delete: if isAdmin();
+    }
+
+    match /sources/{sourceId} {
+      allow read: if isResearcher() || resource.data.verificationStatus == "verified";
+      allow create: if isResearcher() && request.resource.data.createdBy == request.auth.uid;
+      allow update: if isOwner(resource.data) || isReviewer();
+      allow delete: if isAdmin();
+    }
+
+    match /reports/{reportId} {
+      allow read: if resource.data.status == "published" || isResearcher();
+      allow create: if isResearcher()
+        && request.resource.data.createdBy == request.auth.uid
+        && publicationTransitionAllowed(request.resource.data.status);
+      allow update: if (isOwner(resource.data) || isReviewer())
+        && publicationTransitionAllowed(request.resource.data.status);
+      allow delete: if isAdmin();
+    }
+
+    match /correctionRequests/{requestId} {
+      // Anyone — including the anonymous public — can report an error on a published
+      // profile (spec section 17); only a reviewer/admin can read the queue or resolve it.
+      allow read: if isReviewer();
+      allow create: if request.resource.data.description is string
+        && request.resource.data.description.size() > 0
+        && request.resource.data.description.size() < 2000
+        && request.resource.data.status == "open";
+      allow update: if isReviewer();
+      allow delete: if isAdmin();
+    }
+
+    match /auditLogs/{auditLogId} {
+      allow read: if isAdmin();
+      // Append-only: any signed-in user may log their own action; nobody may forge another actor's entry.
+      allow create: if signedIn() && request.resource.data.actorId == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    match /users/{userId} {
+      allow read: if signedIn() && (request.auth.uid == userId || isAdmin());
+      // New accounts self-provision at the lowest privilege level only.
+      allow create: if signedIn() && request.auth.uid == userId
+        && request.resource.data.uid == userId
+        && request.resource.data.role == "public"
+        && request.resource.data.isActive == true;
+      // A user may edit their own profile but can never change their own role or active
+      // flag — only an admin can promote/demote or deactivate an account.
+      allow update: if isAdmin()
+        || (
+          signedIn() && request.auth.uid == userId
+          && request.resource.data.role == resource.data.role
+          && request.resource.data.isActive == resource.data.isActive
+        );
+      allow delete: if isAdmin();
+    }
+  }
+}
