@@ -2,7 +2,6 @@ import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   onAuthStateChanged,
-  sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -50,7 +49,6 @@ export async function registerWithEmail(
   );
   await updateProfile(credential.user, { displayName });
   await ensureUserProfileDoc(credential.user, displayName);
-  await sendEmailVerification(credential.user);
   return credential.user;
 }
 
@@ -72,12 +70,6 @@ export async function loginWithGoogle() {
 
 export async function requestPasswordReset(email: string) {
   await sendPasswordResetEmail(getFirebaseAuth(), email);
-}
-
-export async function resendEmailVerification() {
-  const user = getFirebaseAuth().currentUser;
-  if (!user) throw new Error("No authenticated user.");
-  await sendEmailVerification(user);
 }
 
 export async function signOut() {
