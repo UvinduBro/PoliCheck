@@ -1,7 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import ReactMarkdown from "react-markdown";
 import type { PoliticianOutletContext } from "../PoliticianProfileLayout";
 import { usePoliticianCases, usePoliticianEvents, usePoliticianInvestigations, usePoliticianSources } from "../api";
 import { usePoliticianClaims } from "@/features/cases/api";
@@ -11,6 +10,9 @@ import { can } from "@/lib/permissions/roles";
 import { buildReportMarkdown } from "@/lib/reports/buildReportMarkdown";
 import { casesToCsv, triggerDownload } from "@/lib/export/download";
 import { formatDate } from "@/lib/formatting/date";
+import { ReportDocument } from "@/components/reports/ReportDocument";
+import { ConfidenceBadge } from "@/components/status/ConfidenceBadge";
+import { EmptyState } from "@/components/feedback/EmptyState";
 
 export function ReportTab() {
   const { politician } = useOutletContext<PoliticianOutletContext>();
@@ -75,7 +77,7 @@ export function ReportTab() {
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Full Report</h2>
+        <h2 className="text-lg font-semibold text-ink">Full Report</h2>
         <div className="flex flex-wrap gap-2">
           {can.createRecords(userProfile?.role) && (
             <button type="button" className="btn-secondary" onClick={onGenerate} disabled={generating}>
@@ -95,21 +97,23 @@ export function ReportTab() {
         </div>
       </div>
 
-      {!latestReport && (
-        <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
-          No report has been generated for this profile yet.
-        </p>
-      )}
-
-      {latestReport && (
-        <article className="card prose prose-sm mt-4 max-w-none p-6">
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Report status: {latestReport.status} · Confidence: {latestReport.confidenceLevel} · Research date:{" "}
-            {formatDate(latestReport.researchDate)}
-          </p>
+      {!latestReport ? (
+        <div className="mt-4">
+          <EmptyState
+            title="No report has been generated yet"
+            description="Generate a report from the current, verified data on file for this profile."
+          />
+        </div>
+      ) : (
+        <div className="card mt-4 p-6">
           {/* react-markdown renders Markdown to React elements without a raw-HTML plugin, so no dangerouslySetInnerHTML is involved and inline HTML in the source is never executed. */}
-          <ReactMarkdown>{latestReport.contentMarkdown}</ReactMarkdown>
-        </article>
+          <ReportDocument
+            title="Full Report"
+            badges={<ConfidenceBadge level={latestReport.confidenceLevel} />}
+            meta={`Report status: ${latestReport.status} · Research date: ${formatDate(latestReport.researchDate)}`}
+            markdown={latestReport.contentMarkdown}
+          />
+        </div>
       )}
     </div>
   );

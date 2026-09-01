@@ -22,15 +22,21 @@ export const STATUS_BADGE_LABELS: Record<StatusBadgeKey, string> = {
   UNKNOWN: "UNKNOWN",
 };
 
+/**
+ * Semantic status color mapping (design spec §10): green = verified/clear, amber =
+ * pending/investigation/unclear, red = conviction/incarceration, blue = informational,
+ * gray = unknown. Backed by the CivicLens status tokens so light/dark stay in sync from
+ * one place — color is always paired with an icon + label, never used alone.
+ */
 export const STATUS_BADGE_CLASSES: Record<StatusBadgeKey, string> = {
-  VERIFIED: "bg-green-100 text-green-900 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800",
-  ALLEGATION: "bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800",
-  UNDER_INVESTIGATION: "bg-blue-100 text-blue-900 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800",
-  CASE_PENDING: "bg-indigo-100 text-indigo-900 border-indigo-300 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800",
-  CONVICTED: "bg-red-100 text-red-900 border-red-300 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800",
-  ACQUITTED: "bg-teal-100 text-teal-900 border-teal-300 dark:bg-teal-900/30 dark:text-teal-300 dark:border-teal-800",
-  INCARCERATED: "bg-orange-100 text-orange-900 border-orange-300 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800",
-  UNKNOWN: "bg-slate-100 text-slate-800 border-slate-300 dark:bg-slate-800/60 dark:text-slate-300 dark:border-slate-700",
+  VERIFIED: "bg-status-verified-bg text-status-verified border-status-verified/25",
+  ALLEGATION: "bg-status-pending-bg text-status-pending border-status-pending/25",
+  UNDER_INVESTIGATION: "bg-status-info-bg text-status-info border-status-info/25",
+  CASE_PENDING: "bg-status-info-bg text-status-info border-status-info/25",
+  CONVICTED: "bg-status-critical-bg text-status-critical border-status-critical/25",
+  ACQUITTED: "bg-status-verified-bg text-status-verified border-status-verified/25",
+  INCARCERATED: "bg-status-critical-bg text-status-critical border-status-critical/25",
+  UNKNOWN: "bg-status-neutral-bg text-status-neutral border-status-neutral/25",
 };
 
 export const CASE_STAGE_LABELS: Record<CaseStage, string> = {
@@ -87,4 +93,15 @@ export const FREEDOM_STATUS_LABELS: Record<FreedomStatus, string> = {
   wanted: "Wanted / Warrant Active",
   travel_restricted: "Travel Restricted",
   unknown: "Unknown",
+};
+
+/** The headline sentence on the dominant legal-status card (design spec §10). */
+export const FREEDOM_STATUS_STATEMENT: Record<FreedomStatus, string> = {
+  free: "No current incarceration verified",
+  incarcerated: "Currently incarcerated",
+  detained: "Currently detained in custody",
+  on_bail: "Released on bail, case ongoing",
+  wanted: "Wanted — an active warrant is on record",
+  travel_restricted: "Free, subject to a travel restriction",
+  unknown: "Current status could not be conclusively verified",
 };

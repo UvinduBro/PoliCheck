@@ -82,8 +82,8 @@ export function ClaimFormPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="text-xl font-semibold text-slate-900 dark:text-white">Add a Claim</h1>
-      <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+      <h1 className="text-page-heading font-semibold text-ink">Add a Claim</h1>
+      <p className="mt-1 text-sm text-ink-muted">
         Every claim is classified — verified fact, court finding, formal allegation, investigation, media
         report, or political claim — so readers never mistake an accusation for a conviction.
       </p>
@@ -101,7 +101,7 @@ export function ClaimFormPage() {
         <div>
           <label className="label" htmlFor="text">Claim text</label>
           <textarea id="text" rows={3} className="input" {...register("text")} />
-          {errors.text && <p className="mt-1 text-sm text-red-700">{errors.text.message}</p>}
+          {errors.text && <p className="mt-1 text-sm text-status-critical">{errors.text.message}</p>}
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
@@ -120,7 +120,7 @@ export function ClaimFormPage() {
           </div>
         </div>
         {stageMismatch && relatedCase && (
-          <p className="text-sm text-amber-800">
+          <p className="text-sm text-status-pending">
             Warning: case stage is "{relatedCase.legalStage}", which does not support this classification.
           </p>
         )}
@@ -138,17 +138,17 @@ export function ClaimFormPage() {
         </div>
         <fieldset>
           <legend className="label">Sources (at least one required)</legend>
-          <div className="max-h-48 space-y-1 overflow-y-auto rounded-md border border-slate-300 p-2">
+          <div className="max-h-48 space-y-1 overflow-y-auto rounded-md border border-line p-2">
             {sources.map((s) => (
               <label key={s.id} className="flex items-center gap-2 text-sm">
                 <input type="checkbox" value={s.id} {...register("sourceIds")} />
-                {s.title} <span className="text-xs text-slate-500 dark:text-slate-400">(Tier {s.tier})</span>
+                {s.title} <span className="text-xs text-ink-faint">(Tier {s.tier})</span>
               </label>
             ))}
           </div>
-          {errors.sourceIds && <p className="mt-1 text-sm text-red-700">{errors.sourceIds.message}</p>}
+          {errors.sourceIds && <p className="mt-1 text-sm text-status-critical">{errors.sourceIds.message}</p>}
         </fieldset>
-        {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
+        {error && <p role="alert" className="text-sm text-status-critical">{error}</p>}
         <button type="submit" className="btn-primary" disabled={isSubmitting}>
           {isSubmitting ? "Saving..." : "Save claim for review"}
         </button>

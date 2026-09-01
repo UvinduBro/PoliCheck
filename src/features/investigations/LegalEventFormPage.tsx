@@ -59,7 +59,7 @@ export function LegalEventFormPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="text-xl font-semibold text-slate-900 dark:text-white">Add a Legal Timeline Event</h1>
+      <h1 className="text-page-heading font-semibold text-ink">Add a Legal Timeline Event</h1>
       <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div>
           <label className="label" htmlFor="politicianIds">Politician ID(s), comma-separated</label>
@@ -78,7 +78,7 @@ export function LegalEventFormPage() {
           <div>
             <label className="label" htmlFor="date">Date</label>
             <input id="date" className="input" placeholder="YYYY-MM-DD" {...register("date")} />
-            {errors.date && <p className="mt-1 text-sm text-red-700">{errors.date.message}</p>}
+            {errors.date && <p className="mt-1 text-sm text-status-critical">{errors.date.message}</p>}
           </div>
           <div>
             <label className="label" htmlFor="eventType">Event type</label>
@@ -90,12 +90,12 @@ export function LegalEventFormPage() {
         <div>
           <label className="label" htmlFor="title">Title</label>
           <input id="title" className="input" {...register("title")} />
-          {errors.title && <p className="mt-1 text-sm text-red-700">{errors.title.message}</p>}
+          {errors.title && <p className="mt-1 text-sm text-status-critical">{errors.title.message}</p>}
         </div>
         <div>
           <label className="label" htmlFor="description">Description</label>
           <textarea id="description" rows={3} className="input" {...register("description")} />
-          {errors.description && <p className="mt-1 text-sm text-red-700">{errors.description.message}</p>}
+          {errors.description && <p className="mt-1 text-sm text-status-critical">{errors.description.message}</p>}
         </div>
         <div>
           <label className="label" htmlFor="legalSignificance">Legal significance</label>
@@ -103,17 +103,17 @@ export function LegalEventFormPage() {
         </div>
         <fieldset>
           <legend className="label">Sources (at least one required)</legend>
-          <div className="max-h-48 space-y-1 overflow-y-auto rounded-md border border-slate-300 p-2">
+          <div className="max-h-48 space-y-1 overflow-y-auto rounded-md border border-line p-2">
             {sources.map((s) => (
               <label key={s.id} className="flex items-center gap-2 text-sm">
                 <input type="checkbox" value={s.id} {...register("sourceIds")} />
-                {s.title} <span className="text-xs text-slate-500 dark:text-slate-400">(Tier {s.tier})</span>
+                {s.title} <span className="text-xs text-ink-faint">(Tier {s.tier})</span>
               </label>
             ))}
           </div>
-          {errors.sourceIds && <p className="mt-1 text-sm text-red-700">{errors.sourceIds.message}</p>}
+          {errors.sourceIds && <p className="mt-1 text-sm text-status-critical">{errors.sourceIds.message}</p>}
         </fieldset>
-        {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
+        {error && <p role="alert" className="text-sm text-status-critical">{error}</p>}
         <button type="submit" className="btn-primary" disabled={isSubmitting}>
           {isSubmitting ? "Saving..." : "Save event"}
         </button>

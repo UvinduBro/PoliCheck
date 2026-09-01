@@ -1,74 +1,136 @@
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Archive, FileText, ScrollText } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useSource } from "./api";
 import { SourceTierBadge } from "@/components/sources/SourceTierBadge";
-import { SOURCE_TIER_DESCRIPTIONS, SOURCE_TYPE_LABELS } from "@/constants/sourceTiers";
+import { ErrorState } from "@/components/feedback/ErrorState";
+import { CardSkeleton, Skeleton } from "@/components/feedback/Skeleton";
+import { SOURCE_TIER_DESCRIPTIONS, SOURCE_TYPE_LABELS, TIER_1_SOURCE_TYPES } from "@/constants/sourceTiers";
 import { formatDate } from "@/lib/formatting/date";
+
+const VERIFICATION_LABELS: Record<string, string> = {
+  unverified: "Unverified",
+  partially_verified: "Partially verified",
+  verified: "Verified",
+  disputed: "Disputed",
+};
+
+const VERIFICATION_CLASSES: Record<string, string> = {
+  unverified: "text-ink-muted",
+  partially_verified: "text-status-pending",
+  verified: "text-status-verified",
+  disputed: "text-status-critical",
+};
 
 export function SourceDetailPage() {
   const { sourceId } = useParams();
   const { data: source, isLoading, error } = useSource(sourceId);
 
-  if (isLoading) return <p className="text-sm text-slate-500 dark:text-slate-400">Loading source...</p>;
-  if (error || !source) {
+  if (isLoading) {
     return (
-      <div className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-800">
-        This source could not be found, or you do not have access to view it.
+      <div className="mx-auto max-w-2xl">
+        <Skeleton className="h-7 w-2/3" />
+        <Skeleton className="mt-3 h-4 w-1/3" />
+        <div className="mt-6">
+          <CardSkeleton />
+        </div>
       </div>
     );
   }
 
+  if (error || !source) {
+    return (
+      <div className="mx-auto max-w-2xl">
+        <ErrorState
+          title="Source not found"
+          description="This source could not be found, or you do not have access to view it."
+        />
+      </div>
+    );
+  }
+
+  const isPrimary = TIER_1_SOURCE_TYPES.includes(source.sourceType);
+
   return (
     <div className="mx-auto max-w-2xl">
-      <div className="flex items-start justify-between gap-3">
-        <h1 className="text-xl font-semibold text-slate-900 dark:text-white">{source.title}</h1>
-        <SourceTierBadge tier={source.tier} />
+      <div className="card overflow-hidden">
+        {isPrimary && (
+          <div className="flex items-center gap-1.5 border-b border-status-verified/20 bg-status-verified-bg px-5 py-1.5 text-xs font-semibold uppercase tracking-wide text-status-verified">
+            <ScrollText size={12} aria-hidden="true" />
+            {SOURCE_TYPE_LABELS[source.sourceType]} · Primary source
+          </div>
+        )}
+
+        <div className="p-5 sm:p-6">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <h1 className="text-lg font-semibold leading-snug text-ink sm:text-xl">{source.title}</h1>
+            <SourceTierBadge tier={source.tier} />
+          </div>
+
+          <p className="mt-1.5 text-sm text-ink-muted">
+            {source.publisher}
+            {!isPrimary && ` · ${SOURCE_TYPE_LABELS[source.sourceType]}`}
+            {source.author && ` · ${source.author}`}
+          </p>
+          <p className="mt-2 text-xs text-ink-faint">{SOURCE_TIER_DESCRIPTIONS[source.tier]}</p>
+
+          <div className="mt-4 flex flex-wrap gap-3">
+            <a
+              href={source.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-secondary gap-1.5 text-sm"
+            >
+              <ExternalLink size={14} aria-hidden="true" />
+              View original source
+            </a>
+            {source.archiveUrl && (
+              <a
+                href={source.archiveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-ghost gap-1.5 text-sm"
+              >
+                <Archive size={14} aria-hidden="true" />
+                View archived copy
+              </a>
+            )}
+          </div>
+
+          {source.summary && (
+            <p className="mt-5 border-t border-line pt-4 text-sm leading-relaxed text-ink">{source.summary}</p>
+          )}
+
+          <dl className="mt-5 grid grid-cols-1 gap-x-6 gap-y-3 border-t border-line pt-4 text-sm sm:grid-cols-2">
+            <div>
+              <dt className="text-xs font-medium uppercase tracking-wide text-ink-faint">Publication date</dt>
+              <dd className="mt-0.5 text-ink">{source.publicationDate ? formatDate(source.publicationDate) : "Unknown"}</dd>
+            </div>
+            <div>
+              <dt className="text-xs font-medium uppercase tracking-wide text-ink-faint">Document date</dt>
+              <dd className="mt-0.5 text-ink">{source.documentDate ? formatDate(source.documentDate) : "N/A"}</dd>
+            </div>
+            <div>
+              <dt className="text-xs font-medium uppercase tracking-wide text-ink-faint">Accessed</dt>
+              <dd className="mt-0.5 text-ink">{formatDate(source.accessedAt)}</dd>
+            </div>
+            <div>
+              <dt className="text-xs font-medium uppercase tracking-wide text-ink-faint">Verification status</dt>
+              <dd className={`mt-0.5 font-medium ${VERIFICATION_CLASSES[source.verificationStatus] ?? "text-ink"}`}>
+                {VERIFICATION_LABELS[source.verificationStatus] ?? source.verificationStatus}
+              </dd>
+            </div>
+          </dl>
+
+          {source.notes && (
+            <div className="mt-5 flex gap-2 rounded-lg border border-line bg-surface-2 p-3 text-xs text-ink-muted">
+              <FileText size={14} className="mt-0.5 shrink-0 text-ink-faint" aria-hidden="true" />
+              <p>
+                <span className="font-medium text-ink">Notes:</span> {source.notes}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
-      <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{source.publisher} &middot; {SOURCE_TYPE_LABELS[source.sourceType]}</p>
-      <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">{SOURCE_TIER_DESCRIPTIONS[source.tier]}</p>
-
-      <a
-        href={source.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-4 inline-flex items-center gap-1 text-brand-700 hover:underline dark:text-brand-400"
-      >
-        View original source <ExternalLink size={14} aria-hidden="true" />
-      </a>
-      {source.archiveUrl && (
-        <a
-          href={source.archiveUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-2 flex items-center gap-1 text-brand-700 hover:underline dark:text-brand-400"
-        >
-          View archived copy <ExternalLink size={14} aria-hidden="true" />
-        </a>
-      )}
-
-      {source.summary && <p className="mt-4 text-sm text-slate-800 dark:text-slate-200">{source.summary}</p>}
-
-      <dl className="mt-6 divide-y divide-slate-200 dark:divide-slate-800 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm">
-        <div className="flex justify-between px-4 py-2">
-          <dt className="text-slate-500 dark:text-slate-400">Publication date</dt>
-          <dd>{source.publicationDate ? formatDate(source.publicationDate) : "Unknown"}</dd>
-        </div>
-        <div className="flex justify-between px-4 py-2">
-          <dt className="text-slate-500 dark:text-slate-400">Document date</dt>
-          <dd>{source.documentDate ? formatDate(source.documentDate) : "N/A"}</dd>
-        </div>
-        <div className="flex justify-between px-4 py-2">
-          <dt className="text-slate-500 dark:text-slate-400">Accessed</dt>
-          <dd>{formatDate(source.accessedAt)}</dd>
-        </div>
-        <div className="flex justify-between px-4 py-2">
-          <dt className="text-slate-500 dark:text-slate-400">Verification status</dt>
-          <dd className="capitalize">{source.verificationStatus.replace("_", " ")}</dd>
-        </div>
-      </dl>
-      {source.notes && (
-        <p className="mt-4 text-xs text-slate-500 dark:text-slate-400"><span className="font-medium">Notes:</span> {source.notes}</p>
-      )}
     </div>
   );
 }

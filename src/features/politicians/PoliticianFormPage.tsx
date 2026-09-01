@@ -67,10 +67,10 @@ export function PoliticianFormPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="text-xl font-semibold text-slate-900 dark:text-white">
+      <h1 className="text-page-heading font-semibold text-ink">
         {isEditing ? "Edit Politician Profile" : "Add a New Politician"}
       </h1>
-      <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+      <p className="mt-1 text-sm text-ink-muted">
         Verify identity carefully before adding legal records. If multiple people share this name, create
         separate profiles rather than merging them.
       </p>
@@ -79,7 +79,7 @@ export function PoliticianFormPage() {
         <div>
           <label className="label" htmlFor="fullName">Full legal name</label>
           <input id="fullName" className="input" {...register("fullName")} />
-          {errors.fullName && <p className="mt-1 text-sm text-red-700">{errors.fullName.message}</p>}
+          {errors.fullName && <p className="mt-1 text-sm text-status-critical">{errors.fullName.message}</p>}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
@@ -105,7 +105,7 @@ export function PoliticianFormPage() {
           <div>
             <label className="label" htmlFor="country">Country</label>
             <input id="country" className="input" {...register("country")} />
-            {errors.country && <p className="mt-1 text-sm text-red-700">{errors.country.message}</p>}
+            {errors.country && <p className="mt-1 text-sm text-status-critical">{errors.country.message}</p>}
           </div>
           <div>
             <label className="label" htmlFor="nationality">Nationality</label>
@@ -155,7 +155,7 @@ export function PoliticianFormPage() {
           </select>
         </div>
 
-        {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
+        {error && <p role="alert" className="text-sm text-status-critical">{error}</p>}
 
         <button type="submit" className="btn-primary" disabled={isSubmitting}>
           {isSubmitting ? "Saving..." : isEditing ? "Save changes" : "Create draft profile"}

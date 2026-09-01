@@ -3,21 +3,18 @@ import type { PoliticianOutletContext } from "../PoliticianProfileLayout";
 import { useLegalStatusDashboard } from "../api";
 import { useAuth } from "@/hooks/useAuth";
 import { buildLegalStatusDashboard } from "@/lib/legal-status/dashboard";
-import { FreedomStatusBadge } from "@/components/status/FreedomStatusBadge";
-import { ConfidenceBadge } from "@/components/status/ConfidenceBadge";
+import { LegalStatusCard } from "@/components/profile/LegalStatusCard";
 import { LegalStatusSummaryChart } from "@/components/charts/LegalStatusSummaryChart";
-import { formatDate } from "@/lib/formatting/date";
+import { StatCard } from "@/components/data/StatCard";
+import { CardGridSkeleton } from "@/components/feedback/Skeleton";
 
 const RISK_LABELS: Record<string, string> = { high: "High", medium: "Medium", low: "Low", unknown: "Unknown" };
-
-function StatTile({ label, value }: { label: string; value: number | string }) {
-  return (
-    <div className="rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 text-center">
-      <p className="text-2xl font-semibold text-slate-900 dark:text-white">{value}</p>
-      <p className="text-xs text-slate-500 dark:text-slate-400">{label}</p>
-    </div>
-  );
-}
+const RISK_CLASSNAMES: Record<string, string> = {
+  high: "text-status-critical",
+  medium: "text-status-pending",
+  low: "text-status-verified",
+  unknown: "text-status-neutral",
+};
 
 export function LegalStatusTab() {
   const { politician } = useOutletContext<PoliticianOutletContext>();
@@ -25,47 +22,42 @@ export function LegalStatusTab() {
   const { cases, investigations, events, sources, isLoading } = useLegalStatusDashboard(politician.id, userProfile?.role);
   const dashboard = buildLegalStatusDashboard({ cases, investigations, events, sources });
 
-  if (isLoading) return <p className="text-sm text-slate-500 dark:text-slate-400">Loading legal status...</p>;
+  if (isLoading) return <CardGridSkeleton count={4} />;
 
   return (
     <div className="space-y-6">
-      <section className="card p-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Current Legal Status Dashboard</h2>
-          <div className="flex items-center gap-2">
-            <FreedomStatusBadge status={dashboard.freedomStatus} />
-            <ConfidenceBadge level={dashboard.freedomStatusConfidence} />
-          </div>
-        </div>
+      <LegalStatusCard
+        status={dashboard.freedomStatus}
+        confidence={dashboard.freedomStatusConfidence}
+        lastVerified={politician.lastResearchedAt}
+        hasConflict={dashboard.hasConflictingSources}
+        evidenceHref={`/politicians/${politician.id}/timeline`}
+      />
 
-        {dashboard.freedomStatusConfidence === "unresolved" && (
-          <p className="mt-3 rounded-md bg-slate-50 dark:bg-slate-800/60 p-3 text-sm text-slate-700 dark:text-slate-300">
-            Current incarceration/freedom status could not be conclusively verified from authoritative
-            sources, or conflicting sources require reviewer confirmation before a status can be shown.
+      <div>
+        <div className="flex items-baseline justify-between">
+          <h2 className="text-section-heading font-semibold text-ink">At a glance</h2>
+          <p className="text-sm text-ink-muted">
+            Major legal risk:{" "}
+            <span className={`font-medium ${RISK_CLASSNAMES[dashboard.majorLegalRisk]}`}>
+              {RISK_LABELS[dashboard.majorLegalRisk]}
+            </span>
           </p>
-        )}
-
-        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <StatTile label="Active Criminal Cases" value={dashboard.activeCriminalCases} />
-          <StatTile label="Active Civil Cases" value={dashboard.activeCivilCases} />
-          <StatTile label="Active Investigations" value={dashboard.activeInvestigations} />
-          <StatTile label="Convictions" value={dashboard.convictions} />
-          <StatTile label="Acquittals" value={dashboard.acquittals} />
-          <StatTile label="Pending Appeals" value={dashboard.pendingAppeals} />
-          <StatTile label="Active Warrants" value={dashboard.activeWarrants} />
-          <StatTile label="Travel Restrictions" value={dashboard.travelRestrictions} />
         </div>
+        <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <StatCard label="Active criminal cases" value={dashboard.activeCriminalCases} />
+          <StatCard label="Active civil cases" value={dashboard.activeCivilCases} />
+          <StatCard label="Active investigations" value={dashboard.activeInvestigations} />
+          <StatCard label="Convictions" value={dashboard.convictions} />
+          <StatCard label="Acquittals" value={dashboard.acquittals} />
+          <StatCard label="Pending appeals" value={dashboard.pendingAppeals} />
+          <StatCard label="Active warrants" value={dashboard.activeWarrants} />
+          <StatCard label="Travel restrictions" value={dashboard.travelRestrictions} />
+        </div>
+      </div>
 
-        <p className="mt-4 text-sm text-slate-700 dark:text-slate-300">
-          Major legal risk: <span className="font-medium">{RISK_LABELS[dashboard.majorLegalRisk]}</span>
-        </p>
-        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-          Last verified: {politician.lastResearchedAt ? formatDate(politician.lastResearchedAt) : "Not yet verified"}
-        </p>
-      </section>
-
-      <section className="card p-5">
-        <h3 className="font-semibold text-slate-900 dark:text-white">Cases &amp; Investigations Summary</h3>
+      <section className="card p-6">
+        <h3 className="font-semibold text-ink">Cases &amp; investigations summary</h3>
         <div className="mt-3">
           <LegalStatusSummaryChart data={dashboard} />
         </div>

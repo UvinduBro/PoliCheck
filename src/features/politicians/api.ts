@@ -5,6 +5,7 @@ import {
   getDocById,
   limit,
   orderBy,
+  publicationConstraint,
   queryCollection,
   updateDocById,
   where,
@@ -20,17 +21,6 @@ import type {
   Source,
   UserRole,
 } from "@/types";
-
-/**
- * Firestore only allows an unauthenticated/public list query when the query itself
- * proves every result satisfies the security rule (publicationStatus == "published").
- * Researcher+ can query without that constraint since the rule's isResearcher()
- * branch holds regardless of document content.
- */
-function publicationConstraint(role: UserRole | undefined): QueryConstraint[] {
-  if (role === "researcher" || role === "reviewer" || role === "admin") return [];
-  return [where("publicationStatus", "==", "published")];
-}
 
 export function usePoliticians(role: UserRole | undefined, filters?: { country?: string }) {
   return useQuery({

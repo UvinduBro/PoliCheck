@@ -56,7 +56,7 @@ export function LoginPage() {
 
   if (!firebaseConfigured) {
     return (
-      <div className="mx-auto max-w-md p-8 text-center text-sm text-slate-600 dark:text-slate-400">
+      <div className="mx-auto max-w-md p-8 text-center text-sm text-ink-muted">
         Authentication is not configured in this environment. Set the VITE_FIREBASE_* variables.
       </div>
     );
@@ -64,24 +64,24 @@ export function LoginPage() {
 
   return (
     <div className="mx-auto max-w-md px-4 py-12">
-      <h1 className="text-xl font-semibold text-slate-900 dark:text-white">Sign in to PoliCheck</h1>
+      <h1 className="text-page-heading font-semibold text-ink">Sign in to CivicLens</h1>
       <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div>
           <label className="label" htmlFor="email">Email</label>
           <input id="email" type="email" className="input" autoComplete="email" {...register("email")} />
-          {errors.email && <p className="mt-1 text-sm text-red-700">{errors.email.message}</p>}
+          {errors.email && <p className="mt-1 text-sm text-status-critical">{errors.email.message}</p>}
         </div>
         <div>
           <label className="label" htmlFor="password">Password</label>
           <input id="password" type="password" className="input" autoComplete="current-password" {...register("password")} />
-          {errors.password && <p className="mt-1 text-sm text-red-700">{errors.password.message}</p>}
+          {errors.password && <p className="mt-1 text-sm text-status-critical">{errors.password.message}</p>}
         </div>
-        {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
-        {resetSent && <p role="status" className="text-sm text-green-700">Password reset email sent.</p>}
+        {error && <p role="alert" className="text-sm text-status-critical">{error}</p>}
+        {resetSent && <p role="status" className="text-sm text-status-verified">Password reset email sent.</p>}
         <button type="submit" className="btn-primary w-full" disabled={isSubmitting}>
           {isSubmitting ? "Signing in..." : "Sign in"}
         </button>
-        <button type="button" className="text-sm text-brand-700 hover:underline dark:text-brand-400" onClick={onForgotPassword}>
+        <button type="button" className="text-sm text-accent hover:underline" onClick={onForgotPassword}>
           Forgot password?
         </button>
       </form>
@@ -90,8 +90,8 @@ export function LoginPage() {
           Continue with Google
         </button>
       </div>
-      <p className="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
-        Need an account? <Link to="/register" className="text-brand-700 hover:underline dark:text-brand-400">Register as a researcher</Link>
+      <p className="mt-6 text-center text-sm text-ink-muted">
+        Need an account? <Link to="/register" className="text-accent hover:underline">Register as a researcher</Link>
       </p>
     </div>
   );

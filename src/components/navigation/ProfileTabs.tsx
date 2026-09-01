@@ -7,7 +7,10 @@ export interface ProfileTabDef {
 
 export function ProfileTabs({ basePath, tabs }: { basePath: string; tabs: ProfileTabDef[] }) {
   return (
-    <nav aria-label="Politician profile sections" className="border-b border-slate-200 dark:border-slate-800">
+    <nav
+      aria-label="Politician profile sections"
+      className="sticky top-[57px] z-20 -mx-4 border-b border-line bg-bg/95 px-4 backdrop-blur sm:-mx-6 sm:px-6 lg:top-[65px]"
+    >
       <ul className="scroll-fade-x flex flex-nowrap gap-1 overflow-x-auto">
         {tabs.map((tab) => (
           <li key={tab.path} className="shrink-0">
@@ -16,9 +19,7 @@ export function ProfileTabs({ basePath, tabs }: { basePath: string; tabs: Profil
               end={tab.path === ""}
               className={({ isActive }) =>
                 `inline-block whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-medium transition-colors ${
-                  isActive
-                    ? "border-brand-600 text-brand-700 dark:border-brand-400 dark:text-brand-400"
-                    : "border-transparent text-slate-600 dark:text-slate-400 dark:text-slate-500 hover:border-slate-300 hover:text-slate-900 dark:text-white dark:text-slate-400 dark:text-slate-500 dark:hover:border-slate-700 dark:hover:text-white"
+                  isActive ? "border-accent text-ink" : "border-transparent text-ink-muted hover:text-ink"
                 }`
               }
             >

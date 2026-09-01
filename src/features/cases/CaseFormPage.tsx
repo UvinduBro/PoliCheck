@@ -59,19 +59,19 @@ export function CaseFormPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="text-xl font-semibold text-slate-900 dark:text-white">Add a Legal Case</h1>
+      <h1 className="text-page-heading font-semibold text-ink">Add a Legal Case</h1>
 
       <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div>
           <label className="label" htmlFor="politicianIds">Politician ID(s), comma-separated</label>
           <input id="politicianIds" className="input" {...register("politicianIds", { setValueAs: toCsv })} defaultValue={preselectedPoliticianId ?? ""} />
-          {errors.politicianIds && <p className="mt-1 text-sm text-red-700">{errors.politicianIds.message}</p>}
+          {errors.politicianIds && <p className="mt-1 text-sm text-status-critical">{errors.politicianIds.message}</p>}
         </div>
 
         <div>
           <label className="label" htmlFor="caseName">Case name</label>
           <input id="caseName" className="input" {...register("caseName")} />
-          {errors.caseName && <p className="mt-1 text-sm text-red-700">{errors.caseName.message}</p>}
+          {errors.caseName && <p className="mt-1 text-sm text-status-critical">{errors.caseName.message}</p>}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
@@ -93,7 +93,7 @@ export function CaseFormPage() {
           <div>
             <label className="label" htmlFor="country">Country</label>
             <input id="country" className="input" {...register("country")} />
-            {errors.country && <p className="mt-1 text-sm text-red-700">{errors.country.message}</p>}
+            {errors.country && <p className="mt-1 text-sm text-status-critical">{errors.country.message}</p>}
           </div>
         </div>
 
@@ -130,7 +130,7 @@ export function CaseFormPage() {
         <div>
           <label className="label" htmlFor="currentStatus">Current status summary</label>
           <textarea id="currentStatus" rows={2} className="input" {...register("currentStatus")} />
-          {errors.currentStatus && <p className="mt-1 text-sm text-red-700">{errors.currentStatus.message}</p>}
+          {errors.currentStatus && <p className="mt-1 text-sm text-status-critical">{errors.currentStatus.message}</p>}
         </div>
 
         <div>
@@ -145,25 +145,25 @@ export function CaseFormPage() {
 
         <fieldset>
           <legend className="label">Sources (at least one required)</legend>
-          <div className="max-h-48 space-y-1 overflow-y-auto rounded-md border border-slate-300 p-2">
-            {sources.length === 0 && <p className="text-sm text-slate-500 dark:text-slate-400">No sources exist yet — add one first.</p>}
+          <div className="max-h-48 space-y-1 overflow-y-auto rounded-md border border-line p-2">
+            {sources.length === 0 && <p className="text-sm text-ink-muted">No sources exist yet — add one first.</p>}
             {sources.map((s) => (
               <label key={s.id} className="flex items-center gap-2 text-sm">
                 <input type="checkbox" value={s.id} {...register("sourceIds")} />
-                {s.title} <span className="text-xs text-slate-500 dark:text-slate-400">(Tier {s.tier})</span>
+                {s.title} <span className="text-xs text-ink-faint">(Tier {s.tier})</span>
               </label>
             ))}
           </div>
-          {errors.sourceIds && <p className="mt-1 text-sm text-red-700">{errors.sourceIds.message}</p>}
+          {errors.sourceIds && <p className="mt-1 text-sm text-status-critical">{errors.sourceIds.message}</p>}
           {inconsistentTierSources.length > 0 && (
-            <p className="mt-1 text-sm text-amber-800">
+            <p className="mt-1 text-sm text-status-pending">
               Check the tier on: {inconsistentTierSources.map((s) => s.title).join(", ")} — its source type
               usually implies a different tier.
             </p>
           )}
         </fieldset>
 
-        {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
+        {error && <p role="alert" className="text-sm text-status-critical">{error}</p>}
 
         <button type="submit" className="btn-primary" disabled={isSubmitting}>
           {isSubmitting ? "Saving..." : "Save case"}

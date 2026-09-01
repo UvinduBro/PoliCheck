@@ -68,8 +68,8 @@ export function SourceFormPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="text-xl font-semibold text-slate-900 dark:text-white">Add a Source</h1>
-      <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+      <h1 className="text-page-heading font-semibold text-ink">Add a Source</h1>
+      <p className="mt-1 text-sm text-ink-muted">
         Court judgments, government records, and official statements should be tagged Tier 1. Tier 4 sources
         (blogs, anonymous sites, social media) can never be used alone as evidence of guilt.
       </p>
@@ -78,14 +78,14 @@ export function SourceFormPage() {
         <div>
           <label className="label" htmlFor="title">Title</label>
           <input id="title" className="input" {...register("title")} />
-          {errors.title && <p className="mt-1 text-sm text-red-700">{errors.title.message}</p>}
+          {errors.title && <p className="mt-1 text-sm text-status-critical">{errors.title.message}</p>}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className="label" htmlFor="publisher">Publisher</label>
             <input id="publisher" className="input" {...register("publisher")} />
-            {errors.publisher && <p className="mt-1 text-sm text-red-700">{errors.publisher.message}</p>}
+            {errors.publisher && <p className="mt-1 text-sm text-status-critical">{errors.publisher.message}</p>}
           </div>
           <div>
             <label className="label" htmlFor="sourceType">Source type</label>
@@ -99,7 +99,7 @@ export function SourceFormPage() {
 
         <div>
           <label className="label" htmlFor="tier">
-            Source tier {suggestedTier && <span className="text-slate-500 dark:text-slate-400">(suggested: Tier {suggestedTier})</span>}
+            Source tier {suggestedTier && <span className="text-ink-faint">(suggested: Tier {suggestedTier})</span>}
           </label>
           <select
             id="tier"
@@ -117,7 +117,7 @@ export function SourceFormPage() {
         <div>
           <label className="label" htmlFor="url">URL</label>
           <input id="url" className="input" {...register("url")} />
-          {errors.url && <p className="mt-1 text-sm text-red-700">{errors.url.message}</p>}
+          {errors.url && <p className="mt-1 text-sm text-status-critical">{errors.url.message}</p>}
         </div>
 
         <div>
@@ -159,10 +159,10 @@ export function SourceFormPage() {
         <div>
           <label className="label" htmlFor="document">Attach a document (PDF, PNG, JPEG — max 25MB)</label>
           <input id="document" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp" onChange={onFileChange} />
-          {fileError && <p className="mt-1 text-sm text-red-700">{fileError}</p>}
+          {fileError && <p className="mt-1 text-sm text-status-critical">{fileError}</p>}
         </div>
 
-        {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
+        {error && <p role="alert" className="text-sm text-status-critical">{error}</p>}
 
         <button type="submit" className="btn-primary" disabled={isSubmitting}>
           {isSubmitting ? "Saving..." : "Save source"}
