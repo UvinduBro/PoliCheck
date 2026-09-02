@@ -18,7 +18,7 @@ optional App Check), deployed on Vercel.
 
 ## Status: Phase 1 MVP
 
-This repository implements the Phase 1 scope: auth (email/password + Google), the
+This repository implements the Phase 1 scope: auth (email/password), the
 Firestore data model, Storage uploads, politician profiles, case/investigation/source/
 claim/timeline records, the legal-status dashboard, public profile pages, the
 researcher → reviewer → published workflow, and audit logging. Several Phase 2 items are
@@ -44,7 +44,7 @@ environment variables, and troubleshooting), see
 ### Firebase project setup
 
 1. Create a Firebase project with Authentication, Cloud Firestore, and Storage enabled.
-2. Enable the Email/Password and Google sign-in providers.
+2. Enable the Email/Password sign-in provider.
 3. Deploy security rules and indexes:
    ```bash
    firebase deploy --only firestore:rules,firestore:indexes,storage
