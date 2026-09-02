@@ -1,6 +1,7 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -77,6 +78,10 @@ export async function updateDocById(
     ...data,
     updatedAt: serverTimestamp(),
   });
+}
+
+export async function deleteDocById(collectionName: string, id: string): Promise<void> {
+  await deleteDoc(doc(getFirebaseDb(), collectionName, id));
 }
 
 /** Creates or merges a document at a known id — for singleton config docs that may not exist yet. */

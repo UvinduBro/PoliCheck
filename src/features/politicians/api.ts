@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   COLLECTIONS,
   createDoc,
+  deleteDocById,
   getDocById,
   limit,
   orderBy,
@@ -162,6 +163,17 @@ export function useUpdatePolitician(actorId: string) {
       queryClient.invalidateQueries({ queryKey: ["politicians"] });
       queryClient.invalidateQueries({ queryKey: ["politician", variables.id] });
     },
+  });
+}
+
+export function useDeletePolitician(actorId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      await deleteDocById(COLLECTIONS.politicians, id);
+      await writeAuditLog({ actorId, action: "delete", entityType: "politician", entityId: id });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["politicians"] }),
   });
 }
 
