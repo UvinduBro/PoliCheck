@@ -1,6 +1,9 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { Plus } from "lucide-react";
 import { useCase, useCaseClaims, useCaseEvents } from "./api";
 import { usePoliticianSources } from "@/features/politicians/api";
+import { useAuth } from "@/hooks/useAuth";
+import { can } from "@/lib/permissions/roles";
 import { PublicationStatusBadge } from "@/components/status/PublicationStatusBadge";
 import { SourceList } from "@/components/sources/SourceList";
 import { SourceLinkList } from "@/components/sources/SourceLinkList";
@@ -14,6 +17,7 @@ import { formatDate } from "@/lib/formatting/date";
 
 export function CaseDetailPage() {
   const { caseId } = useParams();
+  const { userProfile } = useAuth();
   const { data: legalCase, isLoading, error } = useCase(caseId);
   const { data: claims = [] } = useCaseClaims(caseId);
   const { data: events = [] } = useCaseEvents(caseId);
@@ -97,7 +101,18 @@ export function CaseDetailPage() {
       </section>
 
       <section>
-        <h2 className="text-section-heading font-semibold text-ink">Fact vs allegation</h2>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-section-heading font-semibold text-ink">Fact vs allegation</h2>
+          {can.createRecords(userProfile?.role) && (
+            <Link
+              to={`/claims/new?caseId=${legalCase.id}&politicianId=${legalCase.politicianIds[0] ?? ""}`}
+              className="btn-secondary gap-1.5 text-xs"
+            >
+              <Plus size={14} aria-hidden="true" />
+              Add claim
+            </Link>
+          )}
+        </div>
         {claims.length === 0 ? (
           <div className="mt-3">
             <EmptyState

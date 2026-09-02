@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { Search } from "lucide-react";
+import { Link, useSearchParams } from "react-router-dom";
+import { Plus, Search } from "lucide-react";
 import { usePoliticians } from "./api";
 import { useAuth } from "@/hooks/useAuth";
+import { can } from "@/lib/permissions/roles";
 import { PoliticianCard } from "@/components/politicians/PoliticianCard";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
@@ -30,8 +31,18 @@ export function PoliticiansListPage() {
 
   return (
     <div>
-      <h1 className="text-page-heading font-semibold text-ink">Politician Profiles</h1>
-      <p className="mt-1 text-sm text-ink-muted">Search verified profiles by name, party, constituency, or country.</p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-page-heading font-semibold text-ink">Politician Profiles</h1>
+          <p className="mt-1 text-sm text-ink-muted">Search verified profiles by name, party, constituency, or country.</p>
+        </div>
+        {can.createRecords(userProfile?.role) && (
+          <Link to="/politicians/new" className="btn-primary shrink-0 gap-1.5">
+            <Plus size={16} aria-hidden="true" />
+            Add politician
+          </Link>
+        )}
+      </div>
 
       <div className="relative mt-5 max-w-md">
         <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint" aria-hidden="true" />
