@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Plus } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 export function AddPoliticianButton({ className }: { className: string }) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [showPrompt, setShowPrompt] = useState(false);
 
@@ -11,7 +13,7 @@ export function AddPoliticianButton({ className }: { className: string }) {
     return (
       <Link to="/politicians/new" className={className}>
         <Plus size={16} aria-hidden="true" />
-        Add politician
+        {t("politicians.addButton")}
       </Link>
     );
   }
@@ -20,7 +22,7 @@ export function AddPoliticianButton({ className }: { className: string }) {
     <>
       <button type="button" className={className} onClick={() => setShowPrompt(true)}>
         <Plus size={16} aria-hidden="true" />
-        Add politician
+        {t("politicians.addButton")}
       </button>
       {showPrompt && (
         <div
@@ -28,24 +30,22 @@ export function AddPoliticianButton({ className }: { className: string }) {
           onClick={() => setShowPrompt(false)}
         >
           <div className="card w-full max-w-sm p-6" onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-lg font-semibold text-ink">Create an account to add a record</h2>
-            <p className="mt-2 text-sm text-ink-muted">
-              Sign up (it's free) to submit a politician profile for review.
-            </p>
+            <h2 className="text-lg font-semibold text-ink">{t("addPolitician.promptTitle")}</h2>
+            <p className="mt-2 text-sm text-ink-muted">{t("addPolitician.promptBody")}</p>
             <div className="mt-5 flex gap-2">
               <Link
                 to="/register"
                 className="btn-primary flex-1 justify-center"
                 onClick={() => setShowPrompt(false)}
               >
-                Sign up
+                {t("addPolitician.signUp")}
               </Link>
               <Link
                 to="/login"
                 className="btn-secondary flex-1 justify-center"
                 onClick={() => setShowPrompt(false)}
               >
-                Sign in
+                {t("addPolitician.signIn")}
               </Link>
             </div>
             <button
@@ -53,7 +53,7 @@ export function AddPoliticianButton({ className }: { className: string }) {
               className="mt-3 w-full text-center text-xs text-ink-faint hover:text-ink-muted"
               onClick={() => setShowPrompt(false)}
             >
-              Cancel
+              {t("addPolitician.cancel")}
             </button>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { Outlet, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { usePolitician } from "./api";
 import { PoliticianStatusActions } from "./PoliticianStatusActions";
 import { ReportErrorButton } from "./ReportErrorButton";
@@ -13,17 +14,17 @@ import { useFeatureFlags } from "@/features/settings/api";
 import type { FeatureFlagKey } from "@/constants/featureFlags";
 import type { Politician } from "@/types";
 
-const TABS: { path: string; label: string; flag?: FeatureFlagKey }[] = [
-  { path: "overview", label: "Overview" },
-  { path: "biography", label: "Biography", flag: "biography" },
-  { path: "political-history", label: "Political History", flag: "politicalHistory" },
-  { path: "legal-status", label: "Legal Status" },
-  { path: "criminal-cases", label: "Criminal Cases" },
-  { path: "civil-cases", label: "Civil Cases" },
-  { path: "investigations", label: "Investigations", flag: "investigations" },
-  { path: "timeline", label: "Timeline", flag: "timeline" },
-  { path: "sources", label: "Sources", flag: "sources" },
-  { path: "report", label: "Full Report", flag: "reports" },
+const TAB_DEFS: { path: string; labelKey: string; flag?: FeatureFlagKey }[] = [
+  { path: "overview", labelKey: "profile.tabs.overview" },
+  { path: "biography", labelKey: "profile.tabs.biography", flag: "biography" },
+  { path: "political-history", labelKey: "profile.tabs.politicalHistory", flag: "politicalHistory" },
+  { path: "legal-status", labelKey: "profile.tabs.legalStatus" },
+  { path: "criminal-cases", labelKey: "profile.tabs.criminalCases" },
+  { path: "civil-cases", labelKey: "profile.tabs.civilCases" },
+  { path: "investigations", labelKey: "profile.tabs.investigations", flag: "investigations" },
+  { path: "timeline", labelKey: "profile.tabs.timeline", flag: "timeline" },
+  { path: "sources", labelKey: "profile.tabs.sources", flag: "sources" },
+  { path: "report", labelKey: "profile.tabs.report", flag: "reports" },
 ];
 
 export interface PoliticianOutletContext {
@@ -37,17 +38,21 @@ function initials(name: string): string {
 }
 
 export function PoliticianProfileLayout() {
+  const { t } = useTranslation();
   const { politicianId } = useParams();
   const { data: politician, isLoading, error } = usePolitician(politicianId);
   const { flags } = useFeatureFlags();
-  const tabs = TABS.filter((tab) => !tab.flag || flags[tab.flag]);
+  const tabs = TAB_DEFS.filter((tab) => !tab.flag || flags[tab.flag]).map((tab) => ({
+    path: tab.path,
+    label: t(tab.labelKey),
+  }));
 
   if (isLoading) return <ProfileHeaderSkeleton />;
   if (error || !politician) {
     return (
       <ErrorState
-        title="This profile could not be found"
-        description="It may not exist, or it hasn't been published yet. Check the link, or search for the person you're looking for."
+        title={t("profile.notFoundTitle")}
+        description={t("profile.notFoundDescription")}
       />
     );
   }
@@ -76,7 +81,7 @@ export function PoliticianProfileLayout() {
               <h1 className="font-serif-report text-2xl font-semibold text-ink sm:text-page-heading">
                 {politician.fullName}
               </h1>
-              <p className="mt-1 text-sm text-ink-muted">{metaParts.join(" · ") || "Details not yet recorded"}</p>
+              <p className="mt-1 text-sm text-ink-muted">{metaParts.join(" · ") || t("profile.detailsNotYetRecorded")}</p>
               <div className="mt-2">
                 <VerificationIndicator confidence={politician.identityConfidence} />
               </div>
@@ -85,12 +90,12 @@ export function PoliticianProfileLayout() {
           <div className="text-right">
             <PublicationStatusBadge status={politician.publicationStatus} />
             <p className="mt-1.5 text-xs text-ink-faint">
-              Last researched:{" "}
+              {t("profile.lastResearched")}{" "}
               {politician.lastResearchedAt
                 ? formatDate(politician.lastResearchedAt)
                 : politician.researchCutoff
                   ? formatDate(politician.researchCutoff)
-                  : "Not yet recorded"}
+                  : t("profile.notYetRecorded")}
             </p>
           </div>
         </div>

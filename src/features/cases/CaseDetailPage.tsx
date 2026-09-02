@@ -12,6 +12,7 @@ import { ClaimCard } from "@/components/evidence/ClaimCard";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { ProfileHeaderSkeleton } from "@/components/feedback/Skeleton";
+import { TranslatedText } from "@/components/content/TranslatedText";
 import { CASE_STAGE_LABELS } from "@/constants/legalStatus";
 import { formatDate } from "@/lib/formatting/date";
 
@@ -70,7 +71,7 @@ export function CaseDetailPage() {
         <section>
           <h2 className="text-section-heading font-semibold text-ink">Allegations</h2>
           <p className="mt-1 text-xs text-ink-faint">Unproven claims, not findings of fact.</p>
-          <p className="mt-2 text-sm leading-relaxed text-ink-muted">{legalCase.allegations}</p>
+          <TranslatedText text={legalCase.allegations} className="mt-2 text-sm leading-relaxed text-ink-muted" />
         </section>
       )}
 
@@ -87,9 +88,11 @@ export function CaseDetailPage() {
 
       <section>
         <h2 className="text-section-heading font-semibold text-ink">Current status</h2>
-        <p className="mt-2 text-sm leading-relaxed text-ink-muted">{legalCase.currentStatus}</p>
+        <TranslatedText text={legalCase.currentStatus} className="mt-2 text-sm leading-relaxed text-ink-muted" />
         {legalCase.latestDevelopment && (
-          <p className="mt-1 text-sm text-ink-faint">Latest development: {legalCase.latestDevelopment}</p>
+          <p className="mt-1 text-sm text-ink-faint">
+            Latest development: <TranslatedText text={legalCase.latestDevelopment} className="inline" />
+          </p>
         )}
       </section>
 

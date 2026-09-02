@@ -11,17 +11,6 @@ export type StatusBadgeKey =
   | "INCARCERATED"
   | "UNKNOWN";
 
-export const STATUS_BADGE_LABELS: Record<StatusBadgeKey, string> = {
-  VERIFIED: "VERIFIED",
-  ALLEGATION: "ALLEGATION / CLAIM",
-  UNDER_INVESTIGATION: "UNDER INVESTIGATION",
-  CASE_PENDING: "CASE PENDING",
-  CONVICTED: "CONVICTED",
-  ACQUITTED: "ACQUITTED / CASE DISMISSED",
-  INCARCERATED: "INCARCERATED / DETAINED",
-  UNKNOWN: "UNKNOWN",
-};
-
 /**
  * Semantic status color mapping (design spec §10): green = verified/clear, amber =
  * pending/investigation/unclear, red = conviction/incarceration, blue = informational,
@@ -95,13 +84,3 @@ export const FREEDOM_STATUS_LABELS: Record<FreedomStatus, string> = {
   unknown: "Unknown",
 };
 
-/** The headline sentence on the dominant legal-status card (design spec §10). */
-export const FREEDOM_STATUS_STATEMENT: Record<FreedomStatus, string> = {
-  free: "No current incarceration verified",
-  incarcerated: "Currently incarcerated",
-  detained: "Currently detained in custody",
-  on_bail: "Released on bail, case ongoing",
-  wanted: "Wanted: an active warrant is on record",
-  travel_restricted: "Free, subject to a travel restriction",
-  unknown: "Current status could not be conclusively verified",
-};

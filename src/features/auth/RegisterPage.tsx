@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { registerWithEmail } from "@/lib/firebase/auth";
 import { registerSchema, type RegisterFormValues } from "@/lib/validation/schemas";
@@ -8,6 +9,7 @@ import { firebaseConfigured } from "@/lib/firebase/config";
 import { PasswordInput } from "@/components/forms/PasswordInput";
 
 export function RegisterPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const [error, setError] = useState<string | null>(null);
@@ -41,38 +43,35 @@ export function RegisterPage() {
 
   return (
     <div className="mx-auto max-w-md px-4 py-12">
-      <h1 className="text-page-heading font-semibold text-ink">Sign up</h1>
-      <p className="mt-1 text-sm text-ink-muted">
-        Create an account to add politician records. An admin reviews new submissions before they're
-        published.
-      </p>
+      <h1 className="text-page-heading font-semibold text-ink">{t("auth.signUpTitle")}</h1>
+      <p className="mt-1 text-sm text-ink-muted">{t("auth.signUpSubtitle")}</p>
 
       <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div>
-          <label className="label" htmlFor="displayName">Full name</label>
+          <label className="label" htmlFor="displayName">{t("auth.fullName")}</label>
           <input id="displayName" className="input" autoComplete="name" {...register("displayName")} />
           {errors.displayName && <p className="mt-1 text-sm text-status-critical">{errors.displayName.message}</p>}
         </div>
         <div>
-          <label className="label" htmlFor="email">Email</label>
+          <label className="label" htmlFor="email">{t("auth.email")}</label>
           <input id="email" type="email" className="input" autoComplete="email" {...register("email")} />
           {errors.email && <p className="mt-1 text-sm text-status-critical">{errors.email.message}</p>}
         </div>
         <PasswordInput
           id="password"
-          label="Password"
+          label={t("auth.password")}
           autoComplete="new-password"
           registration={register("password")}
           error={errors.password?.message}
         />
         {error && <p role="alert" className="text-sm text-status-critical">{error}</p>}
         <button type="submit" className="btn-primary w-full" disabled={isSubmitting}>
-          {isSubmitting ? "Creating account..." : "Create account"}
+          {isSubmitting ? t("auth.creatingAccount") : t("auth.createAccount")}
         </button>
       </form>
 
       <p className="mt-6 text-center text-sm text-ink-muted">
-        Already have an account? <Link to="/login" className="text-accent hover:underline">Sign in</Link>
+        {t("auth.alreadyHaveAccount")} <Link to="/login" className="text-accent hover:underline">{t("auth.signIn")}</Link>
       </p>
     </div>
   );

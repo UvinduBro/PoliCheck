@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { PublicationStatusBadge } from "@/components/status/PublicationStatusBadge";
 import { formatDate } from "@/lib/formatting/date";
@@ -9,18 +10,19 @@ function initials(name: string): string {
   return source.toUpperCase();
 }
 
-const CUSTODY_LABELS: Partial<Record<CustodyStatus, string>> = {
-  jailed: "Jailed",
-  bailed: "On bail",
-};
-
 const CUSTODY_CLASSES: Partial<Record<CustodyStatus, string>> = {
   jailed: "border-status-critical/25 bg-status-critical-bg text-status-critical",
   bailed: "border-status-pending/25 bg-status-pending-bg text-status-pending",
 };
 
 export function PoliticianCard({ politician }: { politician: Politician }) {
-  const custodyLabel = politician.custodyStatus ? CUSTODY_LABELS[politician.custodyStatus] : undefined;
+  const { t } = useTranslation();
+  const custodyLabel =
+    politician.custodyStatus === "jailed"
+      ? t("politicians.custodyJailed")
+      : politician.custodyStatus === "bailed"
+        ? t("politicians.custodyBailed")
+        : undefined;
 
   return (
     <li className="card-hover p-5">
@@ -41,7 +43,9 @@ export function PoliticianCard({ politician }: { politician: Politician }) {
         )}
         <div className="mt-3 w-full min-w-0">
           <p className="truncate font-medium text-ink hover:text-accent">{politician.fullName}</p>
-          <p className="mt-0.5 truncate text-sm text-ink-muted">{politician.currentPosition || politician.profession || "Position not on file"}</p>
+          <p className="mt-0.5 truncate text-sm text-ink-muted">
+            {politician.currentPosition || politician.profession || t("politicians.positionNotOnFile")}
+          </p>
           <p className="truncate text-xs text-ink-faint">
             {politician.country}
             {politician.politicalParty ? ` · ${politician.politicalParty}` : ""}
@@ -58,7 +62,9 @@ export function PoliticianCard({ politician }: { politician: Politician }) {
       <div className="mt-4 flex items-center justify-between gap-2 border-t border-line pt-3">
         <PublicationStatusBadge status={politician.publicationStatus} />
         <span className="text-xs text-ink-faint">
-          {politician.lastResearchedAt ? `Researched ${formatDate(politician.lastResearchedAt)}` : "Not yet researched"}
+          {politician.lastResearchedAt
+            ? t("politicians.researchedOn", { date: formatDate(politician.lastResearchedAt) })
+            : t("politicians.notYetResearched")}
         </span>
       </div>
     </li>

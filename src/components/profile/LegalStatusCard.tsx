@@ -1,8 +1,8 @@
 import { ArrowRight, ExternalLink } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { FreedomStatusBadge } from "@/components/status/FreedomStatusBadge";
 import { ConfidenceBadge } from "@/components/status/ConfidenceBadge";
-import { FREEDOM_STATUS_STATEMENT } from "@/constants/legalStatus";
 import { formatDate } from "@/lib/formatting/date";
 import type { FreedomStatus } from "@/types";
 import type { Timestamp } from "firebase/firestore";
@@ -26,22 +26,24 @@ export function LegalStatusCard({
   sentenceYears?: number;
   custodySourceLink?: string;
 }) {
+  const { t } = useTranslation();
+
   return (
     <section className="card overflow-hidden">
       <div className="border-b border-line bg-surface-2/40 px-6 py-3">
-        <p className="eyebrow">Current legal status</p>
+        <p className="eyebrow">{t("legalStatus.heading")}</p>
       </div>
       <div className="px-6 py-6">
         <div className="flex flex-wrap items-center gap-3">
           <FreedomStatusBadge status={status} className="px-3 py-1.5 text-sm" />
         </div>
         <p className="mt-3 text-xl font-medium leading-snug text-ink sm:text-2xl">
-          {FREEDOM_STATUS_STATEMENT[status]}
+          {t(`legalStatus.statement.${status}`)}
         </p>
 
         {hasConflict && (
           <p className="mt-3 rounded-md bg-status-pending-bg px-3 py-2 text-sm text-status-pending">
-            Sources disagree about this status, marked unresolved pending reviewer confirmation.
+            {t("legalStatus.sourcesDisagree")}
           </p>
         )}
 
@@ -49,19 +51,19 @@ export function LegalStatusCard({
           <dl className="mt-4 grid grid-cols-1 gap-x-6 gap-y-2 rounded-md border border-line bg-surface-2/40 px-4 py-3 text-sm sm:grid-cols-3">
             {custodySince && (
               <div>
-                <dt className="text-xs text-ink-faint">Jailed since</dt>
+                <dt className="text-xs text-ink-faint">{t("legalStatus.jailedSince")}</dt>
                 <dd className="mt-0.5 font-medium text-ink">{formatDate(custodySince)}</dd>
               </div>
             )}
             {sentenceYears !== undefined && (
               <div>
-                <dt className="text-xs text-ink-faint">Sentence</dt>
-                <dd className="mt-0.5 font-medium text-ink">{sentenceYears} year{sentenceYears === 1 ? "" : "s"}</dd>
+                <dt className="text-xs text-ink-faint">{t("legalStatus.sentence")}</dt>
+                <dd className="mt-0.5 font-medium text-ink">{t("legalStatus.sentenceYears", { count: sentenceYears })}</dd>
               </div>
             )}
             {custodySourceLink && (
               <div>
-                <dt className="text-xs text-ink-faint">Source</dt>
+                <dt className="text-xs text-ink-faint">{t("legalStatus.source")}</dt>
                 <dd className="mt-0.5">
                   <a
                     href={custodySourceLink}
@@ -69,7 +71,7 @@ export function LegalStatusCard({
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 font-medium text-accent hover:underline"
                   >
-                    View source <ExternalLink size={12} aria-hidden="true" />
+                    {t("legalStatus.viewSource")} <ExternalLink size={12} aria-hidden="true" />
                   </a>
                 </dd>
               </div>
@@ -79,10 +81,13 @@ export function LegalStatusCard({
 
         <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-muted">
           <span>
-            Last verified: <span className="font-medium text-ink">{lastVerified ? formatDate(lastVerified) : "Not yet verified"}</span>
+            {t("legalStatus.lastVerified")}{" "}
+            <span className="font-medium text-ink">
+              {lastVerified ? formatDate(lastVerified) : t("legalStatus.notYetVerified")}
+            </span>
           </span>
           <span className="flex items-center gap-1.5">
-            Source confidence: <ConfidenceBadge level={confidence} />
+            {t("legalStatus.sourceConfidence")} <ConfidenceBadge level={confidence} />
           </span>
         </div>
 
@@ -90,7 +95,7 @@ export function LegalStatusCard({
           to={evidenceHref}
           className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-accent hover:underline"
         >
-          View evidence
+          {t("legalStatus.viewEvidence")}
           <ArrowRight size={14} aria-hidden="true" />
         </Link>
       </div>

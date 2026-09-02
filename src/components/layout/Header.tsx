@@ -1,5 +1,6 @@
 import { Menu, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { can } from "@/lib/permissions/roles";
@@ -9,6 +10,7 @@ import { BrandMark } from "./BrandMark";
 import { NotificationsMenu } from "./NotificationsMenu";
 import { UserMenu } from "./UserMenu";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   `rounded-md px-3 py-2 text-sm font-medium transition-colors ${
@@ -21,6 +23,7 @@ const mobileNavLinkClass = ({ isActive }: { isActive: boolean }) =>
   }`;
 
 export function Header() {
+  const { t } = useTranslation();
   const { user, userProfile } = useAuth();
   const role = userProfile?.role;
   const location = useLocation();
@@ -34,14 +37,14 @@ export function Header() {
   // tools — a normal registered user only needs Discover and Politicians; everything else
   // is admin-only.
   const links = [
-    { to: "/", label: "Discover", show: true, end: true },
-    { to: "/politicians", label: "Politicians", show: true },
-    { to: "/cases", label: "Cases", show: can.manageUsers(role) },
-    { to: "/investigations", label: "Investigations", show: can.manageUsers(role) && flags.investigations },
-    { to: "/sources", label: "Sources", show: can.manageUsers(role) && flags.sources },
-    { to: "/research", label: "Research", show: can.manageUsers(role) },
-    { to: "/review", label: "Review", show: can.manageUsers(role) },
-    { to: "/admin", label: "Admin", show: can.manageUsers(role) },
+    { to: "/", label: t("nav.discover"), show: true, end: true },
+    { to: "/politicians", label: t("nav.politicians"), show: true },
+    { to: "/cases", label: t("nav.cases"), show: can.manageUsers(role) },
+    { to: "/investigations", label: t("nav.investigations"), show: can.manageUsers(role) && flags.investigations },
+    { to: "/sources", label: t("nav.sources"), show: can.manageUsers(role) && flags.sources },
+    { to: "/research", label: t("nav.research"), show: can.manageUsers(role) },
+    { to: "/review", label: t("nav.review"), show: can.manageUsers(role) },
+    { to: "/admin", label: t("nav.admin"), show: can.manageUsers(role) },
   ].filter((link) => link.show);
 
   return (
@@ -49,7 +52,7 @@ export function Header() {
       <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <Link to="/" className="flex shrink-0 items-center gap-2 text-ink">
           <BrandMark size={20} className="text-accent" />
-          <span className="text-[15px] font-semibold tracking-tight">Politician Watch</span>
+          <span className="text-[15px] font-semibold tracking-tight">{t("app.name")}</span>
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
@@ -67,12 +70,13 @@ export function Header() {
             className="flex min-h-[2.5rem] items-center gap-2 rounded-md border border-line bg-surface-2/60 px-3 text-sm text-ink-muted transition-colors hover:border-line-strong hover:text-ink"
           >
             <Search size={15} aria-hidden="true" />
-            Search
+            {t("nav.search")}
             <kbd className="ml-1 rounded border border-line bg-surface px-1.5 py-0.5 text-[11px] text-ink-faint">
               ⌘K
             </kbd>
           </button>
           <NotificationsMenu />
+          <LanguageSwitcher />
           <ThemeToggle />
           <span className="mx-1 h-6 w-px bg-line" aria-hidden="true" />
           <UserMenu />
@@ -82,18 +86,19 @@ export function Header() {
           <button
             type="button"
             onClick={openSearch}
-            aria-label="Search"
+            aria-label={t("nav.search")}
             className="inline-flex h-10 w-10 items-center justify-center rounded-md text-ink-muted hover:bg-surface-2 hover:text-ink"
           >
             <Search size={18} aria-hidden="true" />
           </button>
+          <LanguageSwitcher />
           <ThemeToggle />
           <button
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
             aria-expanded={menuOpen}
             aria-controls="mobile-nav"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-label={menuOpen ? t("nav.closeMenu") : t("nav.openMenu")}
             className="inline-flex h-10 w-10 items-center justify-center rounded-md text-ink-muted hover:bg-surface-2 hover:text-ink"
           >
             {menuOpen ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
@@ -115,11 +120,11 @@ export function Header() {
           <div className="mt-2 flex items-center justify-between border-t border-line pt-3">
             {user ? (
               <Link to="/account" className={mobileNavLinkClass({ isActive: false })}>
-                Account
+                {t("nav.account")}
               </Link>
             ) : (
               <Link to="/login" className="btn-primary w-full">
-                Sign in
+                {t("nav.signIn")}
               </Link>
             )}
           </div>

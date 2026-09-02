@@ -19,12 +19,12 @@
     />
 
     <script>
-      // Applied before paint to avoid a light/dark flash on load.
+      // Applied before paint to avoid a light/dark flash on load. Light is the default —
+      // dark only applies once a visitor has explicitly chosen it (persisted below).
       (function () {
         try {
           var stored = localStorage.getItem("politician-watch-theme");
-          var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-          if (stored === "dark" || (!stored && prefersDark)) {
+          if (stored === "dark") {
             document.documentElement.classList.add("dark");
           }
         } catch (e) {}

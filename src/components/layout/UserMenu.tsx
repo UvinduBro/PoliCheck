@@ -1,9 +1,9 @@
 import { LogOut, UserRound } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { signOut } from "@/lib/firebase/auth";
-import { ROLE_LABELS } from "@/constants/roles";
 
 function initialsFor(name: string, email: string): string {
   const source = name.trim() || email;
@@ -13,6 +13,7 @@ function initialsFor(name: string, email: string): string {
 }
 
 export function UserMenu() {
+  const { t } = useTranslation();
   const { user, userProfile } = useAuth();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -29,7 +30,7 @@ export function UserMenu() {
   if (!user) {
     return (
       <Link to="/login" className="btn-primary">
-        Sign in
+        {t("nav.signIn")}
       </Link>
     );
   }
@@ -42,7 +43,7 @@ export function UserMenu() {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        aria-label="Account menu"
+        aria-label={t("nav.accountMenu")}
         aria-expanded={open}
         className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-xs font-semibold text-accent-fg transition-opacity hover:opacity-90"
       >
@@ -55,7 +56,7 @@ export function UserMenu() {
         >
           <div className="border-b border-line px-4 py-3">
             <p className="truncate text-sm font-medium text-ink">{displayName || user.email}</p>
-            <p className="mt-0.5 text-xs text-ink-muted">{ROLE_LABELS[userProfile?.role ?? "public"]}</p>
+            <p className="mt-0.5 text-xs text-ink-muted">{t(`roles.${userProfile?.role ?? "public"}`)}</p>
           </div>
           <Link
             to="/account"
@@ -63,7 +64,7 @@ export function UserMenu() {
             className="flex items-center gap-2 px-4 py-2.5 text-sm text-ink hover:bg-surface-2"
           >
             <UserRound size={15} aria-hidden="true" />
-            Account
+            {t("nav.account")}
           </Link>
           <button
             type="button"
@@ -74,7 +75,7 @@ export function UserMenu() {
             className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-ink hover:bg-surface-2"
           >
             <LogOut size={15} aria-hidden="true" />
-            Sign out
+            {t("nav.signOut")}
           </button>
         </div>
       )}

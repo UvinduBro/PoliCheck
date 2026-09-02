@@ -1,5 +1,6 @@
 import { AlertTriangle, Ban, CheckCircle2, Gavel, HelpCircle, Lock, Scale, Search } from "lucide-react";
-import { STATUS_BADGE_CLASSES, STATUS_BADGE_LABELS, type StatusBadgeKey } from "@/constants/legalStatus";
+import { useTranslation } from "react-i18next";
+import { STATUS_BADGE_CLASSES, type StatusBadgeKey } from "@/constants/legalStatus";
 
 const ICONS: Record<StatusBadgeKey, typeof CheckCircle2> = {
   VERIFIED: CheckCircle2,
@@ -19,11 +20,12 @@ const ICONS: Record<StatusBadgeKey, typeof CheckCircle2> = {
  * without supporting sources."
  */
 export function StatusBadge({ status, className = "" }: { status: StatusBadgeKey; className?: string }) {
+  const { t } = useTranslation();
   const Icon = ICONS[status];
   return (
     <span className={`chip ${STATUS_BADGE_CLASSES[status]} ${className}`}>
       <Icon aria-hidden="true" size={14} />
-      {STATUS_BADGE_LABELS[status]}
+      {t(`statusBadge.${status}`)}
     </span>
   );
 }
