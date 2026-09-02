@@ -64,7 +64,7 @@ export function LoginPage() {
 
   return (
     <div className="mx-auto max-w-md px-4 py-12">
-      <h1 className="text-page-heading font-semibold text-ink">Sign in to CivicLens</h1>
+      <h1 className="text-page-heading font-semibold text-ink">Sign in to Politician Watch</h1>
       <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div>
           <label className="label" htmlFor="email">Email</label>

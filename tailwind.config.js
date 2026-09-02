@@ -11,7 +11,7 @@ export default {
         serif: ["\"Source Serif 4\"", "ui-serif", "Georgia", "serif"],
       },
       colors: {
-        // CivicLens design tokens — backed by CSS custom properties (src/styles/index.css)
+        // Politician Watch design tokens — backed by CSS custom properties (src/styles/index.css)
         // so both themes are defined once and consumed everywhere via these semantic names.
         bg: "rgb(var(--cl-bg) / <alpha-value>)",
         surface: "rgb(var(--cl-surface) / <alpha-value>)",

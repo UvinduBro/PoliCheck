@@ -30,7 +30,7 @@ export function PoliticianFormPage() {
     formState: { errors, isSubmitting },
   } = useForm<PoliticianFormValues>({
     resolver: zodResolver(politicianSchema),
-    defaultValues: { custodyStatus: "not_in_custody" },
+    defaultValues: { custodyStatus: "not_in_custody", country: "Sri Lanka" },
     values: existing
       ? {
           fullName: existing.fullName,

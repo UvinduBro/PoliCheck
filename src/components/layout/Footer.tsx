@@ -1,13 +1,13 @@
 import { ShieldAlert } from "lucide-react";
-import { CivicLensMark } from "./CivicLensMark";
+import { BrandMark } from "./BrandMark";
 
 export function Footer() {
   return (
     <footer className="mt-16 border-t border-line bg-surface">
       <div className="mx-auto max-w-[1440px] px-4 py-10 sm:px-6">
         <div className="flex items-center gap-2 text-ink">
-          <CivicLensMark size={16} className="text-accent" />
-          <span className="text-sm font-semibold tracking-tight">CivicLens</span>
+          <BrandMark size={16} className="text-accent" />
+          <span className="text-sm font-semibold tracking-tight">Politician Watch</span>
           <span className="text-sm text-ink-faint">— See the record. Know the facts.</span>
         </div>
 
@@ -17,10 +17,10 @@ export function Footer() {
             Allegations are not convictions. An indictment, complaint, or investigation is not proof of guilt.
           </p>
           <p className="max-w-3xl">
-            CivicLens presents structured, source-cited research. Every significant claim is linked to its
-            original source and classified as a verified fact, court finding, allegation, investigation,
-            media report, or political claim. Where information could not be verified, that limitation is
-            stated explicitly rather than presented as fact.
+            Politician Watch presents structured, source-cited research on Sri Lankan politicians. Every
+            significant claim is linked to its original source and classified as a verified fact, court
+            finding, allegation, investigation, media report, or political claim. Where information could not
+            be verified, that limitation is stated explicitly rather than presented as fact.
           </p>
           <p className="max-w-3xl">
             Found an error? Every published profile includes a "Report an error" action, and disputed
@@ -30,7 +30,7 @@ export function Footer() {
         </div>
 
         <p className="mt-6 border-t border-line pt-5 text-xs text-ink-faint">
-          &copy; {new Date().getFullYear()} CivicLens. Structured research, not legal advice.
+          &copy; {new Date().getFullYear()} Politician Watch. Structured research, not legal advice.
         </p>
       </div>
     </footer>

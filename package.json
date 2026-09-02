@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Politician due-diligence and legal status research engine",
+  "description": "Politician Watch — Sri Lankan politician due-diligence and legal status research engine",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

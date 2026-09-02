@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 
 export type Theme = "light" | "dark";
 
-const STORAGE_KEY = "civiclens-theme";
+const STORAGE_KEY = "politician-watch-theme";
 
 function getInitialTheme(): Theme {
   if (typeof window === "undefined") return "light";

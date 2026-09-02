@@ -1,4 +1,4 @@
-export function CivicLensMark({ size = 18, className = "" }: { size?: number; className?: string }) {
+export function BrandMark({ size = 18, className = "" }: { size?: number; className?: string }) {
   return (
     <svg
       width={size}
