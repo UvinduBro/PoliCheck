@@ -101,7 +101,7 @@ export const FREEDOM_STATUS_STATEMENT: Record<FreedomStatus, string> = {
   incarcerated: "Currently incarcerated",
   detained: "Currently detained in custody",
   on_bail: "Released on bail, case ongoing",
-  wanted: "Wanted — an active warrant is on record",
+  wanted: "Wanted: an active warrant is on record",
   travel_restricted: "Free, subject to a travel restriction",
   unknown: "Current status could not be conclusively verified",
 };

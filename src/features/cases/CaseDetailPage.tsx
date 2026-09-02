@@ -69,7 +69,7 @@ export function CaseDetailPage() {
       {legalCase.allegations && (
         <section>
           <h2 className="text-section-heading font-semibold text-ink">Allegations</h2>
-          <p className="mt-1 text-xs text-ink-faint">Unproven claims — not findings of fact.</p>
+          <p className="mt-1 text-xs text-ink-faint">Unproven claims, not findings of fact.</p>
           <p className="mt-2 text-sm leading-relaxed text-ink-muted">{legalCase.allegations}</p>
         </section>
       )}

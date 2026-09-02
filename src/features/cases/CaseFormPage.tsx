@@ -126,7 +126,7 @@ export function CaseFormPage() {
         </div>
 
         <div>
-          <label className="label" htmlFor="allegations">Allegations (describe neutrally — this is a claim, not a fact)</label>
+          <label className="label" htmlFor="allegations">Allegations (describe neutrally: this is a claim, not a fact)</label>
           <textarea id="allegations" rows={3} className="input" {...register("allegations")} />
         </div>
 
@@ -155,7 +155,7 @@ export function CaseFormPage() {
           <fieldset>
             <legend className="label">Sources (at least one required)</legend>
             <div className="max-h-48 space-y-1 overflow-y-auto rounded-md border border-line p-2">
-              {sources.length === 0 && <p className="text-sm text-ink-muted">No sources exist yet — add one first.</p>}
+              {sources.length === 0 && <p className="text-sm text-ink-muted">No sources exist yet. Add one first.</p>}
               {sources.map((s) => (
                 <label key={s.id} className="flex items-center gap-2 text-sm">
                   <input type="checkbox" value={s.id} {...register("sourceIds")} />
@@ -166,14 +166,14 @@ export function CaseFormPage() {
             {errors.sourceLinks && <p className="mt-1 text-sm text-status-critical">{errors.sourceLinks.message}</p>}
             {inconsistentTierSources.length > 0 && (
               <p className="mt-1 text-sm text-status-pending">
-                Check the tier on: {inconsistentTierSources.map((s) => s.title).join(", ")} — its source type
+                Check the tier on: {inconsistentTierSources.map((s) => s.title).join(", ")}. Its source type
                 usually implies a different tier.
               </p>
             )}
           </fieldset>
         ) : (
           <div>
-            <label className="label" htmlFor="sourceLinks">Source link(s) — one per line (at least one required)</label>
+            <label className="label" htmlFor="sourceLinks">Source link(s), one per line (at least one required)</label>
             <textarea
               id="sourceLinks"
               rows={3}

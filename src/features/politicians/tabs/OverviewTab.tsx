@@ -90,7 +90,7 @@ export function OverviewTab() {
       </section>
 
       <p className="text-xs text-ink-faint">
-        Allegations are not convictions — see the Fact vs Allegation table in the Full Report tab.
+        Allegations are not convictions. See the Fact vs Allegation table in the Full Report tab.
       </p>
     </div>
   );

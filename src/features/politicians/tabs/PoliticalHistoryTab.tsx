@@ -17,7 +17,7 @@ export function PoliticalHistoryTab() {
       date: position.startDate ?? "",
       category: "political" as const,
       eyebrow: position.startDate
-        ? `${formatDate(position.startDate, "MMM yyyy")} — ${position.endDate ? formatDate(position.endDate, "MMM yyyy") : "Present"}`
+        ? `${formatDate(position.startDate, "MMM yyyy")} - ${position.endDate ? formatDate(position.endDate, "MMM yyyy") : "Present"}`
         : "Date unknown",
       title: position.title,
       description: [position.institution, position.party, position.constituency].filter(Boolean).join(" · ") || undefined,

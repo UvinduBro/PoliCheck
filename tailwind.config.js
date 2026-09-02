@@ -88,6 +88,7 @@ export default {
         "fade-in": "fade-in 200ms ease-out",
         "scale-in": "scale-in 150ms ease-out",
         "slide-up": "slide-up 200ms ease-out",
+        "glow-pulse": "glow-pulse 1.8s ease-in-out infinite",
       },
       keyframes: {
         "fade-in": {
@@ -101,6 +102,12 @@ export default {
         "slide-up": {
           from: { opacity: "0", transform: "translateY(8px)" },
           to: { opacity: "1", transform: "translateY(0)" },
+        },
+        // Colors itself off the element's `color` (currentColor) so one animation works
+        // for every status color — critical, pending, etc. — without per-color variants.
+        "glow-pulse": {
+          "0%, 100%": { boxShadow: "0 0 0 0 currentColor" },
+          "50%": { boxShadow: "0 0 10px 3px currentColor" },
         },
       },
     },

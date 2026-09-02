@@ -39,7 +39,7 @@ export function ReportErrorButton({ politicianId }: { politicianId: string }) {
   }
 
   if (submitted) {
-    return <p className="text-sm text-status-verified">Thank you — this has been sent to our review team.</p>;
+    return <p className="text-sm text-status-verified">Thank you. This has been sent to our review team.</p>;
   }
 
   return (

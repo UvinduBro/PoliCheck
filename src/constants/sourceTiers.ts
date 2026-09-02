@@ -1,10 +1,10 @@
 import type { SourceTier, SourceType } from "@/types";
 
 export const SOURCE_TIER_LABELS: Record<SourceTier, string> = {
-  1: "Tier 1 — Primary & Authoritative",
-  2: "Tier 2 — Highly Reliable Journalism",
-  3: "Tier 3 — Secondary Source",
-  4: "Tier 4 — Low Confidence",
+  1: "Tier 1: Primary & Authoritative",
+  2: "Tier 2: Highly Reliable Journalism",
+  3: "Tier 3: Secondary Source",
+  4: "Tier 4: Low Confidence",
 };
 
 export const SOURCE_TIER_DESCRIPTIONS: Record<SourceTier, string> = {

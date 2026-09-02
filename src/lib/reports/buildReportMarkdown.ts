@@ -159,7 +159,7 @@ export function buildReportMarkdown(input: BuildReportInput): string {
     lines.push("| Claim | Classification | Evidence | Current Status |", "| --- | --- | --- | --- |");
     for (const claim of claims) {
       lines.push(
-        `| ${claim.text.replace(/\|/g, "/")} | ${CLAIM_CLASSIFICATION_LABELS[claim.classification]} | ${sourceRef(claim.sourceIds, sources)} | ${claim.currentStatus || "—"} |`,
+        `| ${claim.text.replace(/\|/g, "/")} | ${CLAIM_CLASSIFICATION_LABELS[claim.classification]} | ${sourceRef(claim.sourceIds, sources)} | ${claim.currentStatus || "Not on file"} |`,
       );
     }
     lines.push("");
@@ -175,7 +175,7 @@ export function buildReportMarkdown(input: BuildReportInput): string {
   if (sources.length === 0) {
     p("No sources on file.");
   } else {
-    lines.push(...sources.map((s) => `- ${s.title} — ${s.publisher} (Tier ${s.tier}, ${s.url})`), "");
+    lines.push(...sources.map((s) => `- ${s.title}, ${s.publisher} (Tier ${s.tier}, ${s.url})`), "");
   }
 
   p(`IMPORTANT LIMITATIONS: ${politician.identityConfidence === "unresolved" ? "Identity is unresolved; some records may describe more than one person. " : ""}${freedom.confidence === "unresolved" ? "Current freedom status is unresolved due to conflicting or insufficient sources." : "None beyond what is stated above."}`);

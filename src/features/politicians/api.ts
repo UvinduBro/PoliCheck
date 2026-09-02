@@ -4,8 +4,6 @@ import {
   createDoc,
   deleteDocById,
   getDocById,
-  limit,
-  orderBy,
   publicationConstraint,
   queryCollection,
   updateDocById,
@@ -23,13 +21,18 @@ import type {
   UserRole,
 } from "@/types";
 
+// Sorting happens client-side rather than via a Firestore orderBy() here: combining
+// publicationConstraint's equality filter with a server-side orderBy on a different field
+// would require a composite index, and a public/anonymous visitor's query is exactly the
+// shape that needs one — so this keeps the public site working with nothing to deploy.
 export function usePoliticians(role: UserRole | undefined, filters?: { country?: string }) {
   return useQuery({
     queryKey: ["politicians", role, filters],
     queryFn: async () => {
-      const constraints: QueryConstraint[] = [...publicationConstraint(role), orderBy("fullName")];
+      const constraints: QueryConstraint[] = [...publicationConstraint(role)];
       if (filters?.country) constraints.push(where("country", "==", filters.country));
-      return queryCollection<Politician>(COLLECTIONS.politicians, constraints);
+      const results = await queryCollection<Politician>(COLLECTIONS.politicians, constraints);
+      return results.sort((a, b) => a.fullName.localeCompare(b.fullName));
     },
   });
 }
@@ -37,12 +40,12 @@ export function usePoliticians(role: UserRole | undefined, filters?: { country?:
 export function useRecentlyUpdatedPoliticians(role: UserRole | undefined) {
   return useQuery({
     queryKey: ["politicians", "recent", role],
-    queryFn: () =>
-      queryCollection<Politician>(COLLECTIONS.politicians, [
-        ...publicationConstraint(role),
-        orderBy("updatedAt", "desc"),
-        limit(8),
-      ]),
+    queryFn: async () => {
+      const results = await queryCollection<Politician>(COLLECTIONS.politicians, publicationConstraint(role));
+      return results
+        .sort((a, b) => b.updatedAt.toMillis() - a.updatedAt.toMillis())
+        .slice(0, 8);
+    },
   });
 }
 

@@ -2,14 +2,20 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { COLLECTIONS, createDoc, getDocById, publicationConstraint, updateDocById } from "@/lib/firebase/firestore";
 import { writeAuditLog } from "@/lib/firebase/auditLog";
 import type { Claim, LegalCase, LegalEvent, UserRole } from "@/types";
-import { orderBy, queryCollection, where } from "@/lib/firebase/firestore";
+import { queryCollection, where } from "@/lib/firebase/firestore";
 
-/** Every case visible to `role` — used by global search and cross-politician case listings. */
+/**
+ * Every case visible to `role` — used by global search and cross-politician case listings.
+ * Sorted client-side: combining publicationConstraint's equality filter with a server-side
+ * orderBy would require a composite index for a public/anonymous caller's query shape.
+ */
 export function useAllCases(role: UserRole | undefined) {
   return useQuery({
     queryKey: ["cases", "all", role],
-    queryFn: () =>
-      queryCollection<LegalCase>(COLLECTIONS.cases, [...publicationConstraint(role), orderBy("caseName")]),
+    queryFn: async () => {
+      const results = await queryCollection<LegalCase>(COLLECTIONS.cases, publicationConstraint(role));
+      return results.sort((a, b) => a.caseName.localeCompare(b.caseName));
+    },
   });
 }
 

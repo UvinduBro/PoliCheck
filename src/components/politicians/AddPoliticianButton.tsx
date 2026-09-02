@@ -30,7 +30,7 @@ export function AddPoliticianButton({ className }: { className: string }) {
           <div className="card w-full max-w-sm p-6" onClick={(e) => e.stopPropagation()}>
             <h2 className="text-lg font-semibold text-ink">Create an account to add a record</h2>
             <p className="mt-2 text-sm text-ink-muted">
-              Sign up — it's free — to submit a politician profile for review.
+              Sign up (it's free) to submit a politician profile for review.
             </p>
             <div className="mt-5 flex gap-2">
               <Link
