@@ -149,7 +149,9 @@ service cloud.firestore {
           && request.resource.data.role == resource.data.role
           && request.resource.data.isActive == resource.data.isActive
         );
-      allow delete: if isAdmin();
+      // A user may delete their own account's profile doc (self-service account deletion);
+      // an admin may remove anyone's.
+      allow delete: if isAdmin() || (signedIn() && request.auth.uid == userId);
     }
   }
 }
