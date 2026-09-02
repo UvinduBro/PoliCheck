@@ -122,6 +122,13 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    match /settings/{settingId} {
+      // Admin-controlled feature flags and similar app config — publicly readable so
+      // navigation can be gated for everyone, writable only by an admin.
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     match /users/{userId} {
       allow read: if signedIn() && (request.auth.uid == userId || isAdmin());
       // New accounts self-provision at the lowest privilege level only.

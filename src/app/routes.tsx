@@ -40,6 +40,8 @@ import { ReportPage } from "@/features/reports/ReportPage";
 import { ReviewDashboardPage } from "@/features/reviews/ReviewDashboardPage";
 import { AdminDashboardPage } from "@/features/admin/AdminDashboardPage";
 
+import { FeatureGate } from "@/features/settings/FeatureGate";
+
 export const routes: RouteObject[] = [
   {
     path: "/",
@@ -70,15 +72,15 @@ export const routes: RouteObject[] = [
         children: [
           { index: true, element: <OverviewTab /> },
           { path: "overview", element: <OverviewTab /> },
-          { path: "biography", element: <BiographyTab /> },
-          { path: "political-history", element: <PoliticalHistoryTab /> },
+          { path: "biography", element: <FeatureGate flag="biography"><BiographyTab /></FeatureGate> },
+          { path: "political-history", element: <FeatureGate flag="politicalHistory"><PoliticalHistoryTab /></FeatureGate> },
           { path: "legal-status", element: <LegalStatusTab /> },
           { path: "criminal-cases", element: <CasesTab caseType="criminal" /> },
           { path: "civil-cases", element: <CasesTab caseType="civil" /> },
-          { path: "investigations", element: <InvestigationsTab /> },
-          { path: "timeline", element: <TimelineTab /> },
-          { path: "sources", element: <SourcesTab /> },
-          { path: "report", element: <ReportTab /> },
+          { path: "investigations", element: <FeatureGate flag="investigations"><InvestigationsTab /></FeatureGate> },
+          { path: "timeline", element: <FeatureGate flag="timeline"><TimelineTab /></FeatureGate> },
+          { path: "sources", element: <FeatureGate flag="sources"><SourcesTab /></FeatureGate> },
+          { path: "report", element: <FeatureGate flag="reports"><ReportTab /></FeatureGate> },
         ],
       },
 
@@ -100,36 +102,42 @@ export const routes: RouteObject[] = [
           </RequireRole>
         ),
       },
-      { path: "investigations", element: <InvestigationsListPage /> },
+      { path: "investigations", element: <FeatureGate flag="investigations"><InvestigationsListPage /></FeatureGate> },
       {
         path: "investigations/new",
         element: (
-          <RequireRole minimum="researcher">
-            <InvestigationFormPage />
-          </RequireRole>
+          <FeatureGate flag="investigations">
+            <RequireRole minimum="researcher">
+              <InvestigationFormPage />
+            </RequireRole>
+          </FeatureGate>
         ),
       },
       {
         path: "legal-events/new",
         element: (
-          <RequireRole minimum="researcher">
-            <LegalEventFormPage />
-          </RequireRole>
+          <FeatureGate flag="timeline">
+            <RequireRole minimum="researcher">
+              <LegalEventFormPage />
+            </RequireRole>
+          </FeatureGate>
         ),
       },
 
-      { path: "sources", element: <SourcesListPage /> },
-      { path: "sources/:sourceId", element: <SourceDetailPage /> },
+      { path: "sources", element: <FeatureGate flag="sources"><SourcesListPage /></FeatureGate> },
+      { path: "sources/:sourceId", element: <FeatureGate flag="sources"><SourceDetailPage /></FeatureGate> },
       {
         path: "sources/new",
         element: (
-          <RequireRole minimum="researcher">
-            <SourceFormPage />
-          </RequireRole>
+          <FeatureGate flag="sources">
+            <RequireRole minimum="researcher">
+              <SourceFormPage />
+            </RequireRole>
+          </FeatureGate>
         ),
       },
 
-      { path: "reports/:reportId", element: <ReportPage /> },
+      { path: "reports/:reportId", element: <FeatureGate flag="reports"><ReportPage /></FeatureGate> },
 
       { path: "login", element: <LoginPage /> },
       { path: "register", element: <RegisterPage /> },

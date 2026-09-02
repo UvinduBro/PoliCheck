@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useSources } from "@/features/sources/api";
+import { useFeatureFlags } from "@/features/settings/api";
 import { useCase } from "./api";
 import { COLLECTIONS, createDoc } from "@/lib/firebase/firestore";
 import { writeAuditLog } from "@/lib/firebase/auditLog";
@@ -13,6 +14,10 @@ import { CLAIM_CLASSIFICATION_LABELS } from "@/constants/legalStatus";
 import { isClaimClassificationConsistentWithStage } from "@/lib/legal-status/caseStage";
 import { isSourceTierSufficientForClassification } from "@/lib/legal-status/sourceTier";
 import type { Claim } from "@/types";
+
+function toLines(value: string): string[] {
+  return value.split("\n").map((v) => v.trim()).filter(Boolean);
+}
 
 function useCreateClaim(actorId: string) {
   const queryClient = useQueryClient();
@@ -36,6 +41,7 @@ export function ClaimFormPage() {
   const { user } = useAuth();
   const { data: relatedCase } = useCase(preselectedCaseId || undefined);
   const createMutation = useCreateClaim(user?.uid ?? "");
+  const { flags } = useFeatureFlags();
   const { data: sources = [] } = useSources();
   const [error, setError] = useState<string | null>(null);
 
@@ -47,6 +53,7 @@ export function ClaimFormPage() {
       classification: "unverified_claim",
       confidence: "low",
       sourceIds: [],
+      sourceLinks: [],
     },
   });
 
@@ -136,18 +143,32 @@ export function ClaimFormPage() {
           <label className="label" htmlFor="currentStatus">Current status</label>
           <input id="currentStatus" className="input" {...register("currentStatus")} />
         </div>
-        <fieldset>
-          <legend className="label">Sources (at least one required)</legend>
-          <div className="max-h-48 space-y-1 overflow-y-auto rounded-md border border-line p-2">
-            {sources.map((s) => (
-              <label key={s.id} className="flex items-center gap-2 text-sm">
-                <input type="checkbox" value={s.id} {...register("sourceIds")} />
-                {s.title} <span className="text-xs text-ink-faint">(Tier {s.tier})</span>
-              </label>
-            ))}
+        {flags.sources ? (
+          <fieldset>
+            <legend className="label">Sources (at least one required)</legend>
+            <div className="max-h-48 space-y-1 overflow-y-auto rounded-md border border-line p-2">
+              {sources.map((s) => (
+                <label key={s.id} className="flex items-center gap-2 text-sm">
+                  <input type="checkbox" value={s.id} {...register("sourceIds")} />
+                  {s.title} <span className="text-xs text-ink-faint">(Tier {s.tier})</span>
+                </label>
+              ))}
+            </div>
+            {errors.sourceLinks && <p className="mt-1 text-sm text-status-critical">{errors.sourceLinks.message}</p>}
+          </fieldset>
+        ) : (
+          <div>
+            <label className="label" htmlFor="sourceLinks">Source link(s) — one per line (at least one required)</label>
+            <textarea
+              id="sourceLinks"
+              rows={3}
+              className="input"
+              placeholder="https://…"
+              {...register("sourceLinks", { setValueAs: toLines })}
+            />
+            {errors.sourceLinks && <p className="mt-1 text-sm text-status-critical">{errors.sourceLinks.message}</p>}
           </div>
-          {errors.sourceIds && <p className="mt-1 text-sm text-status-critical">{errors.sourceIds.message}</p>}
-        </fieldset>
+        )}
         {error && <p role="alert" className="text-sm text-status-critical">{error}</p>}
         <button type="submit" className="btn-primary" disabled={isSubmitting}>
           {isSubmitting ? "Saving..." : "Save claim for review"}

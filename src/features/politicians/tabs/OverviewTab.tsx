@@ -20,7 +20,7 @@ export function OverviewTab() {
   const { userProfile } = useAuth();
   const { cases, investigations, events, sources, isLoading } = useLegalStatusDashboard(politician.id, userProfile?.role);
   const { data: positions = [] } = usePoliticalPositions(politician.id);
-  const dashboard = buildLegalStatusDashboard({ cases, investigations, events, sources });
+  const dashboard = buildLegalStatusDashboard({ politician, cases, investigations, events, sources });
 
   const convictions = cases.filter((c) => c.legalStage === "convicted");
   const acquittals = cases.filter((c) => c.legalStage === "acquitted");
@@ -49,6 +49,9 @@ export function OverviewTab() {
         lastVerified={politician.lastResearchedAt}
         hasConflict={dashboard.hasConflictingSources}
         evidenceHref={`/politicians/${politician.id}/legal-status`}
+        custodySince={politician.custodySince}
+        sentenceYears={politician.sentenceYears}
+        custodySourceLink={politician.custodySourceLink}
       />
 
       <InfoGrid items={infoItems} />

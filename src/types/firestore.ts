@@ -17,6 +17,8 @@ export interface UserProfile {
 export type PublicationStatus = "draft" | "review" | "published" | "archived";
 export type IdentityConfidence = "high" | "medium" | "low" | "unresolved";
 
+export type CustodyStatus = "jailed" | "bailed" | "not_in_custody";
+
 export interface Politician {
   id: string;
   fullName: string;
@@ -35,6 +37,13 @@ export interface Politician {
   biography?: string;
   identityConfidence: IdentityConfidence;
   publicationStatus: PublicationStatus;
+  /** Direct, simplified custody status capture (initial-launch scope) — independent of the
+   *  fuller LegalEvent-derived freedom-status system, which still applies as a fallback when
+   *  these fields are left unset. */
+  custodyStatus?: CustodyStatus;
+  custodySince?: string;
+  sentenceYears?: number;
+  custodySourceLink?: string;
   createdBy: string;
   reviewedBy?: string;
   createdAt: Timestamp;
@@ -129,6 +138,8 @@ export interface LegalCase {
   acquittalStatus?: "acquitted" | "not_acquitted" | "unknown";
   appealStatus?: "pending" | "successful" | "unsuccessful" | "none" | "unknown";
   sourceIds: string[];
+  /** Plain-URL citations, used as a fallback when the Sources library subsystem is disabled. */
+  sourceLinks?: string[];
   publicationStatus: PublicationStatus;
   createdBy: string;
   reviewedBy?: string;
@@ -219,6 +230,8 @@ export interface Claim {
   response?: string;
   currentStatus?: string;
   sourceIds: string[];
+  /** Plain-URL citations, used as a fallback when the Sources library subsystem is disabled. */
+  sourceLinks?: string[];
   confidence: "high" | "medium" | "low";
   reviewStatus: ReviewStatus;
   createdBy: string;

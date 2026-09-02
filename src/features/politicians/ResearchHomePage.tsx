@@ -4,20 +4,24 @@ import { usePoliticians } from "./api";
 import { useAuth } from "@/hooks/useAuth";
 import { PublicationStatusBadge } from "@/components/status/PublicationStatusBadge";
 import { EmptyState } from "@/components/feedback/EmptyState";
+import { useFeatureFlags } from "@/features/settings/api";
+import type { FeatureFlagKey } from "@/constants/featureFlags";
 
-const ACTIONS = [
+const ACTIONS: { to: string; icon: typeof UserPlus; title: string; desc: string; flag?: FeatureFlagKey }[] = [
   { to: "/politicians/new", icon: UserPlus, title: "Add a Politician", desc: "Start with identity verification." },
-  { to: "/sources/new", icon: FileText, title: "Add a Source", desc: "Cite a court judgment, article, or record." },
   { to: "/cases/new", icon: Gavel, title: "Add a Legal Case", desc: "Criminal, civil, or corruption case." },
-  { to: "/investigations/new", icon: Landmark, title: "Add an Investigation", desc: "Corruption, financial, or police investigation." },
-  { to: "/legal-events/new", icon: ScrollText, title: "Add a Timeline Event", desc: "Arrest, bail, judgment, and more." },
   { to: "/claims/new", icon: ListChecks, title: "Add a Claim", desc: "Classify a claim for the fact-vs-allegation table." },
+  { to: "/sources/new", icon: FileText, title: "Add a Source", desc: "Cite a court judgment, article, or record.", flag: "sources" },
+  { to: "/investigations/new", icon: Landmark, title: "Add an Investigation", desc: "Corruption, financial, or police investigation.", flag: "investigations" },
+  { to: "/legal-events/new", icon: ScrollText, title: "Add a Timeline Event", desc: "Arrest, bail, judgment, and more.", flag: "timeline" },
 ];
 
 export function ResearchHomePage() {
   const { userProfile } = useAuth();
   const { data: politicians = [] } = usePoliticians(userProfile?.role);
   const myDrafts = politicians.filter((p) => p.createdBy === userProfile?.uid);
+  const { flags } = useFeatureFlags();
+  const actions = ACTIONS.filter((a) => !a.flag || flags[a.flag]);
 
   return (
     <div>
@@ -29,7 +33,7 @@ export function ResearchHomePage() {
 
       <h2 className="mt-8 text-section-heading font-semibold text-ink">Quick actions</h2>
       <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {ACTIONS.map(({ to, icon: Icon, title, desc }) => (
+        {actions.map(({ to, icon: Icon, title, desc }) => (
           <Link key={to} to={to} className="card-hover group block p-5">
             <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent transition-colors group-hover:bg-accent/15">
               <Icon size={20} aria-hidden="true" />
