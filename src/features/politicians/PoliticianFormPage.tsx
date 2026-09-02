@@ -81,6 +81,7 @@ export function PoliticianFormPage() {
           identityConfidence: existing.identityConfidence,
           custodyStatus: existing.custodyStatus ?? "not_in_custody",
           custodySince: existing.custodySince,
+          bailedSince: existing.bailedSince,
           sentenceYears: existing.sentenceYears,
           custodySourceLink: existing.custodySourceLink,
         }
@@ -252,6 +253,13 @@ export function PoliticianFormPage() {
                   {errors.sentenceYears && <p className="mt-1 text-sm text-status-critical">{errors.sentenceYears.message}</p>}
                 </div>
               </div>
+              {custodyStatus === "bailed" && (
+                <div>
+                  <label className="label" htmlFor="bailedSince">Bailed since</label>
+                  <input id="bailedSince" className="input" placeholder="YYYY-MM-DD" {...register("bailedSince")} />
+                  {errors.bailedSince && <p className="mt-1 text-sm text-status-critical">{errors.bailedSince.message}</p>}
+                </div>
+              )}
               <div>
                 <label className="label" htmlFor="custodySourceLink">Source link</label>
                 <input id="custodySourceLink" className="input" placeholder="https://…" {...register("custodySourceLink")} />

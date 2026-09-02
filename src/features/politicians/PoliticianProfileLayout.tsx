@@ -5,6 +5,7 @@ import { ReportErrorButton } from "./ReportErrorButton";
 import { ProfileTabs } from "@/components/navigation/ProfileTabs";
 import { PublicationStatusBadge } from "@/components/status/PublicationStatusBadge";
 import { VerificationIndicator } from "@/components/profile/VerificationIndicator";
+import { CustodyStatusCard } from "@/components/profile/CustodyStatusCard";
 import { ProfileHeaderSkeleton } from "@/components/feedback/Skeleton";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { formatDate } from "@/lib/formatting/date";
@@ -96,6 +97,8 @@ export function PoliticianProfileLayout() {
 
         <PoliticianStatusActions politician={politician} />
       </div>
+
+      <CustodyStatusCard politician={politician} />
 
       <div className="mt-6">
         <ProfileTabs basePath={`/politicians/${politician.id}`} tabs={tabs} />
