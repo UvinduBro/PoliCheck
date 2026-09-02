@@ -27,6 +27,7 @@ export const politicianSchema = z
     identityConfidence: z.enum(["high", "medium", "low", "unresolved"]),
     custodyStatus: z.enum(["jailed", "bailed", "not_in_custody"]).default("not_in_custody"),
     custodySince: isoDate,
+    bailedSince: isoDate,
     // A blank number input arrives as "" — coerce that to undefined rather than 0, so an
     // unspecified sentence isn't mistaken for a determined zero-year sentence.
     sentenceYears: z.preprocess(

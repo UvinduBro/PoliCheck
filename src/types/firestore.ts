@@ -43,6 +43,8 @@ export interface Politician {
    *  these fields are left unset. */
   custodyStatus?: CustodyStatus;
   custodySince?: string;
+  /** When custodyStatus is "bailed": the date bail was granted, ending the custody period that began at custodySince. */
+  bailedSince?: string;
   sentenceYears?: number;
   custodySourceLink?: string;
   createdBy: string;
