@@ -23,41 +23,39 @@ export function PoliticianCard({ politician }: { politician: Politician }) {
   const custodyLabel = politician.custodyStatus ? CUSTODY_LABELS[politician.custodyStatus] : undefined;
 
   return (
-    <li className="card-hover p-4">
-      <Link to={`/politicians/${politician.id}/overview`} className="flex items-start gap-3">
+    <li className="card-hover p-5">
+      <Link to={`/politicians/${politician.id}/overview`} className="flex flex-col items-center text-center">
         {politician.photoUrl ? (
           <img
             src={politician.photoUrl}
             alt=""
-            className="h-11 w-11 shrink-0 rounded-full object-cover"
+            className="h-20 w-20 shrink-0 rounded-full object-cover"
           />
         ) : (
           <span
             aria-hidden="true"
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface-2 text-sm font-semibold text-ink-muted"
+            className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-surface-2 text-lg font-semibold text-ink-muted"
           >
             {initials(politician.fullName)}
           </span>
         )}
-        <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-2">
-            <p className="truncate font-medium text-ink hover:text-accent">{politician.fullName}</p>
-            {custodyLabel && (
-              <span
-                className={`chip shrink-0 py-0.5 text-[11px] ${CUSTODY_CLASSES[politician.custodyStatus as CustodyStatus]}`}
-              >
-                {custodyLabel}
-              </span>
-            )}
-          </div>
+        <div className="mt-3 w-full min-w-0">
+          <p className="truncate font-medium text-ink hover:text-accent">{politician.fullName}</p>
           <p className="mt-0.5 truncate text-sm text-ink-muted">{politician.currentPosition || politician.profession || "—"}</p>
           <p className="truncate text-xs text-ink-faint">
             {politician.country}
             {politician.politicalParty ? ` · ${politician.politicalParty}` : ""}
           </p>
+          {custodyLabel && (
+            <span
+              className={`chip mt-2 py-0.5 text-[11px] ${CUSTODY_CLASSES[politician.custodyStatus as CustodyStatus]}`}
+            >
+              {custodyLabel}
+            </span>
+          )}
         </div>
       </Link>
-      <div className="mt-3 flex items-center justify-between gap-2">
+      <div className="mt-4 flex items-center justify-between gap-2 border-t border-line pt-3">
         <PublicationStatusBadge status={politician.publicationStatus} />
         <span className="text-xs text-ink-faint">
           {politician.lastResearchedAt ? `Researched ${formatDate(politician.lastResearchedAt)}` : "Not yet researched"}
