@@ -1,11 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCreatePolitician, usePolitician, useUpdatePolitician } from "./api";
 import { useAuth } from "@/hooks/useAuth";
 import { politicianSchema, type PoliticianFormValues } from "@/lib/validation/schemas";
 import { useFeatureFlags } from "@/features/settings/api";
+import { uploadResearchFile, validateUpload } from "@/lib/firebase/storage";
 
 function toCsv(value: string): string[] {
   return value.split(",").map((v) => v.trim()).filter(Boolean);
@@ -20,8 +21,38 @@ export function PoliticianFormPage() {
   const createMutation = useCreatePolitician(user?.uid ?? "");
   const updateMutation = useUpdatePolitician(user?.uid ?? "");
   const [error, setError] = useState<string | null>(null);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoError, setPhotoError] = useState<string | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
   const { flags } = useFeatureFlags();
+
+  useEffect(() => {
+    if (!photoFile) return;
+    const objectUrl = URL.createObjectURL(photoFile);
+    setPhotoPreview(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [photoFile]);
+
+  function onPhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const selected = e.target.files?.[0] ?? null;
+    setPhotoError(null);
+    if (selected) {
+      if (!selected.type.startsWith("image/")) {
+        setPhotoError("Choose an image file (PNG, JPEG, or WebP).");
+        setPhotoFile(null);
+        return;
+      }
+      const validationError = validateUpload(selected);
+      if (validationError) {
+        setPhotoError(validationError);
+        setPhotoFile(null);
+        return;
+      }
+    }
+    setPhotoFile(selected);
+  }
 
   const {
     register,
@@ -62,17 +93,23 @@ export function PoliticianFormPage() {
   async function onSubmit(values: PoliticianFormValues) {
     setError(null);
     try {
-      if (isEditing && politicianId) {
-        await updateMutation.mutateAsync({ id: politicianId, data: values });
-        navigate(`/politicians/${politicianId}/overview`);
-      } else {
-        const id = await createMutation.mutateAsync({
-          ...values,
-          publicationStatus: "draft",
-        });
-        navigate(`/politicians/${id}/overview`);
+      const id = isEditing && politicianId ? politicianId : undefined;
+      if (id) {
+        await updateMutation.mutateAsync({ id, data: values });
       }
+
+      const newId = id ?? (await createMutation.mutateAsync({ ...values, publicationStatus: "draft" }));
+
+      if (photoFile && user) {
+        setUploadingPhoto(true);
+        const uploaded = await uploadResearchFile({ kind: "politicians", entityId: newId }, photoFile, user.uid);
+        await updateMutation.mutateAsync({ id: newId, data: { photoUrl: uploaded.downloadUrl } });
+        setUploadingPhoto(false);
+      }
+
+      navigate(`/politicians/${newId}/overview`);
     } catch (e) {
+      setUploadingPhoto(false);
       setError(e instanceof Error ? e.message : "Could not save this profile.");
     }
   }
@@ -92,6 +129,27 @@ export function PoliticianFormPage() {
           <label className="label" htmlFor="fullName">Full legal name</label>
           <input id="fullName" className="input" {...register("fullName")} />
           {errors.fullName && <p className="mt-1 text-sm text-status-critical">{errors.fullName.message}</p>}
+        </div>
+
+        <div>
+          <label className="label" htmlFor="photo">Profile photo (optional)</label>
+          <div className="flex items-center gap-4">
+            {(photoPreview || existing?.photoUrl) && (
+              <img
+                src={photoPreview ?? existing?.photoUrl}
+                alt=""
+                className="h-16 w-16 shrink-0 rounded-full object-cover"
+              />
+            )}
+            <input
+              id="photo"
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              onChange={onPhotoChange}
+              className="text-sm text-ink-muted file:mr-3 file:rounded-md file:border file:border-line file:bg-surface file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-ink hover:file:bg-surface-2"
+            />
+          </div>
+          {photoError && <p className="mt-1 text-sm text-status-critical">{photoError}</p>}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
@@ -169,28 +227,30 @@ export function PoliticianFormPage() {
 
           {inCustody && (
             <div className="mt-3 space-y-3">
+              {custodyStatus === "bailed" && (
+                <p className="text-xs text-ink-faint">
+                  Record when this person was originally jailed and, if sentenced, for how long — bail
+                  typically follows an initial jailing or conviction.
+                </p>
+              )}
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="label" htmlFor="custodySince">
-                    {custodyStatus === "jailed" ? "Jailed since" : "On bail since"}
-                  </label>
+                  <label className="label" htmlFor="custodySince">Jailed since</label>
                   <input id="custodySince" className="input" placeholder="YYYY-MM-DD" {...register("custodySince")} />
                   {errors.custodySince && <p className="mt-1 text-sm text-status-critical">{errors.custodySince.message}</p>}
                 </div>
-                {custodyStatus === "jailed" && (
-                  <div>
-                    <label className="label" htmlFor="sentenceYears">Sentence (years)</label>
-                    <input
-                      id="sentenceYears"
-                      type="number"
-                      min={0}
-                      max={100}
-                      className="input"
-                      {...register("sentenceYears")}
-                    />
-                    {errors.sentenceYears && <p className="mt-1 text-sm text-status-critical">{errors.sentenceYears.message}</p>}
-                  </div>
-                )}
+                <div>
+                  <label className="label" htmlFor="sentenceYears">Sentence (years)</label>
+                  <input
+                    id="sentenceYears"
+                    type="number"
+                    min={0}
+                    max={100}
+                    className="input"
+                    {...register("sentenceYears")}
+                  />
+                  {errors.sentenceYears && <p className="mt-1 text-sm text-status-critical">{errors.sentenceYears.message}</p>}
+                </div>
               </div>
               <div>
                 <label className="label" htmlFor="custodySourceLink">Source link</label>
@@ -214,7 +274,13 @@ export function PoliticianFormPage() {
         {error && <p role="alert" className="text-sm text-status-critical">{error}</p>}
 
         <button type="submit" className="btn-primary" disabled={isSubmitting}>
-          {isSubmitting ? "Saving..." : isEditing ? "Save changes" : "Create draft profile"}
+          {uploadingPhoto
+            ? "Uploading photo..."
+            : isSubmitting
+              ? "Saving..."
+              : isEditing
+                ? "Save changes"
+                : "Create draft profile"}
         </button>
       </form>
     </div>

@@ -49,11 +49,11 @@ export function LegalStatusCard({
           <dl className="mt-4 grid grid-cols-1 gap-x-6 gap-y-2 rounded-md border border-line bg-surface-2/40 px-4 py-3 text-sm sm:grid-cols-3">
             {custodySince && (
               <div>
-                <dt className="text-xs text-ink-faint">{status === "incarcerated" ? "Jailed since" : "On bail since"}</dt>
+                <dt className="text-xs text-ink-faint">Jailed since</dt>
                 <dd className="mt-0.5 font-medium text-ink">{formatDate(custodySince)}</dd>
               </div>
             )}
-            {status === "incarcerated" && sentenceYears !== undefined && (
+            {sentenceYears !== undefined && (
               <div>
                 <dt className="text-xs text-ink-faint">Sentence</dt>
                 <dd className="mt-0.5 font-medium text-ink">{sentenceYears} year{sentenceYears === 1 ? "" : "s"}</dd>
