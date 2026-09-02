@@ -12,8 +12,9 @@ export function PoliticianStatusActions({ politician }: { politician: Politician
   const deleteMutation = useDeletePolitician(user?.uid ?? "");
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const role = userProfile?.role;
+  const isOwner = user?.uid === politician.createdBy;
 
-  if (!user || !can.createRecords(role)) return null;
+  if (!user || !(isOwner || can.createRecords(role))) return null;
 
   async function handleDelete() {
     await deleteMutation.mutateAsync(politician.id);

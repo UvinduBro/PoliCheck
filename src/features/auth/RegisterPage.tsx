@@ -41,10 +41,10 @@ export function RegisterPage() {
 
   return (
     <div className="mx-auto max-w-md px-4 py-12">
-      <h1 className="text-page-heading font-semibold text-ink">Create a researcher account</h1>
+      <h1 className="text-page-heading font-semibold text-ink">Sign up</h1>
       <p className="mt-1 text-sm text-ink-muted">
-        New accounts start with public-level access. A reviewer or administrator must upgrade your role
-        to "researcher" before you can add records.
+        Create an account to add politician records — an admin reviews new submissions before they're
+        published.
       </p>
 
       <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
