@@ -43,6 +43,7 @@ export function CaseFormPage() {
     defaultValues: {
       legalStage: "allegation_only",
       caseType: "criminal",
+      country: "Sri Lanka",
       sourceIds: [],
       sourceLinks: [],
       charges: [],

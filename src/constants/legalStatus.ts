@@ -25,7 +25,7 @@ export const STATUS_BADGE_LABELS: Record<StatusBadgeKey, string> = {
 /**
  * Semantic status color mapping (design spec §10): green = verified/clear, amber =
  * pending/investigation/unclear, red = conviction/incarceration, blue = informational,
- * gray = unknown. Backed by the CivicLens status tokens so light/dark stay in sync from
+ * gray = unknown. Backed by the Politician Watch status tokens so light/dark stay in sync from
  * one place — color is always paired with an icon + label, never used alone.
  */
 export const STATUS_BADGE_CLASSES: Record<StatusBadgeKey, string> = {

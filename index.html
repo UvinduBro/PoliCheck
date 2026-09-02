@@ -7,9 +7,9 @@
     <meta name="theme-color" content="#0B0D10" />
     <meta
       name="description"
-      content="CivicLens — See the record. Know the facts. Public-record intelligence on politicians' identities, political histories, and legal status, backed by verifiable sources."
+      content="Politician Watch — See the record. Know the facts. Public-record intelligence on Sri Lankan politicians' identities, political histories, and legal status, backed by verifiable sources."
     />
-    <title>CivicLens — See the record. Know the facts.</title>
+    <title>Politician Watch — See the record. Know the facts.</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -22,7 +22,7 @@
       // Applied before paint to avoid a light/dark flash on load.
       (function () {
         try {
-          var stored = localStorage.getItem("civiclens-theme");
+          var stored = localStorage.getItem("politician-watch-theme");
           var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
           if (stored === "dark" || (!stored && prefersDark)) {
             document.documentElement.classList.add("dark");

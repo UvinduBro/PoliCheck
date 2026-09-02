@@ -23,13 +23,13 @@ export function HomePage() {
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(ellipse_at_top,theme(colors.accent.100),transparent_65%)] dark:bg-[radial-gradient(ellipse_at_top,theme(colors.accent.950),transparent_65%)]"
         />
-        <p className="eyebrow">Public Record Intelligence</p>
+        <p className="eyebrow">Sri Lanka Public Record Intelligence</p>
         <h1 className="mx-auto mt-4 max-w-3xl text-hero-mobile font-semibold text-ink sm:text-hero">
           Know the record behind the politician.
         </h1>
         <p className="mx-auto mt-5 max-w-xl text-balance text-base text-ink-muted sm:text-lg">
-          Research political careers, court proceedings, investigations and public records — backed by
-          sources you can verify.
+          Research Sri Lankan political careers, court proceedings, investigations and public records —
+          backed by sources you can verify.
         </p>
 
         <button

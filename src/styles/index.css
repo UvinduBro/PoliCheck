@@ -4,7 +4,7 @@
 
 @layer base {
   /*
-   * CivicLens design tokens. Values as space-separated RGB triplets so Tailwind's
+   * Politician Watch design tokens. Values as space-separated RGB triplets so Tailwind's
    * `rgb(var(--x) / <alpha-value>)` color functions (see tailwind.config.js) can apply
    * opacity modifiers (e.g. `bg-surface/60`) the same way built-in colors do.
    */

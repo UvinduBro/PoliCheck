@@ -1,4 +1,4 @@
-const STORAGE_KEY = "civiclens-recent-searches";
+const STORAGE_KEY = "politician-watch-recent-searches";
 const MAX_ENTRIES = 6;
 
 export function getRecentSearches(): string[] {

@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { can } from "@/lib/permissions/roles";
 import { useCommandSearchContext } from "@/features/search/CommandSearchContext";
 import { useFeatureFlags } from "@/features/settings/api";
-import { CivicLensMark } from "./CivicLensMark";
+import { BrandMark } from "./BrandMark";
 import { NotificationsMenu } from "./NotificationsMenu";
 import { UserMenu } from "./UserMenu";
 import { ThemeToggle } from "./ThemeToggle";
@@ -45,8 +45,8 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b border-line/80 bg-surface/85 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <Link to="/" className="flex shrink-0 items-center gap-2 text-ink">
-          <CivicLensMark size={20} className="text-accent" />
-          <span className="text-[15px] font-semibold tracking-tight">CivicLens</span>
+          <BrandMark size={20} className="text-accent" />
+          <span className="text-[15px] font-semibold tracking-tight">Politician Watch</span>
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">

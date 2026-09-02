@@ -37,7 +37,7 @@ export function SourcesListPage() {
     <div>
       <h1 className="text-page-heading font-semibold text-ink">Sources</h1>
       <p className="mt-1 text-sm text-ink-muted">
-        Every court document, government record, and journalism source cited across CivicLens, with its tier
+        Every court document, government record, and journalism source cited across Politician Watch, with its tier
         and verification status.
       </p>
 

@@ -105,7 +105,7 @@ export function CommandSearchDialog({ open, onClose }: { open: boolean; onClose:
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="Search CivicLens"
+        aria-label="Search Politician Watch"
         onKeyDown={onKeyDown}
         className="relative z-10 w-full max-w-xl animate-scale-in overflow-hidden rounded-lg border border-line bg-surface shadow-premium"
       >
@@ -221,7 +221,7 @@ export function CommandSearchDialog({ open, onClose }: { open: boolean; onClose:
           </span>
           <span className="ml-auto flex items-center gap-1.5">
             <Building2 size={13} aria-hidden="true" />
-            CivicLens
+            Politician Watch
           </span>
         </div>
       </div>
