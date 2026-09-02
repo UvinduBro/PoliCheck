@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
-import { BookOpenCheck, CheckCircle2, Clock, Search as SearchIcon, ShieldCheck } from "lucide-react";
+import { BookOpenCheck, Search as SearchIcon, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useRecentlyUpdatedPoliticians } from "@/features/politicians/api";
 import { useCommandSearchContext } from "@/features/search/CommandSearchContext";
-import { StatusBadge } from "@/components/status/StatusBadge";
 import { PoliticianCard } from "@/components/politicians/PoliticianCard";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { CardGridSkeleton } from "@/components/feedback/Skeleton";
@@ -61,44 +60,6 @@ export function HomePage() {
             ))}
           </div>
         )}
-      </section>
-
-      <section aria-label="Example research preview" className="mx-auto max-w-2xl">
-        <div className="card overflow-hidden">
-          <div className="flex items-center justify-between border-b border-line bg-surface-2/50 px-5 py-2.5">
-            <span className="eyebrow">Example preview</span>
-            <span className="flex items-center gap-1 text-xs text-ink-faint">
-              <Clock size={12} aria-hidden="true" /> Updated 2 hours ago
-            </span>
-          </div>
-          <div className="flex flex-wrap items-center gap-4 px-5 py-5">
-            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-surface-2 text-lg font-semibold text-ink-muted">
-              EP
-            </span>
-            <div className="min-w-[180px] flex-1">
-              <p className="font-serif-report text-lg font-semibold text-ink">Example Politician</p>
-              <p className="text-sm text-ink-muted">Active Parliamentarian</p>
-            </div>
-            <StatusBadge status="UNDER_INVESTIGATION" />
-          </div>
-          <dl className="grid grid-cols-1 divide-y divide-line border-t border-line sm:grid-cols-3 sm:divide-y-0 sm:divide-x">
-            <div className="px-5 py-4">
-              <dt className="text-xs text-ink-faint">Legal status</dt>
-              <dd className="mt-1 text-sm font-medium text-ink">3 ongoing proceedings</dd>
-            </div>
-            <div className="px-5 py-4">
-              <dt className="text-xs text-ink-faint">Sources</dt>
-              <dd className="mt-1 flex items-center gap-1 text-sm font-medium text-ink">
-                <CheckCircle2 size={14} className="text-status-verified" aria-hidden="true" />
-                42 verified
-              </dd>
-            </div>
-            <div className="px-5 py-4">
-              <dt className="text-xs text-ink-faint">Confidence</dt>
-              <dd className="mt-1 text-sm font-medium text-ink">High</dd>
-            </div>
-          </dl>
-        </div>
       </section>
 
       <section className="mx-auto max-w-3xl rounded-lg border border-status-pending/25 bg-status-pending-bg px-5 py-4 text-sm text-ink">
