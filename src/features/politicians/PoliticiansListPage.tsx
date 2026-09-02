@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
-import { Plus, Search } from "lucide-react";
+import { Search } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 import { usePoliticians } from "./api";
 import { useAuth } from "@/hooks/useAuth";
-import { can } from "@/lib/permissions/roles";
 import { PoliticianCard } from "@/components/politicians/PoliticianCard";
+import { AddPoliticianButton } from "@/components/politicians/AddPoliticianButton";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { CardGridSkeleton } from "@/components/feedback/Skeleton";
@@ -36,12 +36,7 @@ export function PoliticiansListPage() {
           <h1 className="text-page-heading font-semibold text-ink">Politician Profiles</h1>
           <p className="mt-1 text-sm text-ink-muted">Search verified profiles by name, party, constituency, or country.</p>
         </div>
-        {can.createRecords(userProfile?.role) && (
-          <Link to="/politicians/new" className="btn-primary shrink-0 gap-1.5">
-            <Plus size={16} aria-hidden="true" />
-            Add politician
-          </Link>
-        )}
+        <AddPoliticianButton className="btn-primary shrink-0 gap-1.5" />
       </div>
 
       <div className="relative mt-5 max-w-md">

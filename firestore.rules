@@ -35,13 +35,22 @@ service cloud.firestore {
       return newStatus in ["draft", "review"] ? isResearcher() : isReviewer();
     }
 
+    // Politicians only: any signed-in user (not just researcher+) may submit and keep
+    // editing their own record while it's in draft or review — publishing/archiving still
+    // requires reviewer+ regardless of ownership. This is what lets a newly registered
+    // account use the "Add politician" button immediately, without needing to first be
+    // promoted to researcher.
+    function ownDraftOrReviewAllowed(newStatus, isRecordOwner) {
+      return newStatus in ["draft", "review"] ? (isRecordOwner || isResearcher()) : isReviewer();
+    }
+
     match /politicians/{politicianId} {
-      allow read: if resource.data.publicationStatus == "published" || isResearcher();
-      allow create: if isResearcher()
+      allow read: if resource.data.publicationStatus == "published" || isResearcher() || isOwner(resource.data);
+      allow create: if signedIn()
         && request.resource.data.createdBy == request.auth.uid
-        && publicationTransitionAllowed(request.resource.data.publicationStatus);
+        && ownDraftOrReviewAllowed(request.resource.data.publicationStatus, true);
       allow update: if (isOwner(resource.data) || isReviewer())
-        && publicationTransitionAllowed(request.resource.data.publicationStatus);
+        && ownDraftOrReviewAllowed(request.resource.data.publicationStatus, isOwner(resource.data));
       allow delete: if isAdmin();
     }
 

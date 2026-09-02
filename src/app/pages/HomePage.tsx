@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRecentlyUpdatedPoliticians } from "@/features/politicians/api";
 import { useCommandSearchContext } from "@/features/search/CommandSearchContext";
 import { PoliticianCard } from "@/components/politicians/PoliticianCard";
+import { AddPoliticianButton } from "@/components/politicians/AddPoliticianButton";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { CardGridSkeleton } from "@/components/feedback/Skeleton";
 import { getRecentSearches } from "@/lib/recentSearches";
@@ -59,6 +60,10 @@ export function HomePage() {
             ))}
           </div>
         )}
+
+        <div className="mt-6 flex justify-center">
+          <AddPoliticianButton className="btn-secondary gap-1.5" />
+        </div>
       </section>
 
       <section>

@@ -55,7 +55,7 @@ export const routes: RouteObject[] = [
       {
         path: "politicians/new",
         element: (
-          <RequireRole minimum="researcher">
+          <RequireRole minimum="public">
             <PoliticianFormPage />
           </RequireRole>
         ),
@@ -63,7 +63,7 @@ export const routes: RouteObject[] = [
       {
         path: "politicians/:politicianId/edit",
         element: (
-          <RequireRole minimum="researcher">
+          <RequireRole minimum="public">
             <PoliticianFormPage />
           </RequireRole>
         ),

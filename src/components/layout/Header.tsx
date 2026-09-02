@@ -30,14 +30,17 @@ export function Header() {
 
   useEffect(() => setMenuOpen(false), [location.pathname]);
 
+  // Cases, Investigations, Sources, Research, and Review are internal moderation/workspace
+  // tools — a normal registered user only needs Discover and Politicians; everything else
+  // is admin-only.
   const links = [
     { to: "/", label: "Discover", show: true, end: true },
     { to: "/politicians", label: "Politicians", show: true },
-    { to: "/cases", label: "Cases", show: true },
-    { to: "/investigations", label: "Investigations", show: flags.investigations },
-    { to: "/sources", label: "Sources", show: flags.sources },
-    { to: "/research", label: "Research", show: can.createRecords(role) },
-    { to: "/review", label: "Review", show: can.reviewRecords(role) },
+    { to: "/cases", label: "Cases", show: can.manageUsers(role) },
+    { to: "/investigations", label: "Investigations", show: can.manageUsers(role) && flags.investigations },
+    { to: "/sources", label: "Sources", show: can.manageUsers(role) && flags.sources },
+    { to: "/research", label: "Research", show: can.manageUsers(role) },
+    { to: "/review", label: "Review", show: can.manageUsers(role) },
     { to: "/admin", label: "Admin", show: can.manageUsers(role) },
   ].filter((link) => link.show);
 

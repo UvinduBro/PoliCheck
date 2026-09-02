@@ -85,7 +85,7 @@ export function LoginPage() {
       <p className="mt-6 text-center text-sm text-ink-muted">
         Need an account?{" "}
         <Link to="/register" state={{ email }} className="text-accent hover:underline">
-          Register as a researcher
+          Sign up
         </Link>
       </p>
     </div>

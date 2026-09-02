@@ -32,7 +32,16 @@ service firebase.storage {
       return request.resource.size < 25 * 1024 * 1024;
     }
 
-    // research/{politicians|cases|sources|reports}/{entityId}/{fileName}
+    // research/politicians/{entityId}/{fileName} — any signed-in user may upload a photo
+    // for a politician profile they're submitting, matching firestore.rules allowing any
+    // signed-in user to create a politician draft.
+    match /research/politicians/{entityId}/{fileName} {
+      allow read: if true;
+      allow write: if signedIn() && isAllowedType() && isUnderSizeLimit();
+      allow delete: if false;
+    }
+
+    // research/{cases|sources|reports}/{entityId}/{fileName}
     match /research/{kind}/{entityId}/{fileName} {
       allow read: if true;
       allow write: if isResearcher() && isAllowedType() && isUnderSizeLimit();
