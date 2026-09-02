@@ -60,9 +60,17 @@ export function PoliticianProfileLayout() {
       <div className="card p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex items-start gap-4">
-            <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-surface-2 text-lg font-semibold text-ink-muted sm:h-20 sm:w-20 sm:text-xl">
-              {initials(politician.fullName)}
-            </span>
+            {politician.photoUrl ? (
+              <img
+                src={politician.photoUrl}
+                alt=""
+                className="h-16 w-16 shrink-0 rounded-full object-cover sm:h-20 sm:w-20"
+              />
+            ) : (
+              <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-surface-2 text-lg font-semibold text-ink-muted sm:h-20 sm:w-20 sm:text-xl">
+                {initials(politician.fullName)}
+              </span>
+            )}
             <div>
               <h1 className="font-serif-report text-2xl font-semibold text-ink sm:text-page-heading">
                 {politician.fullName}

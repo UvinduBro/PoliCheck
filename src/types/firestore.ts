@@ -35,6 +35,7 @@ export interface Politician {
   currentPosition?: string;
   constituency?: string;
   biography?: string;
+  photoUrl?: string;
   identityConfidence: IdentityConfidence;
   publicationStatus: PublicationStatus;
   /** Direct, simplified custody status capture (initial-launch scope) — independent of the

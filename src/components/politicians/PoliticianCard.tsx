@@ -25,12 +25,20 @@ export function PoliticianCard({ politician }: { politician: Politician }) {
   return (
     <li className="card-hover p-4">
       <Link to={`/politicians/${politician.id}/overview`} className="flex items-start gap-3">
-        <span
-          aria-hidden="true"
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface-2 text-sm font-semibold text-ink-muted"
-        >
-          {initials(politician.fullName)}
-        </span>
+        {politician.photoUrl ? (
+          <img
+            src={politician.photoUrl}
+            alt=""
+            className="h-11 w-11 shrink-0 rounded-full object-cover"
+          />
+        ) : (
+          <span
+            aria-hidden="true"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface-2 text-sm font-semibold text-ink-muted"
+          >
+            {initials(politician.fullName)}
+          </span>
+        )}
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <p className="truncate font-medium text-ink hover:text-accent">{politician.fullName}</p>
