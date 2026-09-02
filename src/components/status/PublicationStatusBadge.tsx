@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import type { PublicationStatus } from "@/types";
 
 const CLASSES: Record<PublicationStatus, string> = {
@@ -7,13 +8,7 @@ const CLASSES: Record<PublicationStatus, string> = {
   archived: "bg-surface-2 text-ink-faint border-line",
 };
 
-const LABELS: Record<PublicationStatus, string> = {
-  draft: "Draft",
-  review: "In Review",
-  published: "Published",
-  archived: "Archived",
-};
-
 export function PublicationStatusBadge({ status }: { status: PublicationStatus }) {
-  return <span className={`chip font-medium ${CLASSES[status]}`}>{LABELS[status]}</span>;
+  const { t } = useTranslation();
+  return <span className={`chip font-medium ${CLASSES[status]}`}>{t(`profile.publicationStatus.${status}`)}</span>;
 }

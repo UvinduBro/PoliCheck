@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { loginWithEmail, requestPasswordReset } from "@/lib/firebase/auth";
 import { loginSchema, type LoginFormValues } from "@/lib/validation/schemas";
@@ -8,6 +9,7 @@ import { firebaseConfigured } from "@/lib/firebase/config";
 import { PasswordInput } from "@/components/forms/PasswordInput";
 
 export function LoginPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const [error, setError] = useState<string | null>(null);
@@ -57,35 +59,35 @@ export function LoginPage() {
 
   return (
     <div className="mx-auto max-w-md px-4 py-12">
-      <h1 className="text-page-heading font-semibold text-ink">Sign in to Politician Watch</h1>
+      <h1 className="text-page-heading font-semibold text-ink">{t("auth.signInTitle")}</h1>
 
       <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div>
-          <label className="label" htmlFor="email">Email</label>
+          <label className="label" htmlFor="email">{t("auth.email")}</label>
           <input id="email" type="email" className="input" autoComplete="email" {...register("email")} />
           {errors.email && <p className="mt-1 text-sm text-status-critical">{errors.email.message}</p>}
         </div>
         <PasswordInput
           id="password"
-          label="Password"
+          label={t("auth.password")}
           autoComplete="current-password"
           registration={register("password")}
           error={errors.password?.message}
         />
         {error && <p role="alert" className="text-sm text-status-critical">{error}</p>}
-        {resetSent && <p role="status" className="text-sm text-status-verified">Password reset email sent.</p>}
+        {resetSent && <p role="status" className="text-sm text-status-verified">{t("auth.resetSent")}</p>}
         <button type="submit" className="btn-primary w-full" disabled={isSubmitting}>
-          {isSubmitting ? "Signing in..." : "Sign in"}
+          {isSubmitting ? t("auth.signingIn") : t("auth.signIn")}
         </button>
         <button type="button" className="text-sm text-accent hover:underline" onClick={onForgotPassword}>
-          Forgot password?
+          {t("auth.forgotPassword")}
         </button>
       </form>
 
       <p className="mt-6 text-center text-sm text-ink-muted">
-        Need an account?{" "}
+        {t("auth.needAccount")}{" "}
         <Link to="/register" state={{ email }} className="text-accent hover:underline">
-          Sign up
+          {t("auth.signUp")}
         </Link>
       </p>
     </div>

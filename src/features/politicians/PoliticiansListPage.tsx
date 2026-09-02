@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { usePoliticians } from "./api";
 import { useAuth } from "@/hooks/useAuth";
@@ -14,6 +15,7 @@ function normalize(value: string) {
 }
 
 export function PoliticiansListPage() {
+  const { t } = useTranslation();
   const { userProfile } = useAuth();
   const [searchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("q") ?? "");
@@ -33,8 +35,8 @@ export function PoliticiansListPage() {
     <div>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-page-heading font-semibold text-ink">Politician Profiles</h1>
-          <p className="mt-1 text-sm text-ink-muted">Search verified profiles by name, party, constituency, or country.</p>
+          <h1 className="text-page-heading font-semibold text-ink">{t("politicians.pageTitle")}</h1>
+          <p className="mt-1 text-sm text-ink-muted">{t("politicians.pageSubtitle")}</p>
         </div>
         <AddPoliticianButton className="btn-primary shrink-0 gap-1.5" />
       </div>
@@ -42,14 +44,14 @@ export function PoliticiansListPage() {
       <div className="relative mt-5 max-w-md">
         <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint" aria-hidden="true" />
         <label htmlFor="politician-search" className="sr-only">
-          Search by name, party, constituency, or country
+          {t("politicians.pageSubtitle")}
         </label>
         <input
           id="politician-search"
           className="input pl-9"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="e.g. Jane Doe, or Sri Lanka"
+          placeholder={t("politicians.searchPlaceholder")}
         />
       </div>
 
@@ -58,13 +60,13 @@ export function PoliticiansListPage() {
           <CardGridSkeleton count={6} />
         ) : error ? (
           <ErrorState
-            description="Politician profiles returned an error while loading. Try again shortly."
+            description={t("politicians.loadErrorDescription")}
             detail={error instanceof Error ? error.message : undefined}
           />
         ) : filtered.length === 0 ? (
           <EmptyState
-            title="No profiles match your search"
-            description="Try a different name, party, constituency, or country."
+            title={t("politicians.noResultsTitle")}
+            description={t("politicians.noResultsDescription")}
           />
         ) : (
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

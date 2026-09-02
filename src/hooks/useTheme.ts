@@ -8,7 +8,9 @@ function getInitialTheme(): Theme {
   if (typeof window === "undefined") return "light";
   const stored = window.localStorage.getItem(STORAGE_KEY);
   if (stored === "light" || stored === "dark") return stored;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  // Light is the default regardless of OS preference — a visitor only gets dark mode
+  // once they explicitly choose it via the toggle, which then persists.
+  return "light";
 }
 
 /**

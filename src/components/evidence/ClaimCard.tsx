@@ -1,4 +1,5 @@
 import { evidenceTierIcon, EvidenceBadge } from "./EvidenceBadge";
+import { TranslatedText } from "@/components/content/TranslatedText";
 import type { Claim } from "@/types";
 
 export function ClaimCard({ claim, sourceCount }: { claim: Claim; sourceCount: number }) {
@@ -11,7 +12,7 @@ export function ClaimCard({ claim, sourceCount }: { claim: Claim; sourceCount: n
       </span>
       <div className="min-w-0 flex-1">
         <EvidenceBadge classification={claim.classification} />
-        <p className="mt-2 text-sm leading-relaxed text-ink">{claim.text}</p>
+        <TranslatedText text={claim.text} className="mt-2 text-sm leading-relaxed text-ink" />
         <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-faint">
           {claim.claimant && <span>Claimant: {claim.claimant}</span>}
           <span>
@@ -20,10 +21,10 @@ export function ClaimCard({ claim, sourceCount }: { claim: Claim; sourceCount: n
           {claim.currentStatus && <span>{claim.currentStatus}</span>}
         </div>
         {claim.response && (
-          <p className="mt-2 rounded-md bg-surface-2 px-3 py-2 text-xs text-ink-muted">
+          <div className="mt-2 rounded-md bg-surface-2 px-3 py-2 text-xs text-ink-muted">
             <span className="font-medium text-ink">Response: </span>
-            {claim.response}
-          </p>
+            <TranslatedText text={claim.response} className="inline" />
+          </div>
         )}
       </div>
     </li>

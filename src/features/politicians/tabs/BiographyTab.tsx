@@ -1,6 +1,7 @@
 import { useOutletContext } from "react-router-dom";
 import type { PoliticianOutletContext } from "../PoliticianProfileLayout";
 import { EmptyState } from "@/components/feedback/EmptyState";
+import { TranslatedText } from "@/components/content/TranslatedText";
 
 export function BiographyTab() {
   const { politician } = useOutletContext<PoliticianOutletContext>();
@@ -10,9 +11,10 @@ export function BiographyTab() {
       <section className="card p-6">
         <h2 className="text-section-heading font-semibold text-ink">Biography</h2>
         {politician.biography ? (
-          <p className="font-serif-report mt-3 whitespace-pre-wrap text-[15px] leading-relaxed text-ink">
-            {politician.biography}
-          </p>
+          <TranslatedText
+            text={politician.biography}
+            className="font-serif-report mt-3 text-[15px] leading-relaxed text-ink"
+          />
         ) : (
           <div className="mt-3">
             <EmptyState title="No biography has been recorded yet" />

@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { deleteAccount, signOut, updateDisplayName } from "@/lib/firebase/auth";
-import { ROLE_LABELS } from "@/constants/roles";
 import { formatDate } from "@/lib/formatting/date";
 
 export function AccountPage() {
+  const { t } = useTranslation();
   const { user, userProfile, loading } = useAuth();
   const navigate = useNavigate();
   const [editing, setEditing] = useState(false);
@@ -59,10 +60,10 @@ export function AccountPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-12">
-      <h1 className="text-page-heading font-semibold text-ink">Account</h1>
+      <h1 className="text-page-heading font-semibold text-ink">{t("account.title")}</h1>
       <dl className="mt-6 divide-y divide-line rounded-lg border border-line bg-surface">
         <div className="flex items-center justify-between px-4 py-3 text-sm">
-          <dt className="text-ink-muted">Name</dt>
+          <dt className="text-ink-muted">{t("account.name")}</dt>
           {editing ? (
             <div className="flex items-center gap-2">
               <input
@@ -72,7 +73,7 @@ export function AccountPage() {
                 autoFocus
               />
               <button type="button" className="btn-primary h-8 px-3 text-xs" onClick={saveName} disabled={saving}>
-                {saving ? "Saving..." : "Save"}
+                {saving ? t("account.saving") : t("account.save")}
               </button>
               <button
                 type="button"
@@ -80,45 +81,42 @@ export function AccountPage() {
                 onClick={() => setEditing(false)}
                 disabled={saving}
               >
-                Cancel
+                {t("account.cancel")}
               </button>
             </div>
           ) : (
             <dd className="flex items-center gap-3 font-medium text-ink">
-              {userProfile?.displayName || user.displayName || "Not set"}
+              {userProfile?.displayName || user.displayName || t("account.notSet")}
               <button type="button" className="text-xs font-medium text-accent hover:underline" onClick={startEditing}>
-                Edit profile
+                {t("account.editProfile")}
               </button>
             </dd>
           )}
         </div>
         {nameError && <p className="px-4 py-2 text-sm text-status-critical">{nameError}</p>}
         <div className="flex justify-between px-4 py-3 text-sm">
-          <dt className="text-ink-muted">Email</dt>
+          <dt className="text-ink-muted">{t("account.email")}</dt>
           <dd className="font-medium text-ink">{user.email}</dd>
         </div>
         <div className="flex justify-between px-4 py-3 text-sm">
-          <dt className="text-ink-muted">Role</dt>
-          <dd className="font-medium text-ink">{ROLE_LABELS[userProfile?.role ?? "public"]}</dd>
+          <dt className="text-ink-muted">{t("account.role")}</dt>
+          <dd className="font-medium text-ink">{t(`roles.${userProfile?.role ?? "public"}`)}</dd>
         </div>
         {userProfile?.createdAt && (
           <div className="flex justify-between px-4 py-3 text-sm">
-            <dt className="text-ink-muted">Member since</dt>
+            <dt className="text-ink-muted">{t("account.memberSince")}</dt>
             <dd className="font-medium text-ink">{formatDate(userProfile.createdAt)}</dd>
           </div>
         )}
       </dl>
 
       <button type="button" className="btn-secondary mt-8" onClick={() => signOut()}>
-        Sign out
+        {t("account.signOut")}
       </button>
 
       <div className="mt-10 rounded-lg border border-status-critical/25 bg-status-critical-bg/40 p-4">
-        <h2 className="text-sm font-semibold text-status-critical">Delete account</h2>
-        <p className="mt-1 text-sm text-ink-muted">
-          Permanently deletes your account and profile. Research records you've contributed to the site are not
-          removed. This cannot be undone.
-        </p>
+        <h2 className="text-sm font-semibold text-status-critical">{t("account.deleteAccountHeading")}</h2>
+        <p className="mt-1 text-sm text-ink-muted">{t("account.deleteAccountBody")}</p>
         {deleteError && <p className="mt-2 text-sm text-status-critical">{deleteError}</p>}
         <div className="mt-3 flex items-center gap-2">
           {confirmingDelete ? (
@@ -129,7 +127,7 @@ export function AccountPage() {
                 onClick={handleDeleteAccount}
                 disabled={deleting}
               >
-                {deleting ? "Deleting..." : "Confirm delete account"}
+                {deleting ? t("account.deleting") : t("account.confirmDeleteAccount")}
               </button>
               <button
                 type="button"
@@ -137,7 +135,7 @@ export function AccountPage() {
                 onClick={() => setConfirmingDelete(false)}
                 disabled={deleting}
               >
-                Cancel
+                {t("account.cancel")}
               </button>
             </>
           ) : (
@@ -146,7 +144,7 @@ export function AccountPage() {
               className="btn-secondary border-status-critical/40 text-status-critical hover:bg-status-critical-bg"
               onClick={() => setConfirmingDelete(true)}
             >
-              Delete account
+              {t("account.deleteAccount")}
             </button>
           )}
         </div>

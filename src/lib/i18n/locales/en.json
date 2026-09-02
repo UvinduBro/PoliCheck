@@ -1,0 +1,228 @@
+{
+  "app": {
+    "name": "Politician Watch",
+    "tagline": "See the record. Know the facts."
+  },
+  "nav": {
+    "discover": "Discover",
+    "politicians": "Politicians",
+    "cases": "Cases",
+    "investigations": "Investigations",
+    "sources": "Sources",
+    "research": "Research",
+    "review": "Review",
+    "admin": "Admin",
+    "account": "Account",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "search": "Search",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "accountMenu": "Account menu"
+  },
+  "footer": {
+    "allegationsWarning": "Allegations are not convictions. An indictment, complaint, or investigation is not proof of guilt.",
+    "description": "Politician Watch presents structured, source-cited research on Sri Lankan politicians. Every significant claim is linked to its original source and classified as a verified fact, court finding, allegation, investigation, media report, or political claim. Where information could not be verified, that limitation is stated explicitly rather than presented as fact.",
+    "reportErrorNote": "Found an error? Every published profile includes a \"Report an error\" action, and disputed information is flagged for reviewer confirmation before it is used to describe someone's current legal status.",
+    "copyright": "© {{year}} Politician Watch. Structured research, not legal advice.",
+    "disclaimerLink": "Disclaimer"
+  },
+  "home": {
+    "eyebrow": "Sri Lanka Public Record Intelligence",
+    "heroTitle": "Know the record behind the politician.",
+    "heroSubtitle": "Research Sri Lankan political careers, court proceedings, investigations, and public records, backed by sources you can verify.",
+    "searchPlaceholder": "Search a politician…",
+    "searchExample": "try “Ranil Wickremesinghe”",
+    "recentLabel": "Recent:",
+    "recentlyUpdated": "Recently updated profiles",
+    "viewAll": "View all",
+    "noProfilesYet": "No profiles have been published yet"
+  },
+  "disclaimer": {
+    "title": "Disclaimer",
+    "subtitle": "How Politician Watch classifies claims, verifies sources, and why nothing here should be read as a finding of guilt.",
+    "allegationsHeading": "Allegations are not convictions",
+    "allegationsBody": "An indictment, complaint, or open investigation is never presented here as proof of guilt. Every significant claim is classified (verified fact, court finding, conviction, acquittal, formal allegation, ongoing investigation, media report, or political claim) and linked to its source.",
+    "methodologyHeading": "Research methodology",
+    "methodologyBody": "Every profile follows a fixed workflow: identity verification, source collection, legal-record entry, timeline construction, independent reviewer approval, and only then publication. Draft and in-review material is never shown to the public.",
+    "sourceQualityHeading": "Source quality",
+    "sourceQualityFoonote": "Tier 4 sources (blogs, anonymous sites, social media) are never used as sole evidence of guilt."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "backHome": "Back to home"
+  },
+  "auth": {
+    "signInTitle": "Sign in to Politician Watch",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "signingIn": "Signing in...",
+    "forgotPassword": "Forgot password?",
+    "resetSent": "Password reset email sent.",
+    "needAccount": "Need an account?",
+    "signUp": "Sign up",
+    "signUpTitle": "Sign up",
+    "signUpSubtitle": "Create an account to add politician records. An admin reviews new submissions before they're published.",
+    "fullName": "Full name",
+    "createAccount": "Create account",
+    "creatingAccount": "Creating account...",
+    "alreadyHaveAccount": "Already have an account?"
+  },
+  "account": {
+    "title": "Account",
+    "name": "Name",
+    "editProfile": "Edit profile",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "email": "Email",
+    "role": "Role",
+    "memberSince": "Member since",
+    "signOut": "Sign out",
+    "notSet": "Not set",
+    "deleteAccountHeading": "Delete account",
+    "deleteAccountBody": "Permanently deletes your account and profile. Research records you've contributed to the site are not removed. This cannot be undone.",
+    "deleteAccount": "Delete account",
+    "confirmDeleteAccount": "Confirm delete account",
+    "deleting": "Deleting..."
+  },
+  "politicians": {
+    "pageTitle": "Politician Profiles",
+    "pageSubtitle": "Search verified profiles by name, party, constituency, or country.",
+    "searchPlaceholder": "e.g. Jane Doe, or Sri Lanka",
+    "addButton": "Add politician",
+    "noResultsTitle": "No profiles match your search",
+    "noResultsDescription": "Try a different name, party, constituency, or country.",
+    "loadErrorDescription": "Politician profiles returned an error while loading. Try again shortly.",
+    "positionNotOnFile": "Position not on file",
+    "custodyJailed": "Jailed",
+    "custodyBailed": "On bail",
+    "researchedOn": "Researched {{date}}",
+    "notYetResearched": "Not yet researched"
+  },
+  "addPolitician": {
+    "promptTitle": "Create an account to add a record",
+    "promptBody": "Sign up (it's free) to submit a politician profile for review.",
+    "signUp": "Sign up",
+    "signIn": "Sign in",
+    "cancel": "Cancel"
+  },
+  "errorState": {
+    "title": "We couldn't load this information",
+    "description": "Something went wrong while fetching this. Try again in a moment."
+  },
+  "profile": {
+    "notFoundTitle": "This profile could not be found",
+    "notFoundDescription": "It may not exist, or it hasn't been published yet. Check the link, or search for the person you're looking for.",
+    "lastResearched": "Last researched:",
+    "notYetRecorded": "Not yet recorded",
+    "detailsNotYetRecorded": "Details not yet recorded",
+    "tabs": {
+      "overview": "Overview",
+      "biography": "Biography",
+      "politicalHistory": "Political History",
+      "legalStatus": "Legal Status",
+      "criminalCases": "Criminal Cases",
+      "civilCases": "Civil Cases",
+      "investigations": "Investigations",
+      "timeline": "Timeline",
+      "sources": "Sources",
+      "report": "Full Report"
+    },
+    "identityVerified": "Identity verified",
+    "identityPartiallyVerified": "Identity partially verified",
+    "identityLowConfidence": "Low identity confidence",
+    "identityUnresolved": "Identity unresolved",
+    "publicationStatus": {
+      "draft": "Draft",
+      "review": "In Review",
+      "published": "Published",
+      "archived": "Archived"
+    }
+  },
+  "overview": {
+    "positionLabel": "Political position",
+    "positionNotEstablished": "Not established",
+    "partyLabel": "Political party",
+    "notRecorded": "Not recorded",
+    "constituencyLabel": "Constituency",
+    "careerLabel": "Political career",
+    "careerNotRecorded": "Not recorded",
+    "careerLessThanYear": "Less than a year",
+    "careerYears_one": "{{count}} year",
+    "careerYears_other": "{{count}} years",
+    "activeCasesLabel": "Active cases",
+    "investigationsLabel": "Investigations",
+    "convictionsLabel": "Convictions",
+    "acquittalsLabel": "Acquittals",
+    "identityVerificationHeading": "Identity verification",
+    "identityConfidenceLabel": "Identity confidence",
+    "alternativeNamesLabel": "Alternative / local-language names",
+    "noneRecorded": "None recorded",
+    "nationalityLabel": "Nationality",
+    "unknown": "Unknown",
+    "birthLabel": "Date / place of birth",
+    "identityUnresolvedWarning": "Identity could not be conclusively confirmed. Records on this profile may describe more than one person sharing a similar name until this is resolved by a reviewer.",
+    "allegationsNote": "Allegations are not convictions. See the Fact vs Allegation table in the Full Report tab."
+  },
+  "custody": {
+    "jailedSince": "Jailed since",
+    "daysInCustody_one": "day in custody",
+    "daysInCustody_other": "days in custody",
+    "sentenceOnRecord": "Sentence on record: {{count}} year",
+    "sentenceOnRecord_other": "Sentence on record: {{count}} years",
+    "timelineHeading": "Custody timeline",
+    "jailed": "Jailed",
+    "releasedOnBail": "Released on bail",
+    "dateNotRecorded": "Date not recorded",
+    "daysServedBeforeBail_one": "day in custody before bail.",
+    "daysServedBeforeBail_other": "days in custody before bail."
+  },
+  "legalStatus": {
+    "heading": "Current legal status",
+    "sourcesDisagree": "Sources disagree about this status, marked unresolved pending reviewer confirmation.",
+    "jailedSince": "Jailed since",
+    "sentence": "Sentence",
+    "sentenceYears_one": "{{count}} year",
+    "sentenceYears_other": "{{count}} years",
+    "source": "Source",
+    "viewSource": "View source",
+    "lastVerified": "Last verified:",
+    "notYetVerified": "Not yet verified",
+    "sourceConfidence": "Source confidence:",
+    "viewEvidence": "View evidence",
+    "statement": {
+      "free": "No current incarceration verified",
+      "incarcerated": "Currently incarcerated",
+      "detained": "Currently detained in custody",
+      "on_bail": "Released on bail, case ongoing",
+      "wanted": "Wanted: an active warrant is on record",
+      "travel_restricted": "Free, subject to a travel restriction",
+      "unknown": "Current status could not be conclusively verified"
+    }
+  },
+  "statusBadge": {
+    "VERIFIED": "VERIFIED",
+    "ALLEGATION": "ALLEGATION / CLAIM",
+    "UNDER_INVESTIGATION": "UNDER INVESTIGATION",
+    "CASE_PENDING": "CASE PENDING",
+    "CONVICTED": "CONVICTED",
+    "ACQUITTED": "ACQUITTED / CASE DISMISSED",
+    "INCARCERATED": "INCARCERATED / DETAINED",
+    "UNKNOWN": "UNKNOWN"
+  },
+  "roles": {
+    "public": "Public User",
+    "researcher": "Registered Researcher",
+    "reviewer": "Reviewer",
+    "admin": "Administrator"
+  },
+  "translate": {
+    "machineTranslated": "Machine-translated",
+    "viewOriginal": "View original",
+    "viewTranslation": "View translation",
+    "translating": "Translating…"
+  }
+}
