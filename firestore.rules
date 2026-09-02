@@ -1,25 +1,30 @@
 rules_version = '2';
 
-// Roles are read from a Firebase custom claim (request.auth.token.role), set server-side
-// by the Cloud Function in functions/src/index.ts whenever users/{uid}.role changes. Never
-// trust a client-supplied role field for authorization decisions.
+// Roles are read live from the caller's own users/{uid} document — never from a client-
+// supplied field on the document being written, and never from a custom claim on the auth
+// token. A claim would need a separate Cloud Function to stay in sync and would only take
+// effect on the client's next token refresh (up to ~1hr, or the next sign-in), so a role
+// change made here takes effect immediately instead. get() calls below all target the same
+// document path, which Firestore's rules engine caches for the duration of one request, so
+// this doesn't multiply the read cost of a rule check.
 service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() {
       return request.auth != null;
     }
+    function callerRole() {
+      return signedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role
+        : "public";
+    }
     function isAdmin() {
-      return signedIn() && request.auth.token.role == "admin";
+      return callerRole() == "admin";
     }
     function isReviewer() {
-      return signedIn() && (request.auth.token.role == "reviewer" || request.auth.token.role == "admin");
+      return callerRole() in ["reviewer", "admin"];
     }
     function isResearcher() {
-      return signedIn() && (
-        request.auth.token.role == "researcher" ||
-        request.auth.token.role == "reviewer" ||
-        request.auth.token.role == "admin"
-      );
+      return callerRole() in ["researcher", "reviewer", "admin"];
     }
     function isOwner(data) {
       return signedIn() && data.createdBy == request.auth.uid;
