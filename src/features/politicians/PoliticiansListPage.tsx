@@ -62,7 +62,10 @@ export function PoliticiansListPage() {
         {isLoading ? (
           <CardGridSkeleton count={6} />
         ) : error ? (
-          <ErrorState description="Politician profiles returned an error while loading. Try again shortly." />
+          <ErrorState
+            description="Politician profiles returned an error while loading. Try again shortly."
+            detail={error instanceof Error ? error.message : undefined}
+          />
         ) : filtered.length === 0 ? (
           <EmptyState
             title="No profiles match your search"
