@@ -1,11 +1,9 @@
 import {
   createUserWithEmailAndPassword,
   deleteUser,
-  GoogleAuthProvider,
   onAuthStateChanged,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
-  signInWithPopup,
   signOut as firebaseSignOut,
   updateProfile,
   type User,
@@ -59,13 +57,6 @@ export async function loginWithEmail(email: string, password: string) {
     email,
     password,
   );
-  return credential.user;
-}
-
-export async function loginWithGoogle() {
-  const provider = new GoogleAuthProvider();
-  const credential = await signInWithPopup(getFirebaseAuth(), provider);
-  await ensureUserProfileDoc(credential.user, credential.user.displayName ?? "");
   return credential.user;
 }
 

@@ -60,7 +60,7 @@ Notes:
 ## 4. Firebase project setup (one-time)
 
 1. Create a project in the [Firebase Console](https://console.firebase.google.com/).
-2. **Authentication** → Sign-in method → enable **Email/Password** and **Google**.
+2. **Authentication** → Sign-in method → enable **Email/Password**.
 3. **Firestore Database** → Create database (start in production mode; the rules file
    below replaces the defaults).
 4. **Storage** → Get started (same bucket referenced by `VITE_FIREBASE_STORAGE_BUCKET`).

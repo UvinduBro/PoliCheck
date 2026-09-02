@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { loginWithGoogle, registerWithEmail } from "@/lib/firebase/auth";
+import { registerWithEmail } from "@/lib/firebase/auth";
 import { registerSchema, type RegisterFormValues } from "@/lib/validation/schemas";
 import { firebaseConfigured } from "@/lib/firebase/config";
 import { PasswordInput } from "@/components/forms/PasswordInput";
@@ -11,7 +11,6 @@ export function RegisterPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [error, setError] = useState<string | null>(null);
-  const [googleLoading, setGoogleLoading] = useState(false);
   const prefillEmail = (location.state as { email?: string } | null)?.email;
   const {
     register,
@@ -32,19 +31,6 @@ export function RegisterPage() {
     }
   }
 
-  async function onGoogleSignUp() {
-    setError(null);
-    setGoogleLoading(true);
-    try {
-      await loginWithGoogle();
-      navigate("/account", { replace: true });
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Google sign-up failed.");
-    } finally {
-      setGoogleLoading(false);
-    }
-  }
-
   if (!firebaseConfigured) {
     return (
       <div className="mx-auto max-w-md p-8 text-center text-sm text-ink-muted">
@@ -61,17 +47,7 @@ export function RegisterPage() {
         to "researcher" before you can add records.
       </p>
 
-      <button type="button" className="btn-primary mt-6 w-full" onClick={onGoogleSignUp} disabled={googleLoading}>
-        {googleLoading ? "Opening Google sign-in..." : "Continue with Google"}
-      </button>
-
-      <div className="my-5 flex items-center gap-3 text-xs text-ink-faint">
-        <span className="h-px flex-1 bg-line" aria-hidden="true" />
-        or continue with email
-        <span className="h-px flex-1 bg-line" aria-hidden="true" />
-      </div>
-
-      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
+      <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div>
           <label className="label" htmlFor="displayName">Full name</label>
           <input id="displayName" className="input" autoComplete="name" {...register("displayName")} />
@@ -90,7 +66,7 @@ export function RegisterPage() {
           error={errors.password?.message}
         />
         {error && <p role="alert" className="text-sm text-status-critical">{error}</p>}
-        <button type="submit" className="btn-secondary w-full" disabled={isSubmitting}>
+        <button type="submit" className="btn-primary w-full" disabled={isSubmitting}>
           {isSubmitting ? "Creating account..." : "Create account"}
         </button>
       </form>
