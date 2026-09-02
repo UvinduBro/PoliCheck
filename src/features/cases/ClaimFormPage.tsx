@@ -91,8 +91,8 @@ export function ClaimFormPage() {
     <div className="mx-auto max-w-2xl">
       <h1 className="text-page-heading font-semibold text-ink">Add a Claim</h1>
       <p className="mt-1 text-sm text-ink-muted">
-        Every claim is classified — verified fact, court finding, formal allegation, investigation, media
-        report, or political claim — so readers never mistake an accusation for a conviction.
+        Every claim is classified (verified fact, court finding, formal allegation, investigation, media
+        report, or political claim) so readers never mistake an accusation for a conviction.
       </p>
       <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -158,7 +158,7 @@ export function ClaimFormPage() {
           </fieldset>
         ) : (
           <div>
-            <label className="label" htmlFor="sourceLinks">Source link(s) — one per line (at least one required)</label>
+            <label className="label" htmlFor="sourceLinks">Source link(s), one per line (at least one required)</label>
             <textarea
               id="sourceLinks"
               rows={3}

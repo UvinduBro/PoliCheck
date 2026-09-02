@@ -43,7 +43,7 @@ export function RegisterPage() {
     <div className="mx-auto max-w-md px-4 py-12">
       <h1 className="text-page-heading font-semibold text-ink">Sign up</h1>
       <p className="mt-1 text-sm text-ink-muted">
-        Create an account to add politician records — an admin reviews new submissions before they're
+        Create an account to add politician records. An admin reviews new submissions before they're
         published.
       </p>
 

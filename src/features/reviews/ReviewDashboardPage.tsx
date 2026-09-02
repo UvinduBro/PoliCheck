@@ -115,7 +115,7 @@ export function ReviewDashboardPage() {
             {investigations.map((i) => (
               <li key={i.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5">
                 <span className="font-medium text-ink">
-                  {i.agency} <span className="text-xs font-normal text-ink-faint">— {i.investigationType}</span>
+                  {i.agency} <span className="text-xs font-normal text-ink-faint">({i.investigationType})</span>
                 </span>
                 <ReviewActions
                   onApprove={() => setPublicationStatus.mutate({ entityType: "investigation", id: i.id, status: "published" })}

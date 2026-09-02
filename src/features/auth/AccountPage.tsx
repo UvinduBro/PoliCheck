@@ -85,7 +85,7 @@ export function AccountPage() {
             </div>
           ) : (
             <dd className="flex items-center gap-3 font-medium text-ink">
-              {userProfile?.displayName || user.displayName || "—"}
+              {userProfile?.displayName || user.displayName || "Not set"}
               <button type="button" className="text-xs font-medium text-accent hover:underline" onClick={startEditing}>
                 Edit profile
               </button>

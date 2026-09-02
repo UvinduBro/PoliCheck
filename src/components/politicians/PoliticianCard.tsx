@@ -23,35 +23,39 @@ export function PoliticianCard({ politician }: { politician: Politician }) {
   const custodyLabel = politician.custodyStatus ? CUSTODY_LABELS[politician.custodyStatus] : undefined;
 
   return (
-    <li className="card-hover overflow-hidden p-0">
-      <Link to={`/politicians/${politician.id}/overview`} className="block">
+    <li className="card-hover p-5">
+      <Link to={`/politicians/${politician.id}/overview`} className="flex flex-col items-center text-center">
         {politician.photoUrl ? (
-          <img src={politician.photoUrl} alt="" className="aspect-[4/3] w-full object-cover" />
+          <img
+            src={politician.photoUrl}
+            alt=""
+            className="h-20 w-20 shrink-0 rounded-full object-cover"
+          />
         ) : (
           <span
             aria-hidden="true"
-            className="flex aspect-[4/3] w-full items-center justify-center bg-surface-2 text-3xl font-semibold text-ink-muted"
+            className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-surface-2 text-lg font-semibold text-ink-muted"
           >
             {initials(politician.fullName)}
           </span>
         )}
-        <div className="min-w-0 p-4">
+        <div className="mt-3 w-full min-w-0">
           <p className="truncate font-medium text-ink hover:text-accent">{politician.fullName}</p>
-          <p className="mt-0.5 truncate text-sm text-ink-muted">{politician.currentPosition || politician.profession || "—"}</p>
+          <p className="mt-0.5 truncate text-sm text-ink-muted">{politician.currentPosition || politician.profession || "Position not on file"}</p>
           <p className="truncate text-xs text-ink-faint">
             {politician.country}
             {politician.politicalParty ? ` · ${politician.politicalParty}` : ""}
           </p>
           {custodyLabel && (
             <span
-              className={`chip mt-2 py-0.5 text-[11px] ${CUSTODY_CLASSES[politician.custodyStatus as CustodyStatus]}`}
+              className={`chip animate-glow-pulse mt-2 font-semibold py-0.5 text-[11px] ${CUSTODY_CLASSES[politician.custodyStatus as CustodyStatus]}`}
             >
               {custodyLabel}
             </span>
           )}
         </div>
       </Link>
-      <div className="flex items-center justify-between gap-2 border-t border-line px-4 py-3">
+      <div className="mt-4 flex items-center justify-between gap-2 border-t border-line pt-3">
         <PublicationStatusBadge status={politician.publicationStatus} />
         <span className="text-xs text-ink-faint">
           {politician.lastResearchedAt ? `Researched ${formatDate(politician.lastResearchedAt)}` : "Not yet researched"}

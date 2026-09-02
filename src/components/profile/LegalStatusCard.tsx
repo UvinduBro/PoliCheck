@@ -41,7 +41,7 @@ export function LegalStatusCard({
 
         {hasConflict && (
           <p className="mt-3 rounded-md bg-status-pending-bg px-3 py-2 text-sm text-status-pending">
-            Sources disagree about this status — marked unresolved pending reviewer confirmation.
+            Sources disagree about this status, marked unresolved pending reviewer confirmation.
           </p>
         )}
 

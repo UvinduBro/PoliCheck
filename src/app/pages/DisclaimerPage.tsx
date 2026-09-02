@@ -17,8 +17,8 @@ export function DisclaimerPage() {
         </h2>
         <p className="mt-2 text-sm text-ink">
           An indictment, complaint, or open investigation is never presented here as proof of guilt. Every
-          significant claim is classified — verified fact, court finding, conviction, acquittal, formal
-          allegation, ongoing investigation, media report, or political claim — and linked to its source.
+          significant claim is classified (verified fact, court finding, conviction, acquittal, formal
+          allegation, ongoing investigation, media report, or political claim) and linked to its source.
         </p>
       </section>
 
@@ -47,7 +47,7 @@ export function DisclaimerPage() {
           {([1, 2, 3, 4] as const).map((tier) => (
             <li key={tier} className="flex items-baseline gap-2">
               <span className="font-medium text-ink">Tier {tier}</span>
-              <span>— {SOURCE_TIER_LABELS[tier].replace(/^Tier \d — /, "")}</span>
+              <span>{SOURCE_TIER_LABELS[tier].replace(/^Tier \d: /, "")}</span>
             </li>
           ))}
         </ul>

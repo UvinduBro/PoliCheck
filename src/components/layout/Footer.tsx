@@ -9,7 +9,7 @@ export function Footer() {
         <div className="flex items-center gap-2 text-ink">
           <BrandMark size={16} className="text-accent" />
           <span className="text-sm font-semibold tracking-tight">Politician Watch</span>
-          <span className="text-sm text-ink-faint">— See the record. Know the facts.</span>
+          <span className="text-sm text-ink-faint">See the record. Know the facts.</span>
         </div>
 
         <div className="mt-5 space-y-3 text-sm text-ink-muted">

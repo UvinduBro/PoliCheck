@@ -107,10 +107,10 @@ export function SourceFormPage() {
             {...register("tier", { setValueAs: (v) => Number(v) })}
             onBlur={() => suggestedTier && setValue("tier", suggestedTier)}
           >
-            <option value={1}>Tier 1 — Primary &amp; Authoritative</option>
-            <option value={2}>Tier 2 — Highly Reliable Journalism</option>
-            <option value={3}>Tier 3 — Secondary Source</option>
-            <option value={4}>Tier 4 — Low Confidence</option>
+            <option value={1}>Tier 1: Primary &amp; Authoritative</option>
+            <option value={2}>Tier 2: Highly Reliable Journalism</option>
+            <option value={3}>Tier 3: Secondary Source</option>
+            <option value={4}>Tier 4: Low Confidence</option>
           </select>
         </div>
 
@@ -157,7 +157,7 @@ export function SourceFormPage() {
         </div>
 
         <div>
-          <label className="label" htmlFor="document">Attach a document (PDF, PNG, JPEG — max 25MB)</label>
+          <label className="label" htmlFor="document">Attach a document (PDF, PNG, JPEG, max 25MB)</label>
           <input id="document" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp" onChange={onFileChange} />
           {fileError && <p className="mt-1 text-sm text-status-critical">{fileError}</p>}
         </div>

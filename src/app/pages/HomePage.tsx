@@ -27,7 +27,7 @@ export function HomePage() {
           Know the record behind the politician.
         </h1>
         <p className="mx-auto mt-5 max-w-xl text-balance text-base text-ink-muted sm:text-lg">
-          Research Sri Lankan political careers, court proceedings, investigations and public records —
+          Research Sri Lankan political careers, court proceedings, investigations, and public records,
           backed by sources you can verify.
         </p>
 

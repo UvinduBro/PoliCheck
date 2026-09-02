@@ -100,7 +100,7 @@ export function TimelineTab() {
         date: investigation.startDate,
         category: "investigation",
         eyebrow: `${formatDate(investigation.startDate)} · Investigation Opened`,
-        title: `${investigation.agency}${investigation.subject ? ` — ${investigation.subject}` : ""}`,
+        title: `${investigation.agency}${investigation.subject ? `: ${investigation.subject}` : ""}`,
         description: investigation.description,
         current: investigation.currentStatus === "open",
       });

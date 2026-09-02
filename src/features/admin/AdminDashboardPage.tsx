@@ -20,7 +20,7 @@ function FeatureFlagsSection() {
       <h2 className="text-section-heading font-semibold text-ink">Features</h2>
       <p className="mt-1 max-w-2xl text-sm text-ink-muted">
         Everything below is off by default for initial launch, which is scoped to politician profiles, legal
-        cases, and allegations only. Nothing is deleted when a feature is off — its data, routes, and code stay
+        cases, and allegations only. Nothing is deleted when a feature is off: its data, routes, and code stay
         in place, just hidden from navigation until you turn it back on here.
       </p>
       {isLoading ? (
@@ -75,7 +75,7 @@ export function AdminDashboardPage() {
       <div>
         <h1 className="text-page-heading font-semibold text-ink">Administration</h1>
         <p className="mt-1 text-sm text-ink-muted">
-          Aggregate statistics only — presented as counts, never as an implication of guilt.
+          Aggregate statistics only, presented as counts, never as an implication of guilt.
         </p>
       </div>
 
@@ -143,7 +143,7 @@ export function AdminDashboardPage() {
               <tbody className="divide-y divide-line">
                 {users.map((u) => (
                   <tr key={u.uid} className="hover:bg-surface-2/60">
-                    <td className="px-4 py-2.5 font-medium text-ink">{u.displayName || "—"}</td>
+                    <td className="px-4 py-2.5 font-medium text-ink">{u.displayName || "Unnamed"}</td>
                     <td className="px-4 py-2.5 text-ink-muted">{u.email}</td>
                     <td className="px-4 py-2.5">
                       <select

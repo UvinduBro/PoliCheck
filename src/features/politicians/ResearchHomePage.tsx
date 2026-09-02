@@ -27,7 +27,7 @@ export function ResearchHomePage() {
     <div>
       <h1 className="text-page-heading font-semibold text-ink">Research Workspace</h1>
       <p className="mt-1 text-sm text-ink-muted">
-        Add new records here. Always verify identity and collect sources before adding legal records — see
+        Add new records here. Always verify identity and collect sources before adding legal records. See
         the research workflow in the project documentation.
       </p>
 

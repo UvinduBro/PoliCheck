@@ -229,7 +229,7 @@ export function PoliticianFormPage() {
             <div className="mt-3 space-y-3">
               {custodyStatus === "bailed" && (
                 <p className="text-xs text-ink-faint">
-                  Record when this person was originally jailed and, if sentenced, for how long — bail
+                  Record when this person was originally jailed and, if sentenced, for how long. Bail
                   typically follows an initial jailing or conviction.
                 </p>
               )}
@@ -267,7 +267,7 @@ export function PoliticianFormPage() {
             <option value="high">High</option>
             <option value="medium">Medium</option>
             <option value="low">Low</option>
-            <option value="unresolved">Unresolved — multiple candidates possible</option>
+            <option value="unresolved">Unresolved (multiple candidates possible)</option>
           </select>
         </div>
 

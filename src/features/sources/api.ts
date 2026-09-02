@@ -16,16 +16,20 @@ export function useSources() {
  * `sources` security rule reads `isResearcher() || verificationStatus == "verified"`,
  * so a public/unauthenticated query must include the matching filter or Firestore
  * rejects the whole query (see publicationConstraint for the same pattern elsewhere).
+ * Sorted client-side: combining that filter with a server-side orderBy would require a
+ * composite index for a public/anonymous caller's query shape.
  */
 export function useSearchableSources(role: UserRole | undefined) {
   const isResearcher = role === "researcher" || role === "reviewer" || role === "admin";
   return useQuery({
     queryKey: ["sources", "searchable", role],
-    queryFn: () =>
-      queryCollection<Source>(COLLECTIONS.sources, [
-        ...(isResearcher ? [] : [where("verificationStatus", "==", "verified")]),
-        orderBy("title"),
-      ]),
+    queryFn: async () => {
+      const results = await queryCollection<Source>(
+        COLLECTIONS.sources,
+        isResearcher ? [] : [where("verificationStatus", "==", "verified")],
+      );
+      return results.sort((a, b) => a.title.localeCompare(b.title));
+    },
   });
 }
 

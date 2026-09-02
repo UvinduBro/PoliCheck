@@ -42,7 +42,7 @@ export function ReportTab() {
       });
       await createReport.mutateAsync({
         politicianId: politician.id,
-        title: `${politician.fullName} — Research Report`,
+        title: `${politician.fullName}: Research Report`,
         researchDate: new Date().toISOString().slice(0, 10),
         researchCutoff: Timestamp.now(),
         contentMarkdown: markdown,
