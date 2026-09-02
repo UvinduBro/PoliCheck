@@ -92,26 +92,22 @@ firebase deploy --only firestore:rules,firestore:indexes,storage
   size cap; see `ALLOWED_UPLOAD_MIME_TYPES` / `MAX_UPLOAD_BYTES` in
   `src/lib/firebase/storage.ts` for the client-side mirror of those same limits.
 
-### 4b. Deploy the role-sync Cloud Function
+### 4b. Role checks (no Cloud Function required)
 
-Security rules authorize off the `role` **custom claim** on the Firebase Auth token
-(`request.auth.token.role`), never off the client-writable `users/{uid}.role` Firestore
-field — otherwise any signed-in user could grant themselves `admin` by editing their own
-document. The Cloud Function in `functions/src/index.ts` keeps the claim in sync:
+Security rules authorize off the `role` field on the caller's **own**
+`users/{request.auth.uid}` Firestore document — read live via `get()`/`exists()` in
+`firestore.rules`, and via the cross-service `firestore.get()`/`firestore.exists()` rules
+functions in `storage.rules` — never off a client-supplied field on the document being
+written, and never off a custom claim on the Firebase Auth token. A role change made in
+Firestore (by an admin, or by you directly in the console while bootstrapping) takes
+effect on the **very next request** — no Cloud Function to deploy, no token refresh, no
+sign-out/sign-in required.
 
-```bash
-cd functions
-npm install
-npm run build
-cd ..
-firebase deploy --only functions
-```
-
-It's a Firestore `onDocumentWritten` trigger on `users/{uid}` — whenever a `role` field
-changes, it calls `setCustomUserClaims`. The user's **next ID token refresh** picks up
-the new role (the Firebase Auth SDK refreshes tokens roughly every hour, or you can call
-`user.getIdToken(true)` client-side to force it immediately after an admin changes
-someone's role).
+`functions/src/index.ts` still exists as an optional, no-longer-required Cloud Function
+that mirrors the Firestore role onto a custom claim, kept only as defense-in-depth for
+anything outside Firestore/Storage rules that might want to read `request.auth.token.role`
+(e.g. a future custom backend). Skip §2's `functions/` install and `firebase deploy
+--only functions` entirely unless you actually need that.
 
 ### 4c. Bootstrap your first admin account
 
@@ -119,10 +115,10 @@ There's no UI to create the first admin (by design — nobody should be able to
 self-promote). After registering an account in the app:
 
 1. Open Firestore Console → `users/{your-uid}` → set `role` to `"admin"`.
-2. Wait for the Cloud Function to run (or trigger it by re-saving the doc), then sign
-   out and back in (or force a token refresh) so the new claim is picked up.
-3. You now see the **Admin** nav item and `/admin` dashboard, and can promote other
-   users from there instead of touching Firestore directly.
+2. Reload the app (or just wait — the client holds a live listener on your own profile
+   doc, so this is usually instant). You now see the **Admin** nav item and `/admin`
+   dashboard, and can promote other users from there instead of touching Firestore
+   directly.
 
 ## 5. Running the app locally
 
@@ -261,6 +257,6 @@ src/
 | "Firebase is not configured" banner everywhere | `.env.local` missing or a `VITE_FIREBASE_*` value is blank — check §3, restart `npm run dev` after editing (Vite only reads env files at startup) |
 | A public/logged-out user sees nothing in a list that has data | The query is missing the `publicationStatus == "published"` constraint required by the security rules for unauthenticated list queries (§4a) — or the record genuinely isn't published yet |
 | `FAILED_PRECONDITION: The query requires an index` in the console | Click the link in the error to auto-create it, then copy the resulting index definition into `firestore.indexes.json` and redeploy so it's reproducible |
-| Role change doesn't take effect | The custom-claims Cloud Function hasn't run yet, or the client's ID token hasn't refreshed — check the function's logs (`firebase functions:log`) and force a token refresh (sign out/in, or `user.getIdToken(true)`) |
+| "Missing or insufficient permissions" on submit, even for a role that should be allowed | Make sure `firestore.rules` (and `storage.rules`, for uploads) have actually been deployed — `firebase deploy --only firestore:rules,storage` — the console's "Rules" tab shows the version that's live. Also double-check the account has a `users/{uid}` document with the expected `role` value; a signed-in user with no profile document is treated as `"public"` |
 | Upload rejected client-side | Check `ALLOWED_UPLOAD_MIME_TYPES` / `MAX_UPLOAD_BYTES` in `src/lib/firebase/storage.ts` — PDF/PNG/JPEG/WebP only, 25MB cap, mirrored in `storage.rules` |
 | `tsc -b` emits stray `.js`/`.d.ts` files at the repo root | `tsconfig.node.json` must keep `"noEmit": true` (Vite's config file is type-checked, not compiled to disk) |

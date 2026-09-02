@@ -37,8 +37,8 @@ npm run dev
 The app renders even without Firebase configured (auth/data features show a
 configuration notice instead of crashing) — useful for UI work without a live project.
 
-For full setup (Firebase project configuration, security rules deployment, the
-role-sync Cloud Function, Vercel environment variables, and troubleshooting), see
+For full setup (Firebase project configuration, security rules deployment, Vercel
+environment variables, and troubleshooting), see
 [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md).
 
 ### Firebase project setup
@@ -49,16 +49,14 @@ role-sync Cloud Function, Vercel environment variables, and troubleshooting), se
    ```bash
    firebase deploy --only firestore:rules,firestore:indexes,storage
    ```
-4. Deploy the custom-claims sync function (keeps `request.auth.token.role` in sync with
-   each user's `users/{uid}.role` document, which the security rules authorize against —
-   never the client-writable Firestore field directly):
-   ```bash
-   cd functions && npm install && cd ..
-   firebase deploy --only functions
-   ```
-5. Copy your web app's config into `.env.local` (see `.env.example`). These values are
+   Security rules authorize each request off the `role` field on the caller's own
+   `users/{uid}` Firestore document, read live via `get()`/`exists()` — never off a
+   client-writable field on the document being written, and never off a Firebase Auth
+   custom claim. A role change takes effect on the next request, with no Cloud Function
+   to deploy and no token refresh needed.
+4. Copy your web app's config into `.env.local` (see `.env.example`). These values are
    not secret — Firestore/Storage security rules are what actually protect data.
-6. The first account created for a project has the `public` role by default. Grant
+5. The first account created for a project has the `public` role by default. Grant
    yourself `admin` directly in the Firestore console (`users/{uid}.role`) to unlock
    the Admin dashboard and promote everyone else from there.
 

@@ -7,10 +7,12 @@ initializeApp();
 const VALID_ROLES = new Set(["public", "researcher", "reviewer", "admin"]);
 
 /**
- * Firestore security rules (firestore.rules) authorize purely off the "role" custom
- * claim on the auth token — never off the client-writable users/{uid}.role field.
- * This trigger keeps that claim in sync whenever a user's Firestore profile changes,
- * so a promotion/demotion made by an admin actually takes effect.
+ * Not required for authorization: firestore.rules now reads each caller's role live from
+ * their own users/{uid} document, so a role change takes effect immediately with no token
+ * refresh needed and no dependency on this function being deployed. This trigger is kept as
+ * optional defense-in-depth for anything that might check the auth token's role claim
+ * outside of Firestore rules (e.g. a future custom backend) — deploying it is not required
+ * for the app to work.
  */
 export const syncUserRoleClaim = onDocumentWritten("users/{uid}", async (event) => {
   const uid = event.params.uid;
