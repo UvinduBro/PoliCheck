@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { X } from "lucide-react";
+import { Link, useSearchParams } from "react-router-dom";
+import { Plus, X } from "lucide-react";
 import { useAllCases } from "./api";
 import { useAuth } from "@/hooks/useAuth";
+import { can } from "@/lib/permissions/roles";
 import { CaseCard } from "@/components/cases/CaseCard";
 import { FilterBar } from "@/components/data/FilterBar";
 import { EmptyState } from "@/components/feedback/EmptyState";
@@ -48,11 +49,17 @@ export function CasesListPage() {
 
   return (
     <div>
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-page-heading font-semibold text-ink">Legal Cases</h1>
           <p className="mt-1 text-sm text-ink-muted">Criminal, civil, corruption, and constitutional proceedings on record.</p>
         </div>
+        {can.createRecords(userProfile?.role) && (
+          <Link to="/cases/new" className="btn-primary shrink-0 gap-1.5">
+            <Plus size={16} aria-hidden="true" />
+            Add case
+          </Link>
+        )}
       </div>
 
       <div className="mt-5 space-y-3">
