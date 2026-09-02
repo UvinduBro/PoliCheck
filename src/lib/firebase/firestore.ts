@@ -8,6 +8,7 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  setDoc,
   updateDoc,
   where,
   type DocumentData,
@@ -30,6 +31,7 @@ export const COLLECTIONS = {
   reports: "reports",
   auditLogs: "auditLogs",
   correctionRequests: "correctionRequests",
+  settings: "settings",
 } as const;
 
 export function withId<T>(snap: QueryDocumentSnapshot<DocumentData>): T {
@@ -75,6 +77,19 @@ export async function updateDocById(
     ...data,
     updatedAt: serverTimestamp(),
   });
+}
+
+/** Creates or merges a document at a known id — for singleton config docs that may not exist yet. */
+export async function setDocById(
+  collectionName: string,
+  id: string,
+  data: Record<string, unknown>,
+): Promise<void> {
+  await setDoc(
+    doc(getFirebaseDb(), collectionName, id),
+    { ...data, updatedAt: serverTimestamp() },
+    { merge: true },
+  );
 }
 
 /**

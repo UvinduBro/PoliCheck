@@ -8,19 +8,21 @@ import { VerificationIndicator } from "@/components/profile/VerificationIndicato
 import { ProfileHeaderSkeleton } from "@/components/feedback/Skeleton";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { formatDate } from "@/lib/formatting/date";
+import { useFeatureFlags } from "@/features/settings/api";
+import type { FeatureFlagKey } from "@/constants/featureFlags";
 import type { Politician } from "@/types";
 
-const TABS = [
+const TABS: { path: string; label: string; flag?: FeatureFlagKey }[] = [
   { path: "overview", label: "Overview" },
-  { path: "biography", label: "Biography" },
-  { path: "political-history", label: "Political History" },
+  { path: "biography", label: "Biography", flag: "biography" },
+  { path: "political-history", label: "Political History", flag: "politicalHistory" },
   { path: "legal-status", label: "Legal Status" },
   { path: "criminal-cases", label: "Criminal Cases" },
   { path: "civil-cases", label: "Civil Cases" },
-  { path: "investigations", label: "Investigations" },
-  { path: "timeline", label: "Timeline" },
-  { path: "sources", label: "Sources" },
-  { path: "report", label: "Full Report" },
+  { path: "investigations", label: "Investigations", flag: "investigations" },
+  { path: "timeline", label: "Timeline", flag: "timeline" },
+  { path: "sources", label: "Sources", flag: "sources" },
+  { path: "report", label: "Full Report", flag: "reports" },
 ];
 
 export interface PoliticianOutletContext {
@@ -36,6 +38,8 @@ function initials(name: string): string {
 export function PoliticianProfileLayout() {
   const { politicianId } = useParams();
   const { data: politician, isLoading, error } = usePolitician(politicianId);
+  const { flags } = useFeatureFlags();
+  const tabs = TABS.filter((tab) => !tab.flag || flags[tab.flag]);
 
   if (isLoading) return <ProfileHeaderSkeleton />;
   if (error || !politician) {
@@ -86,7 +90,7 @@ export function PoliticianProfileLayout() {
       </div>
 
       <div className="mt-6">
-        <ProfileTabs basePath={`/politicians/${politician.id}`} tabs={TABS} />
+        <ProfileTabs basePath={`/politicians/${politician.id}`} tabs={tabs} />
       </div>
 
       <div className="mt-6">

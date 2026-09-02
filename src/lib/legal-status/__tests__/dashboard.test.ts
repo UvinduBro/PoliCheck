@@ -88,4 +88,40 @@ describe("buildLegalStatusDashboard", () => {
     });
     expect(dashboard.hasConflictingSources).toBe(true);
   });
+
+  it("an explicit politician custodyStatus of jailed overrides event-derived status", () => {
+    const dashboard = buildLegalStatusDashboard({
+      politician: { custodyStatus: "jailed", custodySince: "2024-01-01" },
+      cases: [],
+      investigations: [],
+      // A conflicting/older event should be ignored entirely once the direct status is set.
+      events: [{ id: "e1", date: "2024-01-01", eventType: "release", sourceIds: ["s1"] }],
+      sources: [tier1Verified],
+    });
+    expect(dashboard.freedomStatus).toBe("incarcerated");
+    expect(dashboard.freedomStatusConfidence).toBe("high");
+    expect(dashboard.majorLegalRisk).toBe("high");
+  });
+
+  it("an explicit politician custodyStatus of bailed overrides event-derived status", () => {
+    const dashboard = buildLegalStatusDashboard({
+      politician: { custodyStatus: "bailed", custodySince: "2024-01-01" },
+      cases: [],
+      investigations: [],
+      events: [],
+      sources: [],
+    });
+    expect(dashboard.freedomStatus).toBe("on_bail");
+  });
+
+  it("falls back to event-derived status when custodyStatus is not_in_custody (the form default)", () => {
+    const dashboard = buildLegalStatusDashboard({
+      politician: { custodyStatus: "not_in_custody" },
+      cases: [],
+      investigations: [],
+      events: [{ id: "e1", date: "2024-01-01", eventType: "remand", sourceIds: ["s1"] }],
+      sources: [tier1Verified],
+    });
+    expect(dashboard.freedomStatus).toBe("incarcerated");
+  });
 });

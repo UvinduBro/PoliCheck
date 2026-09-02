@@ -8,9 +8,14 @@ import { legalCaseSchema, type LegalCaseFormValues } from "@/lib/validation/sche
 import { CASE_STAGE_LABELS } from "@/constants/legalStatus";
 import { isTierConsistentWithSourceType } from "@/lib/legal-status/sourceTier";
 import { useSources } from "@/features/sources/api";
+import { useFeatureFlags } from "@/features/settings/api";
 
 function toCsv(value: string): string[] {
   return value.split(",").map((v) => v.trim()).filter(Boolean);
+}
+
+function toLines(value: string): string[] {
+  return value.split("\n").map((v) => v.trim()).filter(Boolean);
 }
 
 const CASE_TYPES: LegalCaseFormValues["caseType"][] = [
@@ -24,6 +29,7 @@ export function CaseFormPage() {
   const preselectedPoliticianId = searchParams.get("politicianId");
   const { user } = useAuth();
   const createMutation = useCreateCase(user?.uid ?? "");
+  const { flags } = useFeatureFlags();
   const { data: sources = [] } = useSources();
   const [error, setError] = useState<string | null>(null);
 
@@ -38,6 +44,7 @@ export function CaseFormPage() {
       legalStage: "allegation_only",
       caseType: "criminal",
       sourceIds: [],
+      sourceLinks: [],
       charges: [],
     },
   });
@@ -143,25 +150,39 @@ export function CaseFormPage() {
           <input id="nextKnownStep" className="input" {...register("nextKnownStep")} />
         </div>
 
-        <fieldset>
-          <legend className="label">Sources (at least one required)</legend>
-          <div className="max-h-48 space-y-1 overflow-y-auto rounded-md border border-line p-2">
-            {sources.length === 0 && <p className="text-sm text-ink-muted">No sources exist yet — add one first.</p>}
-            {sources.map((s) => (
-              <label key={s.id} className="flex items-center gap-2 text-sm">
-                <input type="checkbox" value={s.id} {...register("sourceIds")} />
-                {s.title} <span className="text-xs text-ink-faint">(Tier {s.tier})</span>
-              </label>
-            ))}
+        {flags.sources ? (
+          <fieldset>
+            <legend className="label">Sources (at least one required)</legend>
+            <div className="max-h-48 space-y-1 overflow-y-auto rounded-md border border-line p-2">
+              {sources.length === 0 && <p className="text-sm text-ink-muted">No sources exist yet — add one first.</p>}
+              {sources.map((s) => (
+                <label key={s.id} className="flex items-center gap-2 text-sm">
+                  <input type="checkbox" value={s.id} {...register("sourceIds")} />
+                  {s.title} <span className="text-xs text-ink-faint">(Tier {s.tier})</span>
+                </label>
+              ))}
+            </div>
+            {errors.sourceLinks && <p className="mt-1 text-sm text-status-critical">{errors.sourceLinks.message}</p>}
+            {inconsistentTierSources.length > 0 && (
+              <p className="mt-1 text-sm text-status-pending">
+                Check the tier on: {inconsistentTierSources.map((s) => s.title).join(", ")} — its source type
+                usually implies a different tier.
+              </p>
+            )}
+          </fieldset>
+        ) : (
+          <div>
+            <label className="label" htmlFor="sourceLinks">Source link(s) — one per line (at least one required)</label>
+            <textarea
+              id="sourceLinks"
+              rows={3}
+              className="input"
+              placeholder="https://…"
+              {...register("sourceLinks", { setValueAs: toLines })}
+            />
+            {errors.sourceLinks && <p className="mt-1 text-sm text-status-critical">{errors.sourceLinks.message}</p>}
           </div>
-          {errors.sourceIds && <p className="mt-1 text-sm text-status-critical">{errors.sourceIds.message}</p>}
-          {inconsistentTierSources.length > 0 && (
-            <p className="mt-1 text-sm text-status-pending">
-              Check the tier on: {inconsistentTierSources.map((s) => s.title).join(", ")} — its source type
-              usually implies a different tier.
-            </p>
-          )}
-        </fieldset>
+        )}
 
         {error && <p role="alert" className="text-sm text-status-critical">{error}</p>}
 

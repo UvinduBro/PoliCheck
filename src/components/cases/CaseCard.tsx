@@ -41,7 +41,10 @@ export function CaseCard({ legalCase }: { legalCase: LegalCase }) {
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-xs text-ink-faint">
         <span>
-          {legalCase.sourceIds.length} source{legalCase.sourceIds.length === 1 ? "" : "s"}
+          {(() => {
+            const count = legalCase.sourceIds.length + (legalCase.sourceLinks?.length ?? 0);
+            return `${count} source${count === 1 ? "" : "s"}`;
+          })()}
           {legalCase.dateFiled && ` · Filed ${formatDate(legalCase.dateFiled)}`}
         </span>
         <Link to={`/cases/${legalCase.id}`} className="flex items-center gap-1 font-medium text-accent hover:underline">

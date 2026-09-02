@@ -20,7 +20,7 @@ export function LegalStatusTab() {
   const { politician } = useOutletContext<PoliticianOutletContext>();
   const { userProfile } = useAuth();
   const { cases, investigations, events, sources, isLoading } = useLegalStatusDashboard(politician.id, userProfile?.role);
-  const dashboard = buildLegalStatusDashboard({ cases, investigations, events, sources });
+  const dashboard = buildLegalStatusDashboard({ politician, cases, investigations, events, sources });
 
   if (isLoading) return <CardGridSkeleton count={4} />;
 
@@ -31,7 +31,10 @@ export function LegalStatusTab() {
         confidence={dashboard.freedomStatusConfidence}
         lastVerified={politician.lastResearchedAt}
         hasConflict={dashboard.hasConflictingSources}
-        evidenceHref={`/politicians/${politician.id}/timeline`}
+        evidenceHref={`/politicians/${politician.id}/criminal-cases`}
+        custodySince={politician.custodySince}
+        sentenceYears={politician.sentenceYears}
+        custodySourceLink={politician.custodySourceLink}
       />
 
       <div>

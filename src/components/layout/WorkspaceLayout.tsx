@@ -3,6 +3,7 @@ import { ClipboardList, FileSearch, Gavel, LayoutDashboard, ScrollText, ShieldCh
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { can } from "@/lib/permissions/roles";
+import { useFeatureFlags } from "@/features/settings/api";
 
 interface WorkspaceNavItem {
   to: string;
@@ -16,6 +17,7 @@ interface WorkspaceNavItem {
 export function WorkspaceLayout() {
   const { userProfile } = useAuth();
   const role = userProfile?.role;
+  const { flags } = useFeatureFlags();
 
   const items: WorkspaceNavItem[] = [
     {
@@ -28,8 +30,8 @@ export function WorkspaceLayout() {
     },
     { to: "/politicians", label: "Politicians", description: "Search & profiles", icon: Users, show: true },
     { to: "/cases", label: "Cases", description: "Criminal & civil records", icon: Gavel, show: true },
-    { to: "/investigations", label: "Investigations", description: "Agency inquiries", icon: FileSearch, show: true },
-    { to: "/sources", label: "Sources", description: "Citations & documents", icon: ScrollText, show: true },
+    { to: "/investigations", label: "Investigations", description: "Agency inquiries", icon: FileSearch, show: flags.investigations },
+    { to: "/sources", label: "Sources", description: "Citations & documents", icon: ScrollText, show: flags.sources },
     {
       to: "/review",
       label: "Review queue",

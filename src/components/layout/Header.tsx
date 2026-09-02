@@ -4,6 +4,7 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { can } from "@/lib/permissions/roles";
 import { useCommandSearchContext } from "@/features/search/CommandSearchContext";
+import { useFeatureFlags } from "@/features/settings/api";
 import { CivicLensMark } from "./CivicLensMark";
 import { NotificationsMenu } from "./NotificationsMenu";
 import { UserMenu } from "./UserMenu";
@@ -25,6 +26,7 @@ export function Header() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const { openSearch } = useCommandSearchContext();
+  const { flags } = useFeatureFlags();
 
   useEffect(() => setMenuOpen(false), [location.pathname]);
 
@@ -32,8 +34,8 @@ export function Header() {
     { to: "/", label: "Discover", show: true, end: true },
     { to: "/politicians", label: "Politicians", show: true },
     { to: "/cases", label: "Cases", show: true },
-    { to: "/investigations", label: "Investigations", show: true },
-    { to: "/sources", label: "Sources", show: true },
+    { to: "/investigations", label: "Investigations", show: flags.investigations },
+    { to: "/sources", label: "Sources", show: flags.sources },
     { to: "/research", label: "Research", show: can.createRecords(role) },
     { to: "/review", label: "Review", show: can.reviewRecords(role) },
     { to: "/admin", label: "Admin", show: can.manageUsers(role) },

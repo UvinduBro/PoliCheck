@@ -3,6 +3,7 @@ import { useCase, useCaseClaims, useCaseEvents } from "./api";
 import { usePoliticianSources } from "@/features/politicians/api";
 import { PublicationStatusBadge } from "@/components/status/PublicationStatusBadge";
 import { SourceList } from "@/components/sources/SourceList";
+import { SourceLinkList } from "@/components/sources/SourceLinkList";
 import { CaseTimeline } from "@/components/cases/CaseTimeline";
 import { ClaimCard } from "@/components/evidence/ClaimCard";
 import { EmptyState } from "@/components/feedback/EmptyState";
@@ -110,7 +111,7 @@ export function CaseDetailPage() {
               <ClaimCard
                 key={claim.id}
                 claim={claim}
-                sourceCount={claim.sourceIds.length}
+                sourceCount={claim.sourceIds.length + (claim.sourceLinks?.length ?? 0)}
               />
             ))}
           </ul>
@@ -119,8 +120,9 @@ export function CaseDetailPage() {
 
       <section>
         <h2 className="text-section-heading font-semibold text-ink">Sources</h2>
-        <div className="mt-3">
-          <SourceList sources={sources} />
+        <div className="mt-3 space-y-3">
+          {legalCase.sourceLinks && legalCase.sourceLinks.length > 0 && <SourceLinkList links={legalCase.sourceLinks} />}
+          {(sources.length > 0 || !legalCase.sourceLinks?.length) && <SourceList sources={sources} />}
         </div>
       </section>
     </div>

@@ -1,7 +1,7 @@
 import { initializeApp, type FirebaseApp } from "firebase/app";
 import { initializeAppCheck, ReCaptchaV3Provider, type AppCheck } from "firebase/app-check";
 import { getAuth, type Auth } from "firebase/auth";
-import { getFirestore, type Firestore } from "firebase/firestore";
+import { initializeFirestore, type Firestore } from "firebase/firestore";
 import { getStorage, type FirebaseStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -54,7 +54,9 @@ export function getFirebaseAuth(): Auth {
 }
 
 export function getFirebaseDb(): Firestore {
-  if (!db) db = getFirestore(getFirebaseApp());
+  // ignoreUndefinedProperties: optional form fields (e.g. a number/date left blank) resolve to
+  // `undefined` rather than omitted keys — Firestore rejects those outright by default.
+  if (!db) db = initializeFirestore(getFirebaseApp(), { ignoreUndefinedProperties: true });
   return db;
 }
 
