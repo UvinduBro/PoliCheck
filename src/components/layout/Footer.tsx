@@ -1,4 +1,5 @@
 import { ShieldAlert } from "lucide-react";
+import { Link } from "react-router-dom";
 import { BrandMark } from "./BrandMark";
 
 export function Footer() {
@@ -30,7 +31,10 @@ export function Footer() {
         </div>
 
         <p className="mt-6 border-t border-line pt-5 text-xs text-ink-faint">
-          &copy; {new Date().getFullYear()} Politician Watch. Structured research, not legal advice.
+          &copy; {new Date().getFullYear()} Politician Watch. Structured research, not legal advice. ·{" "}
+          <Link to="/disclaimer" className="text-accent hover:underline">
+            Disclaimer
+          </Link>
         </p>
       </div>
     </footer>

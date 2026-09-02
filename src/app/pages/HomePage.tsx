@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
-import { BookOpenCheck, Search as SearchIcon, ShieldCheck } from "lucide-react";
+import { Search as SearchIcon } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useRecentlyUpdatedPoliticians } from "@/features/politicians/api";
 import { useCommandSearchContext } from "@/features/search/CommandSearchContext";
 import { PoliticianCard } from "@/components/politicians/PoliticianCard";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { CardGridSkeleton } from "@/components/feedback/Skeleton";
-import { SOURCE_TIER_LABELS } from "@/constants/sourceTiers";
 import { getRecentSearches } from "@/lib/recentSearches";
 
 export function HomePage() {
@@ -62,15 +61,6 @@ export function HomePage() {
         )}
       </section>
 
-      <section className="mx-auto max-w-3xl rounded-lg border border-status-pending/25 bg-status-pending-bg px-5 py-4 text-sm text-ink">
-        <p className="font-semibold text-status-pending">Allegations are not convictions.</p>
-        <p className="mt-1 text-ink-muted">
-          An indictment, complaint, or open investigation is never presented here as proof of guilt. Every
-          significant claim is classified — verified fact, court finding, conviction, acquittal, formal
-          allegation, ongoing investigation, media report, or political claim — and linked to its source.
-        </p>
-      </section>
-
       <section>
         <div className="flex items-baseline justify-between">
           <h2 className="text-section-heading font-semibold text-ink">Recently updated profiles</h2>
@@ -93,41 +83,6 @@ export function HomePage() {
             ))}
           </ul>
         )}
-      </section>
-
-      <section className="grid gap-6 sm:grid-cols-2">
-        <div className="card p-6">
-          <h2 className="flex items-center gap-2 font-semibold text-ink">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface-2 text-accent">
-              <ShieldCheck size={18} aria-hidden="true" />
-            </span>
-            Research methodology
-          </h2>
-          <p className="mt-3 text-sm text-ink-muted">
-            Every profile follows a fixed workflow: identity verification, source collection, legal-record
-            entry, timeline construction, independent reviewer approval, and only then publication. Draft and
-            in-review material is never shown to the public.
-          </p>
-        </div>
-        <div className="card p-6">
-          <h2 className="flex items-center gap-2 font-semibold text-ink">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface-2 text-accent">
-              <BookOpenCheck size={18} aria-hidden="true" />
-            </span>
-            Source quality
-          </h2>
-          <ul className="mt-3 space-y-1.5 text-sm text-ink-muted">
-            {([1, 2, 3, 4] as const).map((tier) => (
-              <li key={tier} className="flex items-baseline gap-2">
-                <span className="font-medium text-ink">Tier {tier}</span>
-                <span>— {SOURCE_TIER_LABELS[tier].replace(/^Tier \d — /, "")}</span>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-3 text-xs text-ink-faint">
-            Tier 4 sources (blogs, anonymous sites, social media) are never used as sole evidence of guilt.
-          </p>
-        </div>
       </section>
     </div>
   );

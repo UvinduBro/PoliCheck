@@ -2,6 +2,7 @@ import type { RouteObject } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { WorkspaceLayout } from "@/components/layout/WorkspaceLayout";
 import { HomePage } from "./pages/HomePage";
+import { DisclaimerPage } from "./pages/DisclaimerPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 
 import { LoginPage } from "@/features/auth/LoginPage";
@@ -48,6 +49,7 @@ export const routes: RouteObject[] = [
     element: <Layout />,
     children: [
       { index: true, element: <HomePage /> },
+      { path: "disclaimer", element: <DisclaimerPage /> },
       { path: "search", element: <PoliticiansListPage /> },
       { path: "politicians", element: <PoliticiansListPage /> },
       {
